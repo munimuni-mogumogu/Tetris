@@ -1,13 +1,15 @@
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include <iostream>
 #include <GL/freeglut.h>
-#include <cmath>
 #include "display.h"
 
 int angle = 80;			//視野角
+int angle_of_top = 1.0;
 
-double elevation = 0.0;
 double azimuth = 0.0;
-ViewPoint viewpoint;	//視点
+double elevation = 0.0;
+ViewPoint viewpoint = {VIEW_DISTANCE, 0.0, 0.0};	//視点
 MousePoint mousepoint;	//マウスの位置
 
 void cube() {
@@ -44,7 +46,7 @@ void display() {
 	glLoadIdentity();
 	gluLookAt(viewpoint.x, viewpoint.y, viewpoint.z,
 			0.0, 0.0, 0.0,
-			0.0, 1.0, 0.0);
+			0.0, angle_of_top, 0.0);
 	glPushMatrix();
 
 	//描画！！
@@ -70,7 +72,6 @@ void mouse(int b, int s, int x, int y) {
 	case GLUT_LEFT_BUTTON:
 		mousepoint.x = x;
 		mousepoint.y = y;
-		printf("%d, %d, \n", mousepoint.y, y);
 		break;
 	case GLUT_RIGHT_BUTTON:
 		break;
@@ -96,12 +97,15 @@ void specialkeyboard(int k, int x, int y) {
 }
 
 void motion(int x, int y) {
-	elevation = mousepoint.y - y;
-	azimuth = mousepoint.x - x;
-	printf("%d, %d\n", elevation, mousepoint.y);
+	azimuth += (double)(x - mousepoint.x) / WINDOW_WIDTH * M_PI * 2;
+	elevation += (double)(y - mousepoint.y) / WINDOW_HEIGHT * M_PI * 2;
+	if(elevation > M_PI / 3 ) elevation = M_PI / 3;
+	else if(elevation < -M_PI / 3) elevation = -M_PI / 3;
+
 	viewpoint.x = -VIEW_DISTANCE * cos(elevation) * cos(azimuth);
 	viewpoint.y = VIEW_DISTANCE * sin(elevation);
 	viewpoint.z = VIEW_DISTANCE * cos(elevation) * sin(azimuth);
+	std::cout << viewpoint.x << ", " << viewpoint.y << ", " << viewpoint.z << std::endl;
 	mousepoint.x = x;
 	mousepoint.y = y;
 }
