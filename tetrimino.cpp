@@ -19,8 +19,8 @@ bool* Tetrimino::getMino() {
 /* テトリミノは最大 3 * 3 の大きさで中央だけは固定 */
 /* 他はランダムで生成される */
 void Tetrimino::create() {
-	x = 4;
-	y = 4;
+	x = 5;
+	y = 5;
 	
 	mino[1][1] = true;
 
