@@ -8,12 +8,16 @@ Board::Board() {
 void Board::init() {
 	for (int i = 0; i < BOARD_HEIGHT; i++) {
 		for (int j = 0; j < BOARD_WIDTH; j++) {
-			if (i == 0 || i == BOARD_HEIGHT - 1 || j == 0 || j == BOARD_WIDTH - 1)
+			if (i == 0 || j == 0 || j == BOARD_WIDTH - 1)
 				board[i][j] = true;
 			else
 				board[i][j] = false;
 		}
 	}
+	/* デバッグ ボードの縦横確認
+	for (int j = 0; j < BOARD_WIDTH; j++) board[2][j] = true;
+	for (int i = 0; i < BOARD_HEIGHT; i++) board[i][2] = true;
+	*/
 }
 
 /* 盤面取得 */
@@ -30,7 +34,7 @@ void Board::set(Tetrimino tm) {
 	TmpMino tmp = tm.getMino();
 	for (int i = 0; i < MINO_HEIGHT; i++)
 		for (int j = 0; j < MINO_WIDTH; j++)
-			board[tm.getX() + i][tm.getY() + j] = tmp.mino[i][j];
+			board[tm.getY() - i][tm.getX() + j] = tmp.mino[MINO_HEIGHT - 1 - i][j];
 }
 
 /* 横列消しとゲームオーバーチェック */
@@ -42,35 +46,32 @@ bool Board::boardCheck() {
 
 /* 指定した列が全て埋まっているか確認 */
 bool Board::lineCheck(int line) {
-	for (int i = 0; i < BOARD_WIDTH; i++)
-		if (!board[i][line]) return false;
+	for (int j = 0; j < BOARD_WIDTH; j++)
+		if (!board[line][j]) return false;
 	return true;
 }
 
 /* 指定した列を消去 */
 /* 指定列より上段の列を一つずつずらす */
 void Board::lineErase(int line) {
-	for (int i = 1; i < BOARD_WIDTH - 1; i++)
-		board[i][line] = false;
-	for (int line_num = line; line_num > 0; line_num--) {
-		for (int x = 1; x < BOARD_WIDTH - 1; x++)
-			board[x][line] = board[x][line + 1];
-	}
-	for (int i = 0; i < BOARD_WIDTH; i++)
-		board[i][0] = (i == 0 && i == BOARD_WIDTH - 1) ? true : false;
+	for (int j = 1; j < BOARD_WIDTH - 1; j++)
+		board[line][j] = false;
+	for (int line_num = line; line_num < BOARD_HEIGHT; line_num++)
+		for (int j = 1; j < BOARD_WIDTH - 1; j++)
+			board[line][j] = board[line + 1][j];
 }
 
 bool Board::gameOverCheck() {
-	for (int i = 1; i < BOARD_WIDTH - 1; i++)
-		if (board[i][0] == true) return true;
+	for (int j = 1; j < BOARD_WIDTH - 1; j++)
+		if (board[BOARD_HEIGHT - 1][j] == true) return true;
 	return false;
 }
 
 bool Board::translateCheck(Tetrimino tm, int vv, int hv) {
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
-			if (!tm.getMino().mino[i][j]) continue;
-			if (board[tm.getX() + i + hv][tm.getY() + j + vv]) return false;
+	for (int i = -1; i < MINO_HEIGHT-1; i++) {
+		for (int j = -1; j < MINO_WIDTH-1; j++) {
+			if (!(tm.getMino().mino[i][j])) continue;
+			if (board[tm.getY() - i + vv][tm.getX() + j + hv]) return false;
 		}
 	}
 	return true;
@@ -85,11 +86,11 @@ bool Board::landCheck(Tetrimino tm) {
 		std::cout << std::endl;
 	}
 	*/
-	for (int i = 0; i < MINO_HEIGHT; i++) {
-		for (int j = 0; j < MINO_WIDTH; j++) {
-			if (!tm.getMino().mino[i][j]) continue;
-			if (board[tm.getX() + i][tm.getY() - j - 1]) {
-				std::cout << tm.getY() - j - 1 << std::endl << std::endl;
+	for (int i = -1; i < MINO_HEIGHT - 1; i++) {
+		for (int j = -1; j < MINO_WIDTH - 1; j++) {
+			if (!(tm.getMino().mino[i][j])) continue;
+			if (board[tm.getY() - i][tm.getX() + j]) {
+				std::cout << tm.getY() - i << std::endl << std::endl;
 				return true;
 			}
 		}

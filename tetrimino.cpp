@@ -50,15 +50,14 @@ void Tetrimino::create() {
 			mino[i][j] = (rand() % 2 == 1) ? true : false;
 		}
 	}
-	/*
-	for (int i = 0; i < MINO_SIZE; i++) {
-		for (int j = 0; j < MINO_SIZE; j++) {
-			std::cout << mino[i][j];
+	/* create デバッグ用 */
+	for (int i = 0; i < MINO_HEIGHT; i++) {
+		for (int j = 0; j < MINO_WIDTH; j++) {
+			std::cout << mino[MINO_HEIGHT - 1 - i][j];
 		}
 		std::cout << std::endl;
 	}
 	std::cout << std::endl;
-	*/
 }
 
 /* テトリミノを回転させる */
@@ -125,8 +124,15 @@ void Tetrimino::rotate(bool vec) {
 /* テトリミノを任意の方向に移動させる */
 /* 引数 int, int 横方向ベクトル, 縦方向ベクトル */
 /* horVec = -1 : 左, 1 : 右 */
-/* verVec = -1 : 上, 1 : 下 */ 
+/* verVec = -1 : 下, 1 : 上 */ 
 bool Tetrimino::translate(int horVec, int verVec, Board* b) {
+	for (int i = 0; i < MINO_HEIGHT; i++) {
+		for (int j = 0; j < MINO_WIDTH; j++) {
+			std::cout << mino[MINO_HEIGHT - 1 - i][j];
+		}
+		std::cout << std::endl;
+	}
+	std::cout << std::endl;
 	if (verVec == -1) {
 		if (b->landCheck(*this)) {
 			b->set(*this);
