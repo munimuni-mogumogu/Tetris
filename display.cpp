@@ -204,6 +204,12 @@ void keyboard(unsigned char k, int x, int y) {
 	case 'r':
 		View_reset();
 		break;
+	case 'z':
+		tetrimino.rotate(1);
+		break;
+	case 'x':
+		tetrimino.rotate(0);
+		break;
 	default:
 		break;
 	}
