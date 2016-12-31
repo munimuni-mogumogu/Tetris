@@ -20,6 +20,7 @@ Point2 mousepoint = {0, 0};					//マウスの位置
 Point3 viewpoint = {0, 0, view_distance};	//視点
 Point3 center = {(BOARD_WIDTH + MENU_SIZE) / 2 * BLOCK_SIZE, BOARD_HEIGHT / 2 * BLOCK_SIZE, 0};	//全体の中心
 clock_t start = clock();
+TmpPoint mino_pos;
 Tetrimino tetrimino;
 Tetrimino nextmino;
 Board board;
@@ -111,13 +112,17 @@ void draw_information(int score, int line) {
 }
 
 void Next_Mino_set() {
-
+	tetrimino.setMino(nextmino.getMino());
+	nextmino.create();
+	mino_pos.x = BOARD_WIDTH / 2;
+	mino_pos.y = BOARD_HEIGHT - 2;
+	tetrimino.setPoint(mino_pos);
 }
 
 void Tetris_Main() {
 	if(clock() - start > 1000) {
 		start = clock();
-		tetrimino.translate(0, -1, &board);
+		if(tetrimino.translate(0, -1, &board)) Next_Mino_set();
 	}
 }
 
@@ -200,7 +205,7 @@ void motion(int x, int y) {
 		viewpoint.x = -view_distance * cos(elevation) * sin(azimuth);
 		viewpoint.y = view_distance * sin(elevation);
 		viewpoint.z = view_distance * cos(elevation) * cos(azimuth);
-		//std::cout << viewpoint.x << ", " << viewpoint.y << ", " << viewpoint.z << std::endl;
+		std::cout << viewpoint.x << ", " << viewpoint.y << ", " << viewpoint.z << std::endl;
 		mousepoint.x = x;
 		mousepoint.y = y;
 	} else {
@@ -258,11 +263,7 @@ void init() {
 void tetris_init() {
 	board.init();
 	tetrimino.create();
-	TmpPoint a;
-	a.x = BOARD_WIDTH + 2;
-	a.y = 0;
 	nextmino.create();
-	nextmino.setPoint(a);
 }
 
 int main(int argc, char* argv[]) {
