@@ -125,6 +125,7 @@ void Tetris_Main() {
 		start = clock();
 		if(tetrimino.translate(0, -1, &board)) Next_Mino_set();
 	}
+	if(board.boardCheck()) exit(0);
 }
 
 void display() {
@@ -137,7 +138,7 @@ void display() {
 
 	Tetris_Main();
 	Create_Board(board.getBoard().board);
-	draw_information(6250, 10);
+	draw_information(6250, 120);
 
 	glPushMatrix();
 	glTranslated(tetrimino.getX() * BLOCK_SIZE, tetrimino.getY() * BLOCK_SIZE, 0);
@@ -190,6 +191,9 @@ void specialkeyboard(int k, int x, int y) {
 		break;
 	case GLUT_KEY_LEFT:
 		tetrimino.translate(-1, 0, &board);
+		break;
+	case GLUT_KEY_DOWN:
+		tetrimino.translate(0, -1, &board);
 		break;
 	default:
 		break;
