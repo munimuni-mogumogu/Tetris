@@ -47,24 +47,21 @@ void cube(GLdouble Red, GLdouble Green, GLdouble Blue) {
 }
 
 void Create_Block(bool block[MINO_WIDTH][MINO_HEIGHT]) {
-	for(int i = 0; i < MINO_WIDTH; i++) {
-		for(int j = 0; j < MINO_HEIGHT; j++){
-			std::cout << block[i][j];
+	for(int i = 0; i < MINO_HEIGHT; i++) {
+		for(int j = 0; j < MINO_WIDTH; j++){
 			glPushMatrix();
 			glTranslated(j * BLOCK_SIZE, (MINO_HEIGHT - i) * BLOCK_SIZE, 0.0);
 			if(block[i][j]) cube(1.0, 0.0, 0.0);
 			glPopMatrix();
 		}
-		std::cout << std::endl;
 	}
-		std::cout << std::endl;
 }
 
 void Create_Board(bool block[BOARD_WIDTH][BOARD_HEIGHT]) {
-	for(int i = 0; i < BOARD_WIDTH; i++) {
-		for(int j = 0; j < BOARD_HEIGHT; j++){
+	for(int i = 0; i < BOARD_HEIGHT; i++) {
+		for(int j = 0; j < BOARD_WIDTH; j++){
 			glPushMatrix();
-			glTranslated(i * BLOCK_SIZE, (BOARD_HEIGHT - j) * BLOCK_SIZE, 0.0);
+			glTranslated(j * BLOCK_SIZE, (BOARD_HEIGHT - i) * BLOCK_SIZE, 0.0);
 			if(block[i][j]) cube(0.0, 0.0, 0.0);
 			glPopMatrix();
 		}
@@ -114,7 +111,7 @@ void display() {
 	Create_Block(tetrimino.getMino().mino);
 	glPopMatrix();
 	glTranslated(nextmino.getX() * BLOCK_SIZE, nextmino.getY() * BLOCK_SIZE, 0);
-	//Create_Block(nextmino.getMino().mino);
+	Create_Block(nextmino.getMino().mino);
 
 	glPopMatrix();
 	glutSwapBuffers();
@@ -237,7 +234,7 @@ void tetris_init() {
 	board.init();
 	tetrimino.create();
 	TmpPoint a;
-	a.x = 6;
+	a.x = BOARD_WIDTH + 1;
 	a.y = 0;
 	nextmino.create();
 	nextmino.setPoint(a);
