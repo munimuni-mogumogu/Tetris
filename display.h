@@ -9,10 +9,12 @@
 
 #define BLOCK_SIZE 10
 
-#define MENU_SIZE 20
+#define MENU_SIZE 8
 
 #define WINDOW_WIDTH 600
 #define WINDOW_HEIGHT 600
+
+#define GLUT_KEY_ENTER 0x000d
 
 struct Point2 {
 	int x;
