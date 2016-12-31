@@ -158,8 +158,9 @@ bool Tetrimino::translate(int horVec, int verVec, Board* b) {
 			b->set(*this);
 			return true;
 		}
-	}
-	if (!b->translateCheck(*this, horVec, verVec)) return false;
+	} 
+	else
+		if (!b->translateCheck(*this, horVec, verVec)) return false;
 	this->x += horVec;
 	this->y += verVec;
 	return false;

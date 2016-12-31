@@ -79,7 +79,7 @@ bool Board::translateCheck(Tetrimino tm, int vv, int hv) {
 			if (!(tm.getMino().mino[i + 1][j + 1])) {
 				continue;
 			}
-			if (board[tm.getY() + i][tm.getX() + j + 1 + vv]) {
+			if (board[tm.getY() + i + 1][tm.getX() + j + 1 + vv]) {
 				std::cout << tm.getY() << " " << tm.getX() << std::endl;
 				std::cout << tm.getY() + i << " " << tm.getX() + j << std::endl << std::endl;
 				return false;
