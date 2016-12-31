@@ -3,18 +3,22 @@
 #include <iostream>
 #include <GL/freeglut.h>
 #include "display.h"
+#include "draw_str.h"
 
 int angle = 80;			//視野角
-int angle_of_top = 1.0;
+GLfloat angle_of_top = 1.0;
+
+int view_distance = 300;
 
 double azimuth = 0.0;
 double elevation = 0.0;
-ViewPoint viewpoint = {VIEW_DISTANCE, 0.0, 0.0};	//視点
-MousePoint mousepoint;	//マウスの位置
+Point2 mousepoint = {0, 0};					//マウスの位置
+Point3 viewpoint = {0, 0, view_distance};	//視点
+Point3 center = {(TETRIS_WIDTH + MENU_SIZE) / 2 * BLOCK_SIZE, TETRIS_HEIGHT / 2 * BLOCK_SIZE, 0};	//全体の中心
 
-void cube() {
+void cube(GLdouble Red, GLdouble Green, GLdouble Blue) {
 	glPushMatrix();
-	glColor3d(1.0, 0.0, 0.0);
+	glColor3d(Red, Green, Blue);
 	glutSolidCube(BLOCK_SIZE);
 	glPopMatrix();
 }
@@ -24,7 +28,7 @@ void Create_Block(bool block[MINO_WIDTH][MINO_HEIGHT]) {
 		for(int j = 0; j < MINO_HEIGHT; j++){
 			glPushMatrix();
 			glTranslated(i * BLOCK_SIZE, j * BLOCK_SIZE, 0.0);
-			if(block[i][j]) cube();
+			if(block[i][j]) cube(1.0, 0.0, 0.0);
 			glPopMatrix();
 		}
 	}
@@ -35,24 +39,34 @@ void Create_Board(bool block[TETRIS_WIDTH][TETRIS_HEIGHT]) {
 		for(int j = 0; j < TETRIS_HEIGHT; j++){
 			glPushMatrix();
 			glTranslated(i * BLOCK_SIZE, j * BLOCK_SIZE, 0.0);
-			if(block[i][j]) cube();
+			if(block[i][j]) cube(0.0, 0.0, 0.0);
 			glPopMatrix();
 		}
 	}
 }
 
 void display() {
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
-	gluLookAt(viewpoint.x, viewpoint.y, viewpoint.z,
-			0.0, 0.0, 0.0,
+	gluLookAt(viewpoint.x + center.x, viewpoint.y + center.y, viewpoint.z + center.z,
+			center.x, center.y, center.z,
 			0.0, angle_of_top, 0.0);
 	glPushMatrix();
-
 	//描画！！
-	bool check[3][3] = {{1.0, 0.0, 0.0},{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}};
-	Create_Block(check);
+	bool check[12][22];
+	for(int i = 0; i < 12; i++) {
+		for(int j = 0; j < 22; j++) {
+			if(i == 0 || j == 0 || i == 11 || j == 21) check[i][j] = true;
+			else check[i][j] = false;
+		}
+	}
+	Create_Board(check);
 
+	draw_str a("menu");
+	glTranslated(12 * BLOCK_SIZE, 0, 0);
+	glScaled(2, 2, 0);
+	a.draw_block();
 
 	glPopMatrix();
 	glutSwapBuffers();
@@ -101,13 +115,19 @@ void motion(int x, int y) {
 	elevation += (double)(y - mousepoint.y) / WINDOW_HEIGHT * M_PI * 2;
 	if(elevation > M_PI / 3 ) elevation = M_PI / 3;
 	else if(elevation < -M_PI / 3) elevation = -M_PI / 3;
-
-	viewpoint.x = -VIEW_DISTANCE * cos(elevation) * cos(azimuth);
-	viewpoint.y = VIEW_DISTANCE * sin(elevation);
-	viewpoint.z = VIEW_DISTANCE * cos(elevation) * sin(azimuth);
-	std::cout << viewpoint.x << ", " << viewpoint.y << ", " << viewpoint.z << std::endl;
+	
+	viewpoint.x = -view_distance * cos(elevation) * sin(azimuth);
+	viewpoint.y = view_distance * sin(elevation);
+	viewpoint.z = view_distance * cos(elevation) * cos(azimuth);
+	//std::cout << viewpoint.x << ", " << viewpoint.y << ", " << viewpoint.z << std::endl;
 	mousepoint.x = x;
 	mousepoint.y = y;
+}
+
+void MouseWheel(int wheel_number, int direction, int x, int y)
+{
+	view_distance -= direction * 2;
+	glutPostRedisplay();
 }
 
 void initgl() {
@@ -133,7 +153,7 @@ void initgl() {
 
 void timer(int value) {
 	glutPostRedisplay();
-	glutTimerFunc(16, timer, 0);
+	glutTimerFunc(value, timer, 16);
 }
 
 void funcgroup() {
@@ -143,6 +163,8 @@ void funcgroup() {
 	glutMotionFunc(motion);
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(specialkeyboard);
+	glutMotionFunc(motion);
+	glutMouseWheelFunc(MouseWheel);
 	glutTimerFunc(16, timer, 0);
 }
 

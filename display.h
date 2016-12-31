@@ -9,20 +9,20 @@
 
 #define BLOCK_SIZE 10
 
+#define MENU_SIZE 20
+
 #define WINDOW_WIDTH 600
 #define WINDOW_HEIGHT 600
 
-#define VIEW_DISTANCE 100
+struct Point2 {
+	int x;
+	int y;
+};
 
-struct ViewPoint {
+struct Point3 {
 	int x;
 	int y;
 	int z;
-};
-
-struct MousePoint {
-	int x;
-	int y;
 };
 
 #endif
