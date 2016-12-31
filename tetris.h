@@ -17,6 +17,11 @@ struct TmpMino {
 	bool mino[MINO_SIZE][MINO_SIZE];
 };
 
+struct TmpPoint {
+	int x;
+	int y;
+};
+
 class Tetrimino {
 private:
 	bool mino[MINO_SIZE][MINO_SIZE];
@@ -26,7 +31,10 @@ public:
 	Tetrimino();
 	int getX() { return x; }
 	int getY() { return y; }
+	TmpPoint getXY();
 	TmpMino getMino();
+	void setMino(TmpMino);
+	void setPoint(TmpPoint);
 	void create();
 	void rotate(bool);
 	void translate(int, int, Board*);

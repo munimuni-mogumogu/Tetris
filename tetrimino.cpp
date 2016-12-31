@@ -7,6 +7,13 @@ Tetrimino::Tetrimino() {
 	srand((unsigned int)time(NULL));
 }
 
+TmpPoint Tetrimino::getXY() {
+	TmpPoint tmp;
+	tmp.x = x;
+	tmp.y = y;
+	return tmp;
+}
+
 /* ミノ配列の取得 */
 /* 戻り値はtmp構造体 */
 TmpMino Tetrimino::getMino() {
@@ -15,6 +22,17 @@ TmpMino Tetrimino::getMino() {
 		for (int j = 0; j < MINO_SIZE; j++)
 			tmp.mino[i][j] = mino[i][j];
 	return tmp;
+}
+
+void Tetrimino::setMino(TmpMino tmp) {
+	for (int i = 0; i < MINO_SIZE; i++)
+		for (int j = 0; j < MINO_SIZE; j++)
+			mino[i][j] = tmp.mino[i][j];
+}
+
+void Tetrimino::setPoint(TmpPoint tmp) {
+	x = tmp.x;
+	y = tmp.y;
 }
 
 /* テトリミノ生成 */
