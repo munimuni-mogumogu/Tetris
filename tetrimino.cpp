@@ -21,13 +21,13 @@ TmpMino Tetrimino::getMino() {
 /* テトリミノは最大 3 * 3 の大きさで中央だけは固定 */
 /* 他はランダムで生成される */
 void Tetrimino::create() {
-	x = 5;
-	y = 5;
+	x = 5;		/* 初期位置 */
+	y = 5;		/* 初期位置 */
 	
 	mino[1][1] = true;
 
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
+	for (int i = 0; i < MINO_SIZE; i++) {
+		for (int j = 0; j < MINO_SIZE; j++) {
 			if (i == 1 && j == 1) continue;
 			mino[i][j] = (rand() % 2 == 1) ? true : false;
 		}

@@ -16,6 +16,7 @@ void Board::init() {
 	}
 }
 
+/* 盤面取得 */
 TmpBoard Board::getBoard() {
 	TmpBoard tmp;
 	for (int i = 0; i < BOARD_WIDTH; i++)
@@ -27,48 +28,43 @@ TmpBoard Board::getBoard() {
 /* 盤面にミノをセット */
 void Board::set(Tetrimino tm) {
 	TmpMino tmp = tm.getMino();
-	for (int i = -1; i < 2; i++) {
-		for (int j = -1; j < 2; j++) {
-			board[tm.getX() + i][tm.getY() + j] = tmp.mino[i + 1][j + 1];
+	for (int i = 0; i < MINO_SIZE; i++) {
+		for (int j = 0; j < MINO_SIZE; j++) {
+			board[tm.getX() + i][tm.getY() + j] = tmp.mino[i][j];
 		}
 	}
 }
 
 /* 横列消しとゲームオーバーチェック */
 bool Board::boardCheck() {
-	for (int i = 0; i < BOARD_HEIGHT; i++) {
-		if (lineCheck(i)) {
-			lineErase(i);
-		}
-	}
-	if (gameOverCheck()) return true;
-	return false;
+	for (int i = 0; i < BOARD_HEIGHT; i++)
+		if (lineCheck(i)) lineErase(i);
+	return (gameOverCheck()) ? true : false;
 }
 
+/* 指定した列が全て埋まっているか確認 */
 bool Board::lineCheck(int line) {
-	for (int i = 0; i < BOARD_WIDTH; i++) {
+	for (int i = 0; i < BOARD_WIDTH; i++)
 		if (!board[i][line]) return false;
-	}
 	return true;
 }
 
+/* 指定した列を消去 */
+/* 指定列より上段の列を一つずつずらす */
 void Board::lineErase(int line) {
-	for (int i = 0; i < BOARD_WIDTH; i++) {
+	for (int i = 1; i < BOARD_WIDTH - 1; i++)
 		board[i][line] = false;
-	}
-	for (int y = line; y > 0; y--) {
-		for (int x = 0; x < BOARD_WIDTH; x++) {
+	for (int line_num = line; line_num > 0; line_num--) {
+		for (int x = 1; x < BOARD_WIDTH - 1; x++)
 			board[x][line] = board[x][line + 1];
-		}
 	}
 	for (int i = 0; i < BOARD_WIDTH; i++)
 		board[i][0] = (i == 0 && i == BOARD_WIDTH - 1) ? true : false;
 }
 
 bool Board::gameOverCheck() {
-	for (int i = 1; i < BOARD_WIDTH - 1; i++) {
+	for (int i = 1; i < BOARD_WIDTH - 1; i++)
 		if (board[i][0] == true) return true;
-	}
 	return false;
 }
 
