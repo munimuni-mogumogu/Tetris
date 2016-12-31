@@ -20,8 +20,11 @@ Point3 viewpoint = {0, 0, view_distance};	//Ž‹“_
 Point3 center = {(BOARD_WIDTH + MENU_SIZE) / 2 * BLOCK_SIZE, BOARD_HEIGHT / 2 * BLOCK_SIZE, 0};	//‘S‘Ì‚Ì’†S
 clock_t start = clock();
 TmpPoint mino_pos;
+TmpPoint holdmino_pos;
 Tetrimino tetrimino;
 Tetrimino nextmino;
+bool hold_check = true;
+Tetrimino holdmino;
 Board board;
 
 void View_reset() {
@@ -39,7 +42,10 @@ void tetris_init() {
 	tetrimino.create();
 	mino_pos.x = BOARD_WIDTH / 2;
 	mino_pos.y = BOARD_HEIGHT - 2;
+	holdmino_pos.x = BOARD_WIDTH + 2;
+	holdmino_pos.y = 7;
 	tetrimino.setPoint(mino_pos);
+	holdmino.setPoint(holdmino_pos);
 	nextmino.create();
 	start = clock();
 }
@@ -122,6 +128,18 @@ void draw_information(int score, int line) {
 	glPopMatrix();
 
 	glPushMatrix();
+	draw_str hold_str("hold");
+	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, (BOARD_HEIGHT - 11) * BLOCK_SIZE, 0);
+	glScaled(2, 2, 0);
+	hold_str.draw_block();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslated(holdmino.getX() * BLOCK_SIZE, holdmino.getY() * BLOCK_SIZE, 0);
+	Create_Block(holdmino.getMino().mino);
+	glPopMatrix();
+
+	glPushMatrix();
 	draw_str next_str("next");
 	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, 4 * BLOCK_SIZE, 0);
 	glScaled(2, 2, 0);
@@ -140,6 +158,20 @@ void Next_Mino_set() {
 	tetrimino.setPoint(mino_pos);
 }
 
+
+void Mino_hold() {
+	hold_check = false;
+	TmpMino temp = holdmino.getMino();
+	if(temp.mino[1][1] == false) {
+		holdmino.setMino(tetrimino.getMino());
+		Next_Mino_set();
+	} else {
+		holdmino.setMino(tetrimino.getMino());
+		tetrimino.setMino(temp);
+		tetrimino.setPoint(mino_pos);
+	}
+}
+
 void Tetris_Main() {
 	glPushMatrix();
 	Create_Board(board.getBoard().board);
@@ -153,7 +185,10 @@ void Tetris_Main() {
 	glPopMatrix();
 	if(clock() - start > 1000) {
 		start = clock();
-		if(tetrimino.translate(0, -1, &board)) Next_Mino_set();
+		if(tetrimino.translate(0, -1, &board)) {
+			hold_check = true;
+			Next_Mino_set();
+		}
 	}
 	if(board.boardCheck()) exit(0);
 }
@@ -201,14 +236,20 @@ void keyboard(unsigned char k, int x, int y) {
 		menu = 1;
 		tetris_init();
 		break;
-	case 'r':
+	case 'v':
 		View_reset();
+		break;
+	case 'r':
+		menu = 0;
 		break;
 	case 'z':
 		tetrimino.rotate(1);
 		break;
 	case 'x':
 		tetrimino.rotate(0);
+		break;
+	case 'a':
+		if(hold_check) Mino_hold();
 		break;
 	default:
 		break;
@@ -224,7 +265,10 @@ void specialkeyboard(int k, int x, int y) {
 		tetrimino.translate(-1, 0, &board);
 		break;
 	case GLUT_KEY_DOWN:
-		if(tetrimino.translate(0, -1, &board)) Next_Mino_set();
+		if(tetrimino.translate(0, -1, &board)) {
+			hold_check = true;
+			Next_Mino_set();
+		}
 		break;
 	default:
 		break;
