@@ -2,6 +2,7 @@
 #include <cmath>
 #include <iostream>
 #include <GL/freeglut.h>
+#include <time.h>
 #include "display.h"
 #include "draw_str.h"
 #include "tetris.h"
@@ -13,12 +14,30 @@ int view_distance = 300;
 
 double azimuth = 0.0;
 double elevation = 0.0;
+bool view_check = true;
+bool reset_check = true;
 Point2 mousepoint = {0, 0};					//マウスの位置
 Point3 viewpoint = {0, 0, view_distance};	//視点
 Point3 center = {(BOARD_WIDTH + MENU_SIZE) / 2 * BLOCK_SIZE, BOARD_HEIGHT / 2 * BLOCK_SIZE, 0};	//全体の中心
-
+clock_t start = clock();
 Tetrimino tetrimino;
+Tetrimino nextmino;
 Board board;
+
+void View_reset() {
+	reset_check = false;
+	view_distance = 300;
+	azimuth = 0.0;
+	elevation = 0.0;
+	mousepoint.x = 0; mousepoint.y = 0;
+	viewpoint.x = 0; viewpoint.y = 0; viewpoint.z = view_distance;
+	center.x = (BOARD_WIDTH + MENU_SIZE) / 2 * BLOCK_SIZE; center.y = BOARD_HEIGHT / 2 * BLOCK_SIZE; center.z = 0;
+}
+
+void Tetris_reset() {
+	start = clock();
+	board.init();
+}
 
 void cube(GLdouble Red, GLdouble Green, GLdouble Blue) {
 	glPushMatrix();
@@ -49,22 +68,6 @@ void Create_Board(bool block[BOARD_WIDTH][BOARD_HEIGHT]) {
 	}
 }
 
-void Get_Mino(bool ret_block[MINO_WIDTH][MINO_HEIGHT], bool* block) {
-	for (int i = 0; i < MINO_WIDTH; i++) {
-		for (int j = 0; j < MINO_HEIGHT; j++) {
-			ret_block[i][j] = block[i * BOARD_HEIGHT + j];
-		}
-	}
-}
-
-void Get_Board(bool ret_board[BOARD_WIDTH][BOARD_HEIGHT], bool* board) {
-	for (int i = 0; i < BOARD_WIDTH; i++) {
-		for (int j = 0; j < BOARD_HEIGHT; j++) {
-			ret_board[i][j] = board[i * BOARD_HEIGHT + j];
-		}
-	}
-}
-
 void draw_information(int score, int line) {
 	glPushMatrix();
 	draw_str score_name("score");
@@ -72,7 +75,7 @@ void draw_information(int score, int line) {
 	glScaled(2, 2, 0);
 	score_name.draw_block();
 	glPopMatrix();
-	
+
 	glPushMatrix();
 	char char_score = static_cast<char>(score);
 	draw_str draw_score(char_score);
@@ -81,20 +84,28 @@ void draw_information(int score, int line) {
 	glPopMatrix();
 }
 
+void Tetris_Main() {
+	if(clock() - start > 1000) {
+		start = clock();
+		tetrimino.translate(0, -1, &board);
+	}
+}
+
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	gluLookAt(viewpoint.x + center.x, viewpoint.y + center.y, viewpoint.z + center.z,
-			center.x, center.y, center.z,
-			0.0, angle_of_top, 0.0);
+		center.x, center.y, center.z,
+		0.0, angle_of_top, 0.0);
 	glPushMatrix();
-	
-	bool draw_board[BOARD_WIDTH][BOARD_HEIGHT];
-	board.init();
-	Get_Board(draw_board, board.getBoard());
-	Create_Board(draw_board);
 
+	Tetris_Main();
+	Create_Board(board.getBoard().board);
 	draw_information(10, 10);
+	glPushMatrix();
+	glTranslated(tetrimino.getX() * BLOCK_SIZE, tetrimino.getY() * BLOCK_SIZE, 0);
+	Create_Block(tetrimino.getMino().mino);
+	glPopMatrix();
 
 	glPopMatrix();
 	glutSwapBuffers();
@@ -116,13 +127,19 @@ void mouse(int b, int s, int x, int y) {
 		mousepoint.y = y;
 		break;
 	case GLUT_RIGHT_BUTTON:
+		mousepoint.x = x;
+		mousepoint.y = y;
+		if(view_check) view_check = false;
+		else view_check = true;
 		break;
 	}
 }
 
 void keyboard(unsigned char k, int x, int y) {
 	switch(k) {
-	case 'z':
+	case 'r':
+		Tetris_reset();
+		View_reset();
 		break;
 	default:
 		break;
@@ -139,23 +156,48 @@ void specialkeyboard(int k, int x, int y) {
 }
 
 void motion(int x, int y) {
-	azimuth += (double)(x - mousepoint.x) / WINDOW_WIDTH * M_PI * 2;
-	elevation += (double)(y - mousepoint.y) / WINDOW_HEIGHT * M_PI * 2;
-	if(elevation > M_PI / 3 ) elevation = M_PI / 3;
-	else if(elevation < -M_PI / 3) elevation = -M_PI / 3;
-	
-	viewpoint.x = -view_distance * cos(elevation) * sin(azimuth);
-	viewpoint.y = view_distance * sin(elevation);
-	viewpoint.z = view_distance * cos(elevation) * cos(azimuth);
-	//std::cout << viewpoint.x << ", " << viewpoint.y << ", " << viewpoint.z << std::endl;
-	mousepoint.x = x;
-	mousepoint.y = y;
+	if(view_check) {
+		azimuth += (double)(x - mousepoint.x) / WINDOW_WIDTH * M_PI * 2;
+		elevation += (double)(y - mousepoint.y) / WINDOW_HEIGHT * M_PI * 2;
+		if(elevation > M_PI / 3 ) elevation = M_PI / 3;
+		else if(elevation < -M_PI / 3) elevation = -M_PI / 3;
+
+		viewpoint.x = -view_distance * cos(elevation) * sin(azimuth);
+		viewpoint.y = view_distance * sin(elevation);
+		viewpoint.z = view_distance * cos(elevation) * cos(azimuth);
+		//std::cout << viewpoint.x << ", " << viewpoint.y << ", " << viewpoint.z << std::endl;
+		mousepoint.x = x;
+		mousepoint.y = y;
+	} else {
+		center.x += x - mousepoint.x;
+		center.y += y - mousepoint.y;
+		mousepoint.x = x;
+		mousepoint.y = y;
+	}
 }
 
 void MouseWheel(int wheel_number, int direction, int x, int y)
 {
 	view_distance -= direction * 2;
+	std::cout << view_distance << std::endl;
 	glutPostRedisplay();
+}
+
+void timer(int value) {
+	glutPostRedisplay();
+	glutTimerFunc(value, timer, 16);
+}
+
+void funcgroup() {
+	glutDisplayFunc(display);
+	glutReshapeFunc(reshape);
+	glutMouseFunc(mouse);
+	glutMotionFunc(motion);
+	glutKeyboardFunc(keyboard);
+	glutSpecialFunc(specialkeyboard);
+	glutMotionFunc(motion);
+	glutMouseWheelFunc(MouseWheel);
+	glutTimerFunc(16, timer, 0);
 }
 
 void init() {
@@ -178,21 +220,9 @@ void init() {
 	glEnable(GL_CULL_FACE);
 }
 
-void timer(int value) {
-	glutPostRedisplay();
-	glutTimerFunc(value, timer, 16);
-}
-
-void funcgroup() {
-	glutDisplayFunc(display);
-	glutReshapeFunc(reshape);
-	glutMouseFunc(mouse);
-	glutMotionFunc(motion);
-	glutKeyboardFunc(keyboard);
-	glutSpecialFunc(specialkeyboard);
-	glutMotionFunc(motion);
-	glutMouseWheelFunc(MouseWheel);
-	glutTimerFunc(16, timer, 0);
+void tetris_init() {
+	board.init();
+	tetrimino.create();
 }
 
 int main(int argc, char* argv[]) {
@@ -202,6 +232,7 @@ int main(int argc, char* argv[]) {
 	glutCreateWindow("TETRIS");
 	funcgroup();
 	init();
+	tetris_init();
 	glutMainLoop();
 
 	return 0;
