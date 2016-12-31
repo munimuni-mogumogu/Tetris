@@ -5,6 +5,9 @@
 
 Tetrimino::Tetrimino() {
 	srand((unsigned int)time(NULL));
+	for (int i = 0; MINO_HEIGHT; i++)
+		for (int j = 0; MINO_WIDTH; j++)
+			mino[i][j] = false;
 }
 
 TmpPoint Tetrimino::getXY() {
@@ -47,7 +50,7 @@ void Tetrimino::create() {
 	for (int i = 0; i < MINO_HEIGHT; i++) {
 		for (int j = 0; j < MINO_WIDTH; j++) {
 			if (i == 1 && j == 1) continue;
-			mino[i][j] = (rand() % 2 == 1) ? true : false;
+			mino[i][j] = (rand() % 4 == 1) ? true : false;
 		}
 	}
 	/* create デバッグ用 */
