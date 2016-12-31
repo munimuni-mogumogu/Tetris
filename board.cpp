@@ -82,7 +82,8 @@ bool Board::translateCheck(Tetrimino tm, int vv, int hv) {
 bool Board::landCheck(Tetrimino tm) {
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
-			if (board[tm.getX() + i][tm.getY() + j + 1]) return true;
+			if (tm.getMino().mino[i][j])
+				if (board[tm.getX() + i][tm.getY() + j + 2]) return true;
 		}
 	}
 	return false;
