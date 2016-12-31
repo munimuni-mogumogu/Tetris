@@ -11,6 +11,7 @@ private:
 public:
 	draw_str();
 	draw_str(char[]);
+	draw_str(int);
 	draw_str(char[], int Red, int Blue, int Green);
 	void draw_block();
 };

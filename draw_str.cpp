@@ -3,7 +3,7 @@
 
 
 draw_str::draw_str() {
-	str = "test";
+	str = "null";
 	color[0] = 0;
 	color[1] = 0;
 	color[2] = 0;
@@ -16,6 +16,8 @@ draw_str::draw_str(char figure[]) {
 	color[2] = 0;
 }
 
+draw_str::draw_str(int number) {
+}
 
 draw_str::draw_str(char figure[], int Red, int Blue, int Green) {
 	str = figure;
@@ -250,6 +252,76 @@ void draw_str::draw_block() {
 			block[2][0] = 0; block[2][1] = 0; block[2][2] = 1; block[2][3] = 0; block[2][4] = 0;
 			block[1][0] = 0; block[1][1] = 1; block[1][2] = 0; block[1][3] = 0; block[1][4] = 0;
 			block[0][0] = 1; block[0][1] = 1; block[0][2] = 1; block[0][3] = 1; block[0][4] = 1;
+			break;
+		case '0':
+			block[4][0] = 0; block[4][1] = 1; block[4][2] = 1; block[4][3] = 1; block[4][4] = 0;
+			block[3][0] = 1; block[3][1] = 0; block[3][2] = 0; block[3][3] = 1; block[3][4] = 1;
+			block[2][0] = 1; block[2][1] = 0; block[2][2] = 1; block[2][3] = 0; block[2][4] = 1;
+			block[1][0] = 1; block[1][1] = 1; block[1][2] = 0; block[1][3] = 0; block[1][4] = 1;
+			block[0][0] = 0; block[0][1] = 1; block[0][2] = 1; block[0][3] = 1; block[0][4] = 0;
+			break;
+		case '1':
+			block[4][0] = 0; block[4][1] = 0; block[4][2] = 1; block[4][3] = 0; block[4][4] = 0;
+			block[3][0] = 0; block[3][1] = 1; block[3][2] = 1; block[3][3] = 0; block[3][4] = 0;
+			block[2][0] = 0; block[2][1] = 0; block[2][2] = 1; block[2][3] = 0; block[2][4] = 0;
+			block[1][0] = 0; block[1][1] = 0; block[1][2] = 1; block[1][3] = 0; block[1][4] = 0;
+			block[0][0] = 0; block[0][1] = 0; block[0][2] = 1; block[0][3] = 0; block[0][4] = 0;
+			break;
+		case '2':
+			block[4][0] = 0; block[4][1] = 1; block[4][2] = 1; block[4][3] = 1; block[4][4] = 0;
+			block[3][0] = 1; block[3][1] = 0; block[3][2] = 0; block[3][3] = 0; block[3][4] = 1;
+			block[2][0] = 0; block[2][1] = 0; block[2][2] = 1; block[2][3] = 1; block[2][4] = 0;
+			block[1][0] = 0; block[1][1] = 1; block[1][2] = 0; block[1][3] = 0; block[1][4] = 0;
+			block[0][0] = 1; block[0][1] = 1; block[0][2] = 1; block[0][3] = 1; block[0][4] = 1;
+			break;
+		case '3':
+			block[4][0] = 0; block[4][1] = 1; block[4][2] = 1; block[4][3] = 1; block[4][4] = 0;
+			block[3][0] = 0; block[3][1] = 0; block[3][2] = 0; block[3][3] = 0; block[3][4] = 1;
+			block[2][0] = 0; block[2][1] = 1; block[2][2] = 1; block[2][3] = 1; block[2][4] = 0;
+			block[1][0] = 0; block[1][1] = 0; block[1][2] = 0; block[1][3] = 0; block[1][4] = 1;
+			block[0][0] = 0; block[0][1] = 1; block[0][2] = 1; block[0][3] = 1; block[0][4] = 0;
+			break;
+		case '4':
+			block[4][0] = 0; block[4][1] = 0; block[4][2] = 0; block[4][3] = 1; block[4][4] = 0;
+			block[3][0] = 0; block[3][1] = 0; block[3][2] = 1; block[3][3] = 1; block[3][4] = 0;
+			block[2][0] = 0; block[2][1] = 1; block[2][2] = 0; block[2][3] = 1; block[2][4] = 0;
+			block[1][0] = 1; block[1][1] = 1; block[1][2] = 1; block[1][3] = 1; block[1][4] = 1;
+			block[0][0] = 0; block[0][1] = 0; block[0][2] = 0; block[0][3] = 1; block[0][4] = 0;
+			break;
+		case '5':
+			block[4][0] = 0; block[4][1] = 1; block[4][2] = 1; block[4][3] = 1; block[4][4] = 1;
+			block[3][0] = 0; block[3][1] = 1; block[3][2] = 0; block[3][3] = 0; block[3][4] = 0;
+			block[2][0] = 0; block[2][1] = 1; block[2][2] = 1; block[2][3] = 1; block[2][4] = 0;
+			block[1][0] = 0; block[1][1] = 0; block[1][2] = 0; block[1][3] = 0; block[1][4] = 1;
+			block[0][0] = 0; block[0][1] = 1; block[0][2] = 1; block[0][3] = 1; block[0][4] = 0;
+			break;
+		case '6':
+			block[4][0] = 0; block[4][1] = 1; block[4][2] = 1; block[4][3] = 1; block[4][4] = 0;
+			block[3][0] = 1; block[3][1] = 0; block[3][2] = 0; block[3][3] = 0; block[3][4] = 0;
+			block[2][0] = 1; block[2][1] = 1; block[2][2] = 1; block[2][3] = 1; block[2][4] = 0;
+			block[1][0] = 1; block[1][1] = 0; block[1][2] = 0; block[1][3] = 0; block[1][4] = 1;
+			block[0][0] = 0; block[0][1] = 1; block[0][2] = 1; block[0][3] = 1; block[0][4] = 0;
+			break;
+		case '7':
+			block[4][0] = 1; block[4][1] = 1; block[4][2] = 1; block[4][3] = 1; block[4][4] = 0;
+			block[3][0] = 0; block[3][1] = 0; block[3][2] = 0; block[3][3] = 1; block[3][4] = 0;
+			block[2][0] = 0; block[2][1] = 0; block[2][2] = 1; block[2][3] = 0; block[2][4] = 0;
+			block[1][0] = 0; block[1][1] = 0; block[1][2] = 1; block[1][3] = 0; block[1][4] = 0;
+			block[0][0] = 0; block[0][1] = 0; block[0][2] = 1; block[0][3] = 0; block[0][4] = 0;
+			break;
+		case '8':
+			block[4][0] = 0; block[4][1] = 1; block[4][2] = 1; block[4][3] = 1; block[4][4] = 0;
+			block[3][0] = 1; block[3][1] = 0; block[3][2] = 0; block[3][3] = 0; block[3][4] = 1;
+			block[2][0] = 0; block[2][1] = 1; block[2][2] = 1; block[2][3] = 1; block[2][4] = 0;
+			block[1][0] = 1; block[1][1] = 0; block[1][2] = 0; block[1][3] = 0; block[1][4] = 1;
+			block[0][0] = 0; block[0][1] = 1; block[0][2] = 1; block[0][3] = 1; block[0][4] = 0;
+			break;
+		case '9':
+			block[4][0] = 0; block[4][1] = 1; block[4][2] = 1; block[4][3] = 1; block[4][4] = 0;
+			block[3][0] = 1; block[3][1] = 0; block[3][2] = 0; block[3][3] = 0; block[3][4] = 1;
+			block[2][0] = 0; block[2][1] = 1; block[2][2] = 1; block[2][3] = 1; block[2][4] = 1;
+			block[1][0] = 0; block[1][1] = 0; block[1][2] = 0; block[1][3] = 0; block[1][4] = 1;
+			block[0][0] = 0; block[0][1] = 1; block[0][2] = 1; block[0][3] = 1; block[0][4] = 0;
 			break;
 		default:
 			block[4][0] = 0; block[4][1] = 0; block[4][2] = 0; block[4][3] = 0; block[4][4] = 0;

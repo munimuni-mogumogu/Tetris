@@ -1,8 +1,8 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#define TETRIS_WIDTH 12
-#define TETRIS_HEIGHT 22
+#define BOARD_WIDTH 12
+#define BOARD_HEIGHT 22
 
 #define MINO_WIDTH 3
 #define MINO_HEIGHT 3

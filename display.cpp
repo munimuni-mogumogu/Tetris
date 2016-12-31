@@ -4,6 +4,7 @@
 #include <GL/freeglut.h>
 #include "display.h"
 #include "draw_str.h"
+#include "tetris.h"
 
 int angle = 80;			//視野角
 GLfloat angle_of_top = 1.0;
@@ -14,7 +15,10 @@ double azimuth = 0.0;
 double elevation = 0.0;
 Point2 mousepoint = {0, 0};					//マウスの位置
 Point3 viewpoint = {0, 0, view_distance};	//視点
-Point3 center = {(TETRIS_WIDTH + MENU_SIZE) / 2 * BLOCK_SIZE, TETRIS_HEIGHT / 2 * BLOCK_SIZE, 0};	//全体の中心
+Point3 center = {(BOARD_WIDTH + MENU_SIZE) / 2 * BLOCK_SIZE, BOARD_HEIGHT / 2 * BLOCK_SIZE, 0};	//全体の中心
+
+Tetrimino tetrimino;
+Board board;
 
 void cube(GLdouble Red, GLdouble Green, GLdouble Blue) {
 	glPushMatrix();
@@ -34,9 +38,9 @@ void Create_Block(bool block[MINO_WIDTH][MINO_HEIGHT]) {
 	}
 }
 
-void Create_Board(bool block[TETRIS_WIDTH][TETRIS_HEIGHT]) {
-	for(int i = 0; i < TETRIS_WIDTH; i++) {
-		for(int j = 0; j < TETRIS_HEIGHT; j++){
+void Create_Board(bool block[BOARD_WIDTH][BOARD_HEIGHT]) {
+	for(int i = 0; i < BOARD_WIDTH; i++) {
+		for(int j = 0; j < BOARD_HEIGHT; j++){
 			glPushMatrix();
 			glTranslated(i * BLOCK_SIZE, j * BLOCK_SIZE, 0.0);
 			if(block[i][j]) cube(0.0, 0.0, 0.0);
@@ -45,28 +49,52 @@ void Create_Board(bool block[TETRIS_WIDTH][TETRIS_HEIGHT]) {
 	}
 }
 
-void display() {
+void Get_Mino(bool ret_block[MINO_WIDTH][MINO_HEIGHT], bool* block) {
+	for (int i = 0; i < MINO_WIDTH; i++) {
+		for (int j = 0; j < MINO_HEIGHT; j++) {
+			ret_block[i][j] = block[i * BOARD_HEIGHT + j];
+		}
+	}
+}
 
+void Get_Board(bool ret_board[BOARD_WIDTH][BOARD_HEIGHT], bool* board) {
+	for (int i = 0; i < BOARD_WIDTH; i++) {
+		for (int j = 0; j < BOARD_HEIGHT; j++) {
+			ret_board[i][j] = board[i * BOARD_HEIGHT + j];
+		}
+	}
+}
+
+void draw_information(int score, int line) {
+	glPushMatrix();
+	draw_str score_name("score");
+	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, (BOARD_HEIGHT - 2) * BLOCK_SIZE, 0);
+	glScaled(2, 2, 0);
+	score_name.draw_block();
+	glPopMatrix();
+	
+	glPushMatrix();
+	char char_score = static_cast<char>(score);
+	draw_str draw_score(char_score);
+	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, (BOARD_HEIGHT - 4) * BLOCK_SIZE, 0);
+	//draw_score.draw_block();
+	glPopMatrix();
+}
+
+void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	gluLookAt(viewpoint.x + center.x, viewpoint.y + center.y, viewpoint.z + center.z,
 			center.x, center.y, center.z,
 			0.0, angle_of_top, 0.0);
 	glPushMatrix();
-	//描画！！
-	bool check[12][22];
-	for(int i = 0; i < 12; i++) {
-		for(int j = 0; j < 22; j++) {
-			if(i == 0 || j == 0 || i == 11 || j == 21) check[i][j] = true;
-			else check[i][j] = false;
-		}
-	}
-	Create_Board(check);
+	
+	bool draw_board[BOARD_WIDTH][BOARD_HEIGHT];
+	board.init();
+	Get_Board(draw_board, board.getBoard());
+	Create_Board(draw_board);
 
-	draw_str a("menu");
-	glTranslated(12 * BLOCK_SIZE, 0, 0);
-	glScaled(2, 2, 0);
-	a.draw_block();
+	draw_information(10, 10);
 
 	glPopMatrix();
 	glutSwapBuffers();
@@ -130,7 +158,7 @@ void MouseWheel(int wheel_number, int direction, int x, int y)
 	glutPostRedisplay();
 }
 
-void initgl() {
+void init() {
 	// 背景色
 	glClearColor(1.0, 1.0, 1.0, 0.0);
 	// デプスバッファ有効
@@ -148,7 +176,6 @@ void initgl() {
 	*/
 
 	glEnable(GL_CULL_FACE);
-	
 }
 
 void timer(int value) {
@@ -174,7 +201,7 @@ int main(int argc, char* argv[]) {
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 	glutCreateWindow("TETRIS");
 	funcgroup();
-	initgl();
+	init();
 	glutMainLoop();
 
 	return 0;
