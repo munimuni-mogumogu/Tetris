@@ -114,8 +114,6 @@ void draw_information(int score, int line) {
 void Next_Mino_set() {
 	tetrimino.setMino(nextmino.getMino());
 	nextmino.create();
-	mino_pos.x = BOARD_WIDTH / 2;
-	mino_pos.y = BOARD_HEIGHT - 2;
 	tetrimino.setPoint(mino_pos);
 }
 
@@ -205,7 +203,7 @@ void motion(int x, int y) {
 		viewpoint.x = -view_distance * cos(elevation) * sin(azimuth);
 		viewpoint.y = view_distance * sin(elevation);
 		viewpoint.z = view_distance * cos(elevation) * cos(azimuth);
-		std::cout << viewpoint.x << ", " << viewpoint.y << ", " << viewpoint.z << std::endl;
+		//std::cout << viewpoint.x << ", " << viewpoint.y << ", " << viewpoint.z << std::endl;
 		mousepoint.x = x;
 		mousepoint.y = y;
 	} else {
@@ -263,6 +261,9 @@ void init() {
 void tetris_init() {
 	board.init();
 	tetrimino.create();
+	mino_pos.x = BOARD_WIDTH / 2;
+	mino_pos.y = BOARD_HEIGHT - 2;
+	tetrimino.setPoint(mino_pos);
 	nextmino.create();
 }
 
