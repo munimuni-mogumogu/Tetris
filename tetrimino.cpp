@@ -50,7 +50,13 @@ void Tetrimino::create() {
 			mino[i][j] = (rand() % 2 == 1) ? true : false;
 		}
 	}
-
+	for (int i = 0; i < MINO_SIZE; i++) {
+		for (int j = 0; j < MINO_SIZE; j++) {
+			std::cout << mino[i][j];
+		}
+		std::cout << std::endl;
+	}
+	std::cout << std::endl;
 }
 
 /* ƒeƒgƒŠƒ~ƒm‚ğ‰ñ“]‚³‚¹‚é */
@@ -119,7 +125,7 @@ void Tetrimino::rotate(bool vec) {
 /* horVec = -1 : ¶, 1 : ‰E */
 /* verVec = -1 : ã, 1 : ‰º */ 
 bool Tetrimino::translate(int horVec, int verVec, Board* b) {
-	if (verVec == 1) {
+	if (verVec == -1) {
 		if (b->landCheck(*this)) {
 			b->set(*this);
 			return true;

@@ -1,6 +1,8 @@
 #ifndef TETRIS_H
 #define TETRIS_H
 
+#include <iostream>
+
 #define BOARD_WIDTH		12
 #define BOARD_HEIGHT	22
 
