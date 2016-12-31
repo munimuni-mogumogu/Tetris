@@ -13,6 +13,7 @@ public:
 	draw_str(char[]);
 	draw_str(int);
 	draw_str(char[], int Red, int Blue, int Green);
+	draw_str(int, int Red, int Blue, int Green);
 	void draw_block();
 };
 

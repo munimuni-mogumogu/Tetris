@@ -17,10 +17,43 @@ draw_str::draw_str(char figure[]) {
 }
 
 draw_str::draw_str(int number) {
+	int pos_check = 10;
+	int pos = 1;
+	while(number >= pos_check) {
+		pos_check *= 10;
+		pos++;
+	}
+	str = new char[pos + 1];
+	for(int i = pos - 1; i >= 0; i--) {
+		str[i] = (char)(number % 10) + '0';
+		number /= 10;
+	}
+	str[pos] = '\0';
+	color[0] = 0;
+	color[1] = 0;
+	color[2] = 0;
 }
 
 draw_str::draw_str(char figure[], int Red, int Blue, int Green) {
 	str = figure;
+	color[0] = Red;
+	color[1] = Blue;
+	color[2] = Green;
+}
+
+draw_str::draw_str(int number, int Red, int Blue, int Green) {
+	int pos_check = 10;
+	int pos = 1;
+	while(number >= pos_check) {
+		pos_check *= 10;
+		pos++;
+	}
+	str = new char[pos + 1];
+	for(int i = pos - 1; i >= 0; i--) {
+		str[i] = (char)(number % 10) + '0';
+		number /= 10;
+	}
+	str[pos] = '\0';
 	color[0] = Red;
 	color[1] = Blue;
 	color[2] = Green;
