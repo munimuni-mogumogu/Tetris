@@ -15,7 +15,7 @@ void Board::init() {
 		}
 	}
 	/* デバッグ ボードの縦横確認 */
-	for (int j = 0; j < BOARD_WIDTH; j++) board[15][j] = true;
+	// for (int j = 0; j < BOARD_WIDTH; j++) board[15][j] = true;
 	// for (int i = 0; i < BOARD_HEIGHT; i++) board[i][2] = true;
 	
 }
@@ -59,9 +59,12 @@ bool Board::lineCheck(int line) {
 void Board::lineErase(int line) {
 	for (int j = 1; j < BOARD_WIDTH - 1; j++)
 		board[line][j] = false;
-	for (int line_num = line; line_num < BOARD_HEIGHT; line_num++)
-		for (int j = 1; j < BOARD_WIDTH - 1; j++)
-			board[line][j] = board[line + 1][j];
+	for (int line_num = line; line_num < BOARD_HEIGHT - 1; line_num++) {
+		for (int j = 1; j < BOARD_WIDTH - 1; j++) {
+			board[line_num][j] = board[line_num + 1][j];
+			board[line_num + 1][j] = false;
+		}
+	}
 }
 
 bool Board::gameOverCheck() {
