@@ -8,7 +8,10 @@ Board::Board() {
 void Board::init() {
 	for (int i = 0; i < BOARD_WIDTH; i++) {
 		for (int j = 0; j < BOARD_HEIGHT; j++) {
-			board[i][j] = false;
+			if (i == 0 || i == BOARD_WIDTH - 1 || j == 0 || j == BOARD_HEIGHT - 1)
+				board[i][j] = true;
+			else
+				board[i][j] = false;
 		}
 	}
 }
@@ -17,7 +20,7 @@ bool* Board::getBoard() {
 	bool temp[BOARD_WIDTH * BOARD_HEIGHT];
 	for (int i = 0; i < BOARD_WIDTH; i++) {
 		for (int j = 0; j < BOARD_HEIGHT; j++) {
-			temp[i * BOARD_HEIGHT + 3] = board[i][j];
+			temp[i * BOARD_HEIGHT + j] = board[i][j];
 		}
 	}
 	return temp;
