@@ -10,7 +10,7 @@
 int angle = 80;			//Ž‹–ìŠp
 GLfloat angle_of_top = 1.0;
 
-int view_distance = 300;
+int view_distance = 200;
 
 double azimuth = 0.0;
 double elevation = 0.0;
