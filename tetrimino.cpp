@@ -39,8 +39,8 @@ void Tetrimino::setPoint(TmpPoint tmp) {
 /* テトリミノは最大 3 * 3 の大きさで中央だけは固定 */
 /* 他はランダムで生成される */
 void Tetrimino::create() {
-	x = 5;		/* 初期位置 */
-	y = 5;		/* 初期位置 */
+	x = BOARD_WIDTH + 2;		/* (NEXT)初期位置 */
+	y = 0;						/* (NEXT)初期位置 */
 	
 	mino[1][1] = true;
 
