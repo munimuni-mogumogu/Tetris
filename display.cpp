@@ -84,6 +84,10 @@ void draw_information(int score, int line) {
 	glPopMatrix();
 }
 
+void Next_Mino_set() {
+
+}
+
 void Tetris_Main() {
 	if(clock() - start > 1000) {
 		start = clock();
@@ -105,6 +109,7 @@ void display() {
 	glPushMatrix();
 	glTranslated(tetrimino.getX() * BLOCK_SIZE, tetrimino.getY() * BLOCK_SIZE, 0);
 	Create_Block(tetrimino.getMino().mino);
+	Create_Block(nextmino.getMino().mino);
 	glPopMatrix();
 
 	glPopMatrix();
@@ -148,7 +153,11 @@ void keyboard(unsigned char k, int x, int y) {
 
 void specialkeyboard(int k, int x, int y) {
 	switch(k) {
-	case GLUT_KEY_UP:
+	case GLUT_KEY_RIGHT:
+		tetrimino.translate(1, 0, &board);
+		break;
+	case GLUT_KEY_LEFT:
+		tetrimino.translate(-1, 0, &board);
 		break;
 	default:
 		break;
@@ -223,6 +232,7 @@ void init() {
 void tetris_init() {
 	board.init();
 	tetrimino.create();
+	nextmino.create();
 }
 
 int main(int argc, char* argv[]) {
