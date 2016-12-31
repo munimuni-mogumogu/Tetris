@@ -5,8 +5,8 @@
 
 Tetrimino::Tetrimino() {
 	srand((unsigned int)time(NULL));
-	for (int i = 0; MINO_HEIGHT; i++)
-		for (int j = 0; MINO_WIDTH; j++)
+	for (int i = 0; i < MINO_HEIGHT; i++)
+		for (int j = 0; j < MINO_WIDTH; j++)
 			mino[i][j] = false;
 }
 
@@ -64,7 +64,17 @@ void Tetrimino::create() {
 	std::cout << std::endl;
 	*/
 }
+/*
+void Tetrimino::rotate(bool vec) {
+	int horVec;
+	int verVec;
+	bool temp = mino[0][0];
 
+	if () {
+
+	}
+}
+*/
 /* ƒeƒgƒŠƒ~ƒm‚ð‰ñ“]‚³‚¹‚é */
 /* ˆø” : bool ‰ñ“]•ûŒü*/
 /* vec == 1 : ‰E‰ñ“] */
@@ -74,54 +84,57 @@ void Tetrimino::rotate(bool vec) {
 	int verVec;	/* cƒxƒNƒgƒ‹ -1 : ã, 1 : ‰º */
 	bool temp = mino[0][0];
 	bool temp2;
-	if (!vec) {
-		verVec = 0;
-		horVec = 1;
-		for (int i = 0, x = 0, y = 0; i < 8; i++) {
-			switch (i) {
-			case 2 :
-				verVec = 1;
-				horVec = 0;
-				break;
-			case 4 :
-				verVec = 0;
-				horVec = -1;
-				break;
-			case 6:
-				verVec = -1;
-				horVec = 0;
-				break;
+	for (int i = 0; i < 2; i++) {
+		temp = mino[0][0];
+		if (!vec) {
+			verVec = 0;
+			horVec = 1;
+			for (int i = 0, x = 0, y = 0; i < 8; i++) {
+				switch (i) {
+				case 2:
+					verVec = 1;
+					horVec = 0;
+					break;
+				case 4:
+					verVec = 0;
+					horVec = -1;
+					break;
+				case 6:
+					verVec = -1;
+					horVec = 0;
+					break;
+				}
+				x += horVec;
+				y += verVec;
+				temp2 = temp;
+				temp = mino[y][x];
+				mino[y][x] = temp2;
 			}
-			x += horVec;
-			y += verVec;
-			temp2 = temp;
-			temp = mino[y][x];
-			mino[y][x] = temp2;
 		}
-	}
-	else {
-		verVec = 1;
-		horVec = 0;
-		for (int i = 0, x = 0, y = 0; i < 8; i++) {
-			switch (i) {
-			case 2:
-				verVec = 0;
-				horVec = 1;
-				break;
-			case 4:
-				verVec = -1;
-				horVec = 0;
-				break;
-			case 6:
-				verVec = 0;
-				horVec = -1;
-				break;
+		else {
+			verVec = 1;
+			horVec = 0;
+			for (int i = 0, x = 0, y = 0; i < 8; i++) {
+				switch (i) {
+				case 2:
+					verVec = 0;
+					horVec = 1;
+					break;
+				case 4:
+					verVec = -1;
+					horVec = 0;
+					break;
+				case 6:
+					verVec = 0;
+					horVec = -1;
+					break;
+				}
+				x += horVec;
+				y += verVec;
+				temp2 = temp;
+				temp = mino[y][x];
+				mino[y][x] = temp2;
 			}
-			x += horVec;
-			y += verVec;
-			temp2 = temp;
-			temp = mino[y][x];
-			mino[y][x] = temp2;
 		}
 	}
 }
