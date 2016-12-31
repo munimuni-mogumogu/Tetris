@@ -63,7 +63,10 @@ void Create_Board(bool block[BOARD_HEIGHT][BOARD_WIDTH]) {
 		for(int j = 0; j < BOARD_WIDTH; j++){
 			glPushMatrix();
 			glTranslated(j * BLOCK_SIZE, i * BLOCK_SIZE, 0.0);
-			if(block[i][j]) cube(0.0, 0.0, 0.0);
+			if(block[i][j]) {
+				glColor4d(0, 0, 0, 0.4);
+				glutSolidCube(BLOCK_SIZE);
+			}
 			glPopMatrix();
 		}
 	}
@@ -90,7 +93,7 @@ void draw_information(int score, int line) {
 	glScaled(2, 2, 0);
 	line_str.draw_block();
 	glPopMatrix();
-	
+
 	glPushMatrix();
 	draw_str draw_line(line);
 	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, (BOARD_HEIGHT - 8) * BLOCK_SIZE, 0);
@@ -104,7 +107,7 @@ void draw_information(int score, int line) {
 	glScaled(2, 2, 0);
 	next_str.draw_block();
 	glPopMatrix();
-	
+
 	glPushMatrix();
 	glTranslated(nextmino.getX() * BLOCK_SIZE, nextmino.getY() * BLOCK_SIZE, 0);
 	Create_Block(nextmino.getMino().mino);
@@ -256,6 +259,8 @@ void init() {
 	*/
 
 	glEnable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void tetris_init() {
