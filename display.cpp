@@ -46,22 +46,22 @@ void cube(GLdouble Red, GLdouble Green, GLdouble Blue) {
 	glPopMatrix();
 }
 
-void Create_Block(bool block[MINO_WIDTH][MINO_HEIGHT]) {
+void Create_Block(bool block[MINO_HEIGHT][MINO_WIDTH]) {
 	for(int i = 0; i < MINO_HEIGHT; i++) {
 		for(int j = 0; j < MINO_WIDTH; j++){
 			glPushMatrix();
-			glTranslated(j * BLOCK_SIZE, (MINO_HEIGHT - i) * BLOCK_SIZE, 0.0);
+			glTranslated(j * BLOCK_SIZE, i * BLOCK_SIZE, 0.0);
 			if(block[i][j]) cube(1.0, 0.0, 0.0);
 			glPopMatrix();
 		}
 	}
 }
 
-void Create_Board(bool block[BOARD_WIDTH][BOARD_HEIGHT]) {
+void Create_Board(bool block[BOARD_HEIGHT][BOARD_WIDTH]) {
 	for(int i = 0; i < BOARD_HEIGHT; i++) {
 		for(int j = 0; j < BOARD_WIDTH; j++){
 			glPushMatrix();
-			glTranslated(j * BLOCK_SIZE, (BOARD_HEIGHT - i) * BLOCK_SIZE, 0.0);
+			glTranslated(j * BLOCK_SIZE, i * BLOCK_SIZE, 0.0);
 			if(block[i][j]) cube(0.0, 0.0, 0.0);
 			glPopMatrix();
 		}
@@ -70,17 +70,43 @@ void Create_Board(bool block[BOARD_WIDTH][BOARD_HEIGHT]) {
 
 void draw_information(int score, int line) {
 	glPushMatrix();
-	draw_str score_name("score");
+	draw_str score_str("score");
 	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, (BOARD_HEIGHT - 2) * BLOCK_SIZE, 0);
 	glScaled(2, 2, 0);
-	score_name.draw_block();
+	score_str.draw_block();
 	glPopMatrix();
 
 	glPushMatrix();
-	char char_score = static_cast<char>(score);
-	draw_str draw_score(char_score);
+	draw_str draw_score(score);
 	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, (BOARD_HEIGHT - 4) * BLOCK_SIZE, 0);
-	//draw_score.draw_block();
+	glScaled(2, 2, 0);
+	draw_score.draw_block();
+	glPopMatrix();
+
+	glPushMatrix();
+	draw_str line_str("line");
+	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, (BOARD_HEIGHT - 6) * BLOCK_SIZE, 0);
+	glScaled(2, 2, 0);
+	line_str.draw_block();
+	glPopMatrix();
+	
+	glPushMatrix();
+	draw_str draw_line(line);
+	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, (BOARD_HEIGHT - 8) * BLOCK_SIZE, 0);
+	glScaled(2, 2, 0);
+	draw_line.draw_block();
+	glPopMatrix();
+
+	glPushMatrix();
+	draw_str next_str("next");
+	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, 4 * BLOCK_SIZE, 0);
+	glScaled(2, 2, 0);
+	next_str.draw_block();
+	glPopMatrix();
+	
+	glPushMatrix();
+	glTranslated(nextmino.getX() * BLOCK_SIZE, nextmino.getY() * BLOCK_SIZE, 0);
+	Create_Block(nextmino.getMino().mino);
 	glPopMatrix();
 }
 
@@ -105,13 +131,12 @@ void display() {
 
 	Tetris_Main();
 	Create_Board(board.getBoard().board);
-	draw_information(10, 10);
+	draw_information(6250, 10);
+
 	glPushMatrix();
 	glTranslated(tetrimino.getX() * BLOCK_SIZE, tetrimino.getY() * BLOCK_SIZE, 0);
 	Create_Block(tetrimino.getMino().mino);
 	glPopMatrix();
-	glTranslated(nextmino.getX() * BLOCK_SIZE, nextmino.getY() * BLOCK_SIZE, 0);
-	Create_Block(nextmino.getMino().mino);
 
 	glPopMatrix();
 	glutSwapBuffers();
@@ -234,7 +259,7 @@ void tetris_init() {
 	board.init();
 	tetrimino.create();
 	TmpPoint a;
-	a.x = BOARD_WIDTH + 1;
+	a.x = BOARD_WIDTH + 2;
 	a.y = 0;
 	nextmino.create();
 	nextmino.setPoint(a);
