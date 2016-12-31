@@ -7,12 +7,12 @@ Tetrimino::Tetrimino() {
 	srand((unsigned int)time(NULL));
 }
 
-bool* Tetrimino::getMino() {
-	bool temp[9];
-	for (int i = 0; i < 9; i++) {
-		temp[i] = mino[i / 3][i % 3];
-	}
-	return temp;
+TmpMino Tetrimino::getMino() {
+	TmpMino tmp;
+	for (int i = 0; i < MINO_SIZE; i++)
+		for (int j = 0; j < MINO_SIZE; j++)
+			tmp.mino[i][j] = mino[i][j];
+	return tmp;
 }
 
 /* ƒeƒgƒŠƒ~ƒm¶¬ */
