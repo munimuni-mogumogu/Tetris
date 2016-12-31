@@ -6,9 +6,9 @@ Board::Board() {
 
 /* 盤面の初期化 */
 void Board::init() {
-	for (int i = 0; i < BOARD_WIDTH; i++) {
-		for (int j = 0; j < BOARD_HEIGHT; j++) {
-			if (i == 0 || i == BOARD_WIDTH - 1 || j == 0 || j == BOARD_HEIGHT - 1)
+	for (int i = 0; i < BOARD_HEIGHT; i++) {
+		for (int j = 0; j < BOARD_WIDTH; j++) {
+			if (i == 0 || i == BOARD_HEIGHT - 1 || j == 0 || j == BOARD_WIDTH - 1)
 				board[i][j] = true;
 			else
 				board[i][j] = false;
@@ -19,8 +19,8 @@ void Board::init() {
 /* 盤面取得 */
 TmpBoard Board::getBoard() {
 	TmpBoard tmp;
-	for (int i = 0; i < BOARD_WIDTH; i++)
-		for (int j = 0; j < BOARD_HEIGHT; j++)
+	for (int i = 0; i < BOARD_HEIGHT; i++)
+		for (int j = 0; j < BOARD_WIDTH; j++)
 			tmp.board[i][j] = board[i][j];
 	return tmp;
 }
@@ -28,16 +28,14 @@ TmpBoard Board::getBoard() {
 /* 盤面にミノをセット */
 void Board::set(Tetrimino tm) {
 	TmpMino tmp = tm.getMino();
-	for (int i = 0; i < MINO_SIZE; i++) {
-		for (int j = 0; j < MINO_SIZE; j++) {
+	for (int i = 0; i < MINO_HEIGHT; i++)
+		for (int j = 0; j < MINO_WIDTH; j++)
 			board[tm.getX() + i][tm.getY() + j] = tmp.mino[i][j];
-		}
-	}
 }
 
 /* 横列消しとゲームオーバーチェック */
 bool Board::boardCheck() {
-	for (int i = 0; i < BOARD_HEIGHT; i++)
+	for (int i = 1; i < BOARD_HEIGHT - 1; i++)
 		if (lineCheck(i)) lineErase(i);
 	return (gameOverCheck()) ? true : false;
 }
@@ -79,17 +77,21 @@ bool Board::translateCheck(Tetrimino tm, int vv, int hv) {
 }
 
 bool Board::landCheck(Tetrimino tm) {
+	/*
 	for (int i = 0; i < MINO_SIZE; i++) {
 		for (int j = 0; j < MINO_SIZE; j++) {
 			std::cout << tm.getMino().mino[i][j];
 		}
 		std::cout << std::endl;
 	}
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
+	*/
+	for (int i = 0; i < MINO_HEIGHT; i++) {
+		for (int j = 0; j < MINO_WIDTH; j++) {
 			if (!tm.getMino().mino[i][j]) continue;
-			if (board[tm.getX() + i][tm.getY() - j - 1]) 
+			if (board[tm.getX() + i][tm.getY() - j - 1]) {
+				std::cout << tm.getY() - j - 1 << std::endl << std::endl;
 				return true;
+			}
 		}
 	}
 	return false;

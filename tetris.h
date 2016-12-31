@@ -6,17 +6,18 @@
 #define BOARD_WIDTH		12
 #define BOARD_HEIGHT	22
 
-#define MINO_SIZE		3
+#define MINO_WIDTH		3
+#define MINO_HEIGHT		3
 
 class Tetrimino;
 class Board;
 
 struct TmpBoard {
-	bool board[BOARD_WIDTH][BOARD_HEIGHT];
+	bool board[BOARD_HEIGHT][BOARD_WIDTH];
 };
 
 struct TmpMino {
-	bool mino[MINO_SIZE][MINO_SIZE];
+	bool mino[MINO_HEIGHT][MINO_WIDTH];
 };
 
 struct TmpPoint {
@@ -26,7 +27,7 @@ struct TmpPoint {
 
 class Tetrimino {
 private:
-	bool mino[MINO_SIZE][MINO_SIZE];
+	bool mino[MINO_HEIGHT][MINO_WIDTH];
 	int x;
 	int y;
 public:
@@ -44,7 +45,7 @@ public:
 
 class Board {
 private:
-	bool board[BOARD_WIDTH][BOARD_HEIGHT];
+	bool board[BOARD_HEIGHT][BOARD_WIDTH];
 public:
 	Board();
 	void init();

@@ -18,15 +18,15 @@ TmpPoint Tetrimino::getXY() {
 /* 戻り値はtmp構造体 */
 TmpMino Tetrimino::getMino() {
 	TmpMino tmp;
-	for (int i = 0; i < MINO_SIZE; i++)
-		for (int j = 0; j < MINO_SIZE; j++)
+	for (int i = 0; i < MINO_HEIGHT; i++)
+		for (int j = 0; j < MINO_WIDTH; j++)
 			tmp.mino[i][j] = mino[i][j];
 	return tmp;
 }
 
 void Tetrimino::setMino(TmpMino tmp) {
-	for (int i = 0; i < MINO_SIZE; i++)
-		for (int j = 0; j < MINO_SIZE; j++)
+	for (int i = 0; i < MINO_HEIGHT; i++)
+		for (int j = 0; j < MINO_WIDTH; j++)
 			mino[i][j] = tmp.mino[i][j];
 }
 
@@ -44,12 +44,13 @@ void Tetrimino::create() {
 	
 	mino[1][1] = true;
 
-	for (int i = 0; i < MINO_SIZE; i++) {
-		for (int j = 0; j < MINO_SIZE; j++) {
+	for (int i = 0; i < MINO_HEIGHT; i++) {
+		for (int j = 0; j < MINO_WIDTH; j++) {
 			if (i == 1 && j == 1) continue;
 			mino[i][j] = (rand() % 2 == 1) ? true : false;
 		}
 	}
+	/*
 	for (int i = 0; i < MINO_SIZE; i++) {
 		for (int j = 0; j < MINO_SIZE; j++) {
 			std::cout << mino[i][j];
@@ -57,6 +58,7 @@ void Tetrimino::create() {
 		std::cout << std::endl;
 	}
 	std::cout << std::endl;
+	*/
 }
 
 /* テトリミノを回転させる */
