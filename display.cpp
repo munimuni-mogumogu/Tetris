@@ -49,19 +49,22 @@ void cube(GLdouble Red, GLdouble Green, GLdouble Blue) {
 void Create_Block(bool block[MINO_WIDTH][MINO_HEIGHT]) {
 	for(int i = 0; i < MINO_WIDTH; i++) {
 		for(int j = 0; j < MINO_HEIGHT; j++){
+			std::cout << block[i][j];
 			glPushMatrix();
-			glTranslated(i * BLOCK_SIZE, j * BLOCK_SIZE, 0.0);
+			glTranslated(j * BLOCK_SIZE, (MINO_HEIGHT - i) * BLOCK_SIZE, 0.0);
 			if(block[i][j]) cube(1.0, 0.0, 0.0);
 			glPopMatrix();
 		}
+		std::cout << std::endl;
 	}
+		std::cout << std::endl;
 }
 
 void Create_Board(bool block[BOARD_WIDTH][BOARD_HEIGHT]) {
 	for(int i = 0; i < BOARD_WIDTH; i++) {
 		for(int j = 0; j < BOARD_HEIGHT; j++){
 			glPushMatrix();
-			glTranslated(i * BLOCK_SIZE, j * BLOCK_SIZE, 0.0);
+			glTranslated(i * BLOCK_SIZE, (BOARD_HEIGHT - j) * BLOCK_SIZE, 0.0);
 			if(block[i][j]) cube(0.0, 0.0, 0.0);
 			glPopMatrix();
 		}
@@ -109,8 +112,9 @@ void display() {
 	glPushMatrix();
 	glTranslated(tetrimino.getX() * BLOCK_SIZE, tetrimino.getY() * BLOCK_SIZE, 0);
 	Create_Block(tetrimino.getMino().mino);
-	Create_Block(nextmino.getMino().mino);
 	glPopMatrix();
+	glTranslated(nextmino.getX() * BLOCK_SIZE, nextmino.getY() * BLOCK_SIZE, 0);
+	//Create_Block(nextmino.getMino().mino);
 
 	glPopMatrix();
 	glutSwapBuffers();
@@ -188,7 +192,7 @@ void motion(int x, int y) {
 void MouseWheel(int wheel_number, int direction, int x, int y)
 {
 	view_distance -= direction * 2;
-	std::cout << view_distance << std::endl;
+	//std::cout << view_distance << std::endl;
 	glutPostRedisplay();
 }
 
@@ -232,7 +236,11 @@ void init() {
 void tetris_init() {
 	board.init();
 	tetrimino.create();
+	TmpPoint a;
+	a.x = 6;
+	a.y = 0;
 	nextmino.create();
+	nextmino.setPoint(a);
 }
 
 int main(int argc, char* argv[]) {
