@@ -69,10 +69,9 @@ bool Board::gameOverCheck() {
 }
 
 bool Board::translateCheck(Tetrimino tm, int vv, int hv) {
-	TmpMino tmp = tm.getMino();
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
-			if (!tmp.mino[i][j]) continue;
+			if (!tm.getMino().mino[i][j]) continue;
 			if (board[tm.getX() + i + hv][tm.getY() + j + vv]) return false;
 		}
 	}
@@ -82,8 +81,8 @@ bool Board::translateCheck(Tetrimino tm, int vv, int hv) {
 bool Board::landCheck(Tetrimino tm) {
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
-			if (tm.getMino().mino[i][j])
-				if (board[tm.getX() + i][tm.getY() + j + 2]) return true;
+			if (!tm.getMino().mino[i][j]) continue;
+			if (board[tm.getX() + i][tm.getY() + j + 2]) return true;
 		}
 	}
 	return false;

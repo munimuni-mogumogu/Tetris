@@ -37,7 +37,7 @@ public:
 	void setPoint(TmpPoint);
 	void create();
 	void rotate(bool);
-	void translate(int, int, Board*);
+	bool translate(int, int, Board*);
 };
 
 class Board {

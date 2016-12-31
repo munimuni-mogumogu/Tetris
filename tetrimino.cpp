@@ -118,13 +118,15 @@ void Tetrimino::rotate(bool vec) {
 /* 引数 int, int 横方向ベクトル, 縦方向ベクトル */
 /* horVec = -1 : 左, 1 : 右 */
 /* verVec = -1 : 上, 1 : 下 */ 
-void Tetrimino::translate(int horVec, int verVec, Board* b) {
+bool Tetrimino::translate(int horVec, int verVec, Board* b) {
 	if (verVec == 1) {
 		if (b->landCheck(*this)) {
 			b->set(*this);
+			return true;
 		}
 	}
 	if (!b->translateCheck(*this, horVec, verVec)) return;
 	this->x += horVec;
 	this->y += verVec;
+	return false;
 }
