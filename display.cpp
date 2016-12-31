@@ -85,14 +85,14 @@ void Create_Board(bool block[BOARD_HEIGHT][BOARD_WIDTH]) {
 void Title() {
 	glPushMatrix();
 	draw_str Title_str("tetris");
-	glTranslated(0, center.y, center.z);
+	glTranslated(0,  BOARD_HEIGHT / 2 * BLOCK_SIZE, 0);
 	glScaled(6, 6, 6);
 	Title_str.draw_block();
 	glPopMatrix();
 	
 	glPushMatrix();
 	draw_str Start_str("please push enter");
-	glTranslated(center.x - 10 * BLOCK_SIZE, center.y - 4 * BLOCK_SIZE, center.z);
+	glTranslated(BLOCK_SIZE, (BOARD_HEIGHT / 2 - 4) * BLOCK_SIZE, 0);
 	glScaled(2, 2, 2);
 	Start_str.draw_block();
 	glPopMatrix();
@@ -174,8 +174,6 @@ void Mino_hold() {
 
 void Tetris_Main() {
 	glPushMatrix();
-	Create_Board(board.getBoard().board);
-	draw_information(6250, 120);
 
 	glPushMatrix();
 	glTranslated(tetrimino.getX() * BLOCK_SIZE, tetrimino.getY() * BLOCK_SIZE, 0);
@@ -190,7 +188,10 @@ void Tetris_Main() {
 			Next_Mino_set();
 		}
 	}
+	Create_Board(board.getBoard().board);
+	draw_information(6250, 120);
 	if(board.boardCheck()) exit(0);
+	glPopMatrix();
 }
 
 void display() {
@@ -289,8 +290,9 @@ void motion(int x, int y) {
 		mousepoint.x = x;
 		mousepoint.y = y;
 	} else {
-		center.x += x - mousepoint.x;
+		center.x -= x - mousepoint.x;
 		center.y += y - mousepoint.y;
+		std::cout << center.x << ", " << center.y << ", " << center.z << std::endl;
 		mousepoint.x = x;
 		mousepoint.y = y;
 	}
