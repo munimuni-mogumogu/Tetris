@@ -26,10 +26,10 @@ TmpBoard Board::getBoard() {
 
 /* 盤面にミノをセット */
 void Board::set(Tetrimino tm) {
-	bool* temp = tm.getMino();
+	TmpMino tmp = tm.getMino();
 	for (int i = -1; i < 2; i++) {
 		for (int j = -1; j < 2; j++) {
-			board[tm.getX() + i][tm.getY() + j] = temp[i + 1 * 3 + j + 1];
+			board[tm.getX() + i][tm.getY() + j] = tmp.mino[i + 1][j + 1];
 		}
 	}
 }
@@ -73,10 +73,10 @@ bool Board::gameOverCheck() {
 }
 
 bool Board::translateCheck(Tetrimino tm, int vv, int hv) {
-	bool* temp = tm.getMino();
+	TmpMino tmp = tm.getMino();
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
-			if (!temp[i * 3 + j]) continue;
+			if (!tmp.mino[i][j]) continue;
 			if (board[tm.getX() + i + hv][tm.getY() + j + vv]) return false;
 		}
 	}
@@ -84,7 +84,6 @@ bool Board::translateCheck(Tetrimino tm, int vv, int hv) {
 }
 
 bool Board::landCheck(Tetrimino tm) {
-	bool* temp = tm.getMino();
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
 			if (board[tm.getX() + i][tm.getY() + j + 1]) return true;

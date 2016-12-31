@@ -19,7 +19,7 @@ struct TmpMino {
 
 class Tetrimino {
 private:
-	bool mino[3][3];
+	bool mino[MINO_SIZE][MINO_SIZE];
 	int x;
 	int y;
 public:

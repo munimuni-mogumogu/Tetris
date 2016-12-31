@@ -7,6 +7,8 @@ Tetrimino::Tetrimino() {
 	srand((unsigned int)time(NULL));
 }
 
+/* ミノ配列の取得 */
+/* 戻り値はtmp構造体 */
 TmpMino Tetrimino::getMino() {
 	TmpMino tmp;
 	for (int i = 0; i < MINO_SIZE; i++)
