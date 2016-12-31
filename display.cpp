@@ -8,10 +8,9 @@
 #include "tetris.h"
 
 int angle = 80;			//Ž‹–ìŠp
+int menu = 0;
 GLfloat angle_of_top = 1.0;
-
 int view_distance = 200;
-
 double azimuth = 0.0;
 double elevation = 0.0;
 bool view_check = true;
@@ -35,9 +34,14 @@ void View_reset() {
 	center.x = (BOARD_WIDTH + MENU_SIZE) / 2 * BLOCK_SIZE; center.y = BOARD_HEIGHT / 2 * BLOCK_SIZE; center.z = 0;
 }
 
-void Tetris_reset() {
-	start = clock();
+void tetris_init() {
 	board.init();
+	tetrimino.create();
+	mino_pos.x = BOARD_WIDTH / 2;
+	mino_pos.y = BOARD_HEIGHT - 2;
+	tetrimino.setPoint(mino_pos);
+	nextmino.create();
+	start = clock();
 }
 
 void cube(GLdouble Red, GLdouble Green, GLdouble Blue) {
@@ -70,6 +74,22 @@ void Create_Board(bool block[BOARD_HEIGHT][BOARD_WIDTH]) {
 			glPopMatrix();
 		}
 	}
+}
+
+void Title() {
+	glPushMatrix();
+	draw_str Title_str("tetris");
+	glTranslated(0, center.y, center.z);
+	glScaled(6, 6, 6);
+	Title_str.draw_block();
+	glPopMatrix();
+	
+	glPushMatrix();
+	draw_str Start_str("please push enter");
+	glTranslated(center.x - 10 * BLOCK_SIZE, center.y - 4 * BLOCK_SIZE, center.z);
+	glScaled(2, 2, 2);
+	Start_str.draw_block();
+	glPopMatrix();
 }
 
 void draw_information(int score, int line) {
@@ -121,6 +141,16 @@ void Next_Mino_set() {
 }
 
 void Tetris_Main() {
+	glPushMatrix();
+	Create_Board(board.getBoard().board);
+	draw_information(6250, 120);
+
+	glPushMatrix();
+	glTranslated(tetrimino.getX() * BLOCK_SIZE, tetrimino.getY() * BLOCK_SIZE, 0);
+	Create_Block(tetrimino.getMino().mino);
+	glPopMatrix();
+
+	glPopMatrix();
 	if(clock() - start > 1000) {
 		start = clock();
 		if(tetrimino.translate(0, -1, &board)) Next_Mino_set();
@@ -134,18 +164,10 @@ void display() {
 	gluLookAt(viewpoint.x + center.x, viewpoint.y + center.y, viewpoint.z + center.z,
 		center.x, center.y, center.z,
 		0.0, angle_of_top, 0.0);
-	glPushMatrix();
 
-	Tetris_Main();
-	Create_Board(board.getBoard().board);
-	draw_information(6250, 120);
+	if(menu == 0) Title();
+	else if(menu == 1) Tetris_Main();
 
-	glPushMatrix();
-	glTranslated(tetrimino.getX() * BLOCK_SIZE, tetrimino.getY() * BLOCK_SIZE, 0);
-	Create_Block(tetrimino.getMino().mino);
-	glPopMatrix();
-
-	glPopMatrix();
 	glutSwapBuffers();
 }
 
@@ -175,8 +197,11 @@ void mouse(int b, int s, int x, int y) {
 
 void keyboard(unsigned char k, int x, int y) {
 	switch(k) {
+	case GLUT_KEY_ENTER:
+		menu = 1;
+		tetris_init();
+		break;
 	case 'r':
-		Tetris_reset();
 		View_reset();
 		break;
 	default:
@@ -265,15 +290,6 @@ void init() {
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-}
-
-void tetris_init() {
-	board.init();
-	tetrimino.create();
-	mino_pos.x = BOARD_WIDTH / 2;
-	mino_pos.y = BOARD_HEIGHT - 2;
-	tetrimino.setPoint(mino_pos);
-	nextmino.create();
 }
 
 int main(int argc, char* argv[]) {
