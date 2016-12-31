@@ -193,7 +193,7 @@ void specialkeyboard(int k, int x, int y) {
 		tetrimino.translate(-1, 0, &board);
 		break;
 	case GLUT_KEY_DOWN:
-		tetrimino.translate(0, -1, &board);
+		if(tetrimino.translate(0, -1, &board)) Next_Mino_set();
 		break;
 	default:
 		break;
