@@ -12,6 +12,8 @@ public:
 	draw_str();
 	draw_str(char[], int Red = 0, int Blue = 0, int Green = 0);
 	draw_str(int, int Red = 0, int Blue = 0, int Green = 0);
+	void set_str(char[], int Red = 0, int Blue = 0, int Green = 0);
+	void set_str(int ,int Red = 0, int Blue = 0, int Green = 0);
 	void draw_block();
 };
 

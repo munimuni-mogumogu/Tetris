@@ -3,6 +3,7 @@
 #include <iostream>
 #include <GL/freeglut.h>
 #include <time.h>
+#include <fstream>
 #include "display.h"
 #include "draw_str.h"
 #include "tetris.h"
@@ -28,6 +29,9 @@ Tetrimino holdmino;
 TmpPoint forecastmino_pos;
 Tetrimino forecastmino;
 Board board;
+int rank_pos = -1;
+Point2 ranking[10];
+int title_pos = 0;
 
 void View_reset() {
 	reset_check = false;
@@ -37,6 +41,36 @@ void View_reset() {
 	mousepoint.x = 0; mousepoint.y = 0;
 	viewpoint.x = 0; viewpoint.y = 0; viewpoint.z = view_distance;
 	center.x = (BOARD_WIDTH + MENU_SIZE) / 2 * BLOCK_SIZE; center.y = BOARD_HEIGHT / 2 * BLOCK_SIZE; center.z = 0;
+}
+
+void setRanking(int score, int line) {
+	std::ifstream fin("ranking.txt");
+	if(fin.fail()) {
+		std::cerr << "Error : Cannot open file" << std::endl;
+	}
+	for(int i = 0; i < 10; i++)
+		fin >> ranking[i].x >> ranking[i].y;
+	fin.close();
+
+	Point2 temp1 = {score, line};
+	Point2 temp2;
+	for(int i = 0; i < 10; i++) {
+		if(ranking[i].x < temp1.x) {
+			if(rank_pos == -1) rank_pos = i;
+			temp2.x = ranking[i].x; temp2.y = ranking[i].y;
+			ranking[i].x = temp1.x; ranking[i].y = temp1.y;
+			temp1.x = temp2.x; temp1.y = temp2.y;
+		}
+	}
+
+	std::ofstream fout("ranking.txt");
+	if(fout.fail()) {
+		std::cerr << "Error : Cannot open file" << std::endl;
+	}
+	for(int i = 0; i < 10; i++) {
+		fout << ranking[i].x << " " << ranking[i].y << std::endl;
+	}
+	fout.close();
 }
 
 void tetris_init() {
@@ -50,6 +84,9 @@ void tetris_init() {
 	holdmino.setPoint(holdmino_pos);
 	nextmino.create();
 	start = clock();
+	rank_pos = -1;
+	setRanking(0, 0);
+	title_pos = 0;
 }
 
 void cube(GLdouble Red = 0, GLdouble Green = 0, GLdouble Blue = 0) {
@@ -85,7 +122,14 @@ void Create_Board(bool block[BOARD_HEIGHT][BOARD_WIDTH]) {
 }
 
 void Title() {
+
 	glPushMatrix();
+	glTranslated((BOARD_WIDTH / 6 - 1) * BLOCK_SIZE, (BOARD_HEIGHT / 2 - 3 - (title_pos * 2)) * BLOCK_SIZE - 6, 0);
+	glColor3d(1, 0, 0);
+	glutSolidSphere(5, 5, 5);
+	glPopMatrix();
+	glPushMatrix();
+
 	draw_str Title_str("tetris");
 	glTranslated(0,  BOARD_HEIGHT / 2 * BLOCK_SIZE, 0);
 	glScaled(6, 6, 6);
@@ -93,10 +137,17 @@ void Title() {
 	glPopMatrix();
 
 	glPushMatrix();
-	draw_str Start_str("please push enter");
-	glTranslated(BLOCK_SIZE, (BOARD_HEIGHT / 2 - 4) * BLOCK_SIZE, 0);
+	draw_str Start_str("start tetris");
+	glTranslated(BOARD_WIDTH / 6 * BLOCK_SIZE, (BOARD_HEIGHT / 2 - 4) * BLOCK_SIZE, 0);
 	glScaled(2, 2, 2);
 	Start_str.draw_block();
+	glPopMatrix();
+
+	glPushMatrix();
+	draw_str ranking_str("ranking");
+	glTranslated(BOARD_WIDTH / 6 * BLOCK_SIZE, (BOARD_HEIGHT / 2 - 6) * BLOCK_SIZE, 0);
+	glScaled(2, 2, 2);
+	ranking_str.draw_block();
 	glPopMatrix();
 }
 
@@ -214,19 +265,59 @@ void drawGameOver() {
 	glScaled(4, 4, 4);
 	gameover_str.draw_block();
 	glPopMatrix();
-	
+
 	draw_str end_str("please push enter", 1, 0, 0);
 	glPushMatrix();
 	glTranslated((BOARD_WIDTH + MENU_SIZE - 19) / 2 * BLOCK_SIZE, (BOARD_HEIGHT - 4) / 2 * BLOCK_SIZE, 30);
 	glScaled(2, 2, 2);
 	end_str.draw_block();
 	glPopMatrix();
-	
+
 	draw_information(6250, 120);
 	Create_Board(board.getBoard().board);
 }
 
+
 void drawRanking() {
+	draw_str rank("rank");
+	draw_str score("score");
+	draw_str line("line");
+	glPushMatrix();
+	glTranslated((BOARD_WIDTH - 16) * BLOCK_SIZE, (BOARD_HEIGHT + 2) * BLOCK_SIZE, 0);
+	glScaled(2, 2, 2);
+	rank.draw_block();
+	glTranslated(4 * BLOCK_SIZE , 0, 0);
+	score.draw_block();
+	glTranslated(6 * BLOCK_SIZE , 0, 0);
+	line.draw_block();
+	glPopMatrix();
+
+	draw_str ranking_str[10][3];
+	Point3 color = {0, 0, 0};
+	for(int i = 0; i < 10; i++) {
+		Point3 color = {0, 0, 0};
+		if(rank_pos == i) color.x = 1;
+		glPushMatrix();
+		glTranslated((BOARD_WIDTH - 16) * BLOCK_SIZE, (BOARD_HEIGHT - i * 2) * BLOCK_SIZE, 0);
+		glScaled(2, 2, 2);
+		ranking_str[i][0].set_str(i + 1, color.x, color.y, color.z);
+		ranking_str[i][0].draw_block();
+
+		glTranslated(4 * BLOCK_SIZE, 0, 0);
+		ranking_str[i][1].set_str(ranking[i].x, color.x, color.y, color.z);
+		ranking_str[i][1].draw_block();
+
+		glTranslated(6 * BLOCK_SIZE, 0, 0);
+		ranking_str[i][2].set_str(ranking[i].y, color.x, color.y, color.z);
+		ranking_str[i][2].draw_block();
+		glPopMatrix();
+	}
+	glPushMatrix();
+	glTranslated(-BLOCK_SIZE, 0, 0);
+	draw_str please("please push r key", 1, 0, 0);
+	glScaled(2, 2, 2);
+	please.draw_block();
+	glPopMatrix();
 }
 
 void display() {
@@ -272,9 +363,14 @@ void keyboard(unsigned char k, int x, int y) {
 	switch(k) {
 	case GLUT_KEY_ENTER:
 		if(mode == 0){
-			mode = 1;
-			tetris_init();
-		}else if(mode == 2) {
+			if(title_pos == 0) {
+				mode = 1;
+				tetris_init();
+			} else if(title_pos == 1) {
+				mode = 3;
+			}
+		} else if(mode == 2) {
+			setRanking(0, 0);
 			mode = 3;
 		}
 		break;
@@ -285,13 +381,13 @@ void keyboard(unsigned char k, int x, int y) {
 		mode = 0;
 		break;
 	case 'z':
-		tetrimino.rotate(1);
+		if(mode == 1) tetrimino.rotate(1);
 		break;
 	case 'x':
-		tetrimino.rotate(0);
+		if(mode == 1) tetrimino.rotate(0);
 		break;
 	case 'a':
-		if(mode != 2) {
+		if(mode == 1) {
 			if(hold_check) Mino_hold();
 		}
 		break;
@@ -303,13 +399,15 @@ void keyboard(unsigned char k, int x, int y) {
 void specialkeyboard(int k, int x, int y) {
 	switch(k) {
 	case GLUT_KEY_RIGHT:
-		tetrimino.translate(1, 0, &board);
+		if(mode == 1) tetrimino.translate(1, 0, &board);
 		break;
 	case GLUT_KEY_LEFT:
-		tetrimino.translate(-1, 0, &board);
+		if(mode == 1) tetrimino.translate(-1, 0, &board);
 		break;
 	case GLUT_KEY_DOWN:
-		if(mode != 2) {
+		if(mode == 0) {
+			if(title_pos < 1)title_pos++;
+		} else if(mode == 1) {
 			if(tetrimino.translate(0, -1, &board)) {
 				hold_check = true;
 				Next_Mino_set();
@@ -317,7 +415,9 @@ void specialkeyboard(int k, int x, int y) {
 		}
 		break;
 	case GLUT_KEY_UP:
-		if(mode != 2) {
+		if(mode == 0) {
+			if(title_pos > 0)title_pos--;
+		} else if(mode == 1) {
 			while(!tetrimino.translate(0, -1, &board));
 			hold_check = true;
 			Next_Mino_set();
