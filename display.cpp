@@ -62,7 +62,7 @@ void Create_Block(bool block[MINO_HEIGHT][MINO_WIDTH]) {
 		for(int j = 0; j < MINO_WIDTH; j++){
 			glPushMatrix();
 			glTranslated(j * BLOCK_SIZE, i * BLOCK_SIZE, 0.0);
-			if(block[i][j]) cube(1.0, 0.0, 0.0);
+			if(block[i][j]) cube(1.0, 1.0, 0.0);
 			glPopMatrix();
 		}
 	}
@@ -290,8 +290,8 @@ void motion(int x, int y) {
 		mousepoint.x = x;
 		mousepoint.y = y;
 	} else {
-		int dx = x - mousepoint.x;
-		int dy = y - mousepoint.y;
+		int dx = (x - mousepoint.x) / 2;
+		int dy = (y - mousepoint.y) / 2;
 		center.x -= dx * cos(azimuth) - dy * sin(elevation) * sin(azimuth);
 		center.y += dy * cos(elevation);
 		center.z += -dx * sin(azimuth) - dy * sin(elevation) * cos(azimuth);
