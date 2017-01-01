@@ -20,16 +20,18 @@ Point3 viewpoint = {0, 0, view_distance};	//Ž‹“_
 Point3 center = {(BOARD_WIDTH + MENU_SIZE) / 2 * BLOCK_SIZE, BOARD_HEIGHT / 2 * BLOCK_SIZE, 0};	//‘S‘Ì‚Ì’†S
 clock_t start = clock();
 TmpPoint mino_pos;
-TmpPoint holdmino_pos;
 Tetrimino tetrimino;
 Tetrimino nextmino;
 bool hold_check = true;
+TmpPoint holdmino_pos;
 Tetrimino holdmino;
+TmpPoint forecastmino_pos;
+Tetrimino forecastmino;
 Board board;
 
 void View_reset() {
 	reset_check = false;
-	view_distance = 300;
+	view_distance = 200;
 	azimuth = 0.0;
 	elevation = 0.0;
 	mousepoint.x = 0; mousepoint.y = 0;
@@ -178,7 +180,17 @@ void Tetris_Main() {
 	glTranslated(tetrimino.getX() * BLOCK_SIZE, tetrimino.getY() * BLOCK_SIZE, 0);
 	Create_Block(tetrimino.getMino().mino, 1, 0, 0);
 	glPopMatrix();
+	/*
+	forecastmino.setMino(tetrimino.getMino());
+	forecastmino_pos = tetrimino.getXY();
+	forecastmino.setPoint(forecastmino_pos);
+	while(!forecastmino.translate(0, -1, &board));
 
+	glPushMatrix();
+	glTranslated(forecastmino.getX() * BLOCK_SIZE, forecastmino.getY() * BLOCK_SIZE, 0);
+	Create_Block(forecastmino.getMino().mino, 0, 0, 0);
+	glPopMatrix();
+	*/
 	glPopMatrix();
 	if(clock() - start > 1000) {
 		start = clock();
@@ -187,8 +199,8 @@ void Tetris_Main() {
 			Next_Mino_set();
 		}
 	}
-	Create_Board(board.getBoard().board);
 	draw_information(6250, 120);
+	Create_Board(board.getBoard().board);
 	if(board.boardCheck()) {
 		mode = 2;
 	}
@@ -196,14 +208,25 @@ void Tetris_Main() {
 }
 
 void drawGameOver() {
-	Create_Board(board.getBoard().board);
-	draw_information(6250, 120);
 	draw_str gameover_str("gameover", 1, 0, 0);
 	glPushMatrix();
 	glTranslated((BOARD_WIDTH + MENU_SIZE - 18) / 2 * BLOCK_SIZE, BOARD_HEIGHT / 2 * BLOCK_SIZE, 30);
 	glScaled(4, 4, 4);
 	gameover_str.draw_block();
 	glPopMatrix();
+	
+	draw_str end_str("please push enter", 1, 0, 0);
+	glPushMatrix();
+	glTranslated((BOARD_WIDTH + MENU_SIZE - 19) / 2 * BLOCK_SIZE, (BOARD_HEIGHT - 4) / 2 * BLOCK_SIZE, 30);
+	glScaled(2, 2, 2);
+	end_str.draw_block();
+	glPopMatrix();
+	
+	draw_information(6250, 120);
+	Create_Board(board.getBoard().board);
+}
+
+void drawRanking() {
 }
 
 void display() {
@@ -216,6 +239,7 @@ void display() {
 	if(mode == 0) Title();
 	else if(mode == 1) Tetris_Main();
 	else if(mode == 2) drawGameOver();
+	else if(mode == 3) drawRanking();
 
 	glutSwapBuffers();
 }
@@ -247,8 +271,12 @@ void mouse(int b, int s, int x, int y) {
 void keyboard(unsigned char k, int x, int y) {
 	switch(k) {
 	case GLUT_KEY_ENTER:
-		mode = 1;
-		tetris_init();
+		if(mode == 0){
+			mode = 1;
+			tetris_init();
+		}else if(mode == 2) {
+			mode = 3;
+		}
 		break;
 	case 'v':
 		View_reset();
