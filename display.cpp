@@ -89,7 +89,7 @@ void Title() {
 	glScaled(6, 6, 6);
 	Title_str.draw_block();
 	glPopMatrix();
-	
+
 	glPushMatrix();
 	draw_str Start_str("please push enter");
 	glTranslated(BLOCK_SIZE, (BOARD_HEIGHT / 2 - 4) * BLOCK_SIZE, 0);
@@ -157,7 +157,6 @@ void Next_Mino_set() {
 	nextmino.create();
 	tetrimino.setPoint(mino_pos);
 }
-
 
 void Mino_hold() {
 	hold_check = false;
@@ -301,8 +300,10 @@ void motion(int x, int y) {
 void MouseWheel(int wheel_number, int direction, int x, int y)
 {
 	view_distance -= direction * 2;
+	viewpoint.x = -view_distance * cos(elevation) * sin(azimuth);
+	viewpoint.y = view_distance * sin(elevation);
+	viewpoint.z = view_distance * cos(elevation) * cos(azimuth);
 	//std::cout << view_distance << std::endl;
-	glutPostRedisplay();
 }
 
 void timer(int value) {
