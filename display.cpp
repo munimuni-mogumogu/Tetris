@@ -18,6 +18,7 @@ bool reset_check = true;
 Point2 mousepoint = {0, 0};					//マウスの位置
 Point3 viewpoint = {0, 0, view_distance};	//視点
 Point3 center = {(BOARD_WIDTH + MENU_SIZE) / 2 * BLOCK_SIZE, BOARD_HEIGHT / 2 * BLOCK_SIZE, 0};	//全体の中心
+Point3 obj = {0, 0, 0};
 clock_t start = clock();
 TmpPoint mino_pos;
 TmpPoint holdmino_pos;
@@ -200,8 +201,11 @@ void display() {
 		center.x, center.y, center.z,
 		0.0, angle_of_top, 0.0);
 
+	glPushMatrix();
+	glTranslated(-obj.x, -obj.y, -obj.z);
 	if(menu == 0) Title();
 	else if(menu == 1) Tetris_Main();
+	glPopMatrix();
 
 	glutSwapBuffers();
 }
@@ -289,8 +293,11 @@ void motion(int x, int y) {
 		mousepoint.x = x;
 		mousepoint.y = y;
 	} else {
-		center.x -= x - mousepoint.x;
-		center.y += y - mousepoint.y;
+		int dx = x - mousepoint.x;
+		int dy = y - mousepoint.y;
+		obj.x -= dx * cos(azimuth) + dy * sin(elevation) * cos(azimuth);
+		obj.y += dy * cos(elevation);
+		obj.z += -dx * sin(azimuth) + dy * sin(elevation) * sin(azimuth);
 		std::cout << center.x << ", " << center.y << ", " << center.z << std::endl;
 		mousepoint.x = x;
 		mousepoint.y = y;
