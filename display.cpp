@@ -8,7 +8,7 @@
 #include "tetris.h"
 
 int angle = 80;			//Ž‹–ìŠp
-int menu = 0;
+int mode = 0;
 GLfloat angle_of_top = 1.0;
 int view_distance = 200;
 double azimuth = 0.0;
@@ -50,19 +50,19 @@ void tetris_init() {
 	start = clock();
 }
 
-void cube(GLdouble Red, GLdouble Green, GLdouble Blue) {
+void cube(GLdouble Red = 0, GLdouble Green = 0, GLdouble Blue = 0) {
 	glPushMatrix();
 	glColor3d(Red, Green, Blue);
 	glutSolidCube(BLOCK_SIZE);
 	glPopMatrix();
 }
 
-void Create_Block(bool block[MINO_HEIGHT][MINO_WIDTH]) {
+void Create_Block(bool block[MINO_HEIGHT][MINO_WIDTH], GLdouble Red = 0, GLdouble Green = 0, GLdouble Blue = 0) {
 	for(int i = 0; i < MINO_HEIGHT; i++) {
 		for(int j = 0; j < MINO_WIDTH; j++){
 			glPushMatrix();
 			glTranslated(j * BLOCK_SIZE, i * BLOCK_SIZE, 0.0);
-			if(block[i][j]) cube(1.0, 1.0, 0.0);
+			if(block[i][j]) cube(Red, Green, Blue);
 			glPopMatrix();
 		}
 	}
@@ -136,7 +136,7 @@ void draw_information(int score, int line) {
 
 	glPushMatrix();
 	glTranslated(holdmino.getX() * BLOCK_SIZE, holdmino.getY() * BLOCK_SIZE, 0);
-	Create_Block(holdmino.getMino().mino);
+	Create_Block(holdmino.getMino().mino, 1, 0, 0);
 	glPopMatrix();
 
 	glPushMatrix();
@@ -148,7 +148,7 @@ void draw_information(int score, int line) {
 
 	glPushMatrix();
 	glTranslated(nextmino.getX() * BLOCK_SIZE, nextmino.getY() * BLOCK_SIZE, 0);
-	Create_Block(nextmino.getMino().mino);
+	Create_Block(nextmino.getMino().mino, 1, 0, 0);
 	glPopMatrix();
 }
 
@@ -176,7 +176,7 @@ void Tetris_Main() {
 
 	glPushMatrix();
 	glTranslated(tetrimino.getX() * BLOCK_SIZE, tetrimino.getY() * BLOCK_SIZE, 0);
-	Create_Block(tetrimino.getMino().mino);
+	Create_Block(tetrimino.getMino().mino, 1, 0, 0);
 	glPopMatrix();
 
 	glPopMatrix();
@@ -189,7 +189,20 @@ void Tetris_Main() {
 	}
 	Create_Board(board.getBoard().board);
 	draw_information(6250, 120);
-	if(board.boardCheck()) exit(0);
+	if(board.boardCheck()) {
+		mode = 2;
+	}
+	glPopMatrix();
+}
+
+void drawGameOver() {
+	Create_Board(board.getBoard().board);
+	draw_information(6250, 120);
+	draw_str gameover_str("gameover", 1, 0, 0);
+	glPushMatrix();
+	glTranslated((BOARD_WIDTH + MENU_SIZE - 18) / 2 * BLOCK_SIZE, BOARD_HEIGHT / 2 * BLOCK_SIZE, 30);
+	glScaled(4, 4, 4);
+	gameover_str.draw_block();
 	glPopMatrix();
 }
 
@@ -200,8 +213,9 @@ void display() {
 		center.x, center.y, center.z,
 		0.0, angle_of_top, 0.0);
 
-	if(menu == 0) Title();
-	else if(menu == 1) Tetris_Main();
+	if(mode == 0) Title();
+	else if(mode == 1) Tetris_Main();
+	else if(mode == 2) drawGameOver();
 
 	glutSwapBuffers();
 }
@@ -233,14 +247,14 @@ void mouse(int b, int s, int x, int y) {
 void keyboard(unsigned char k, int x, int y) {
 	switch(k) {
 	case GLUT_KEY_ENTER:
-		menu = 1;
+		mode = 1;
 		tetris_init();
 		break;
 	case 'v':
 		View_reset();
 		break;
 	case 'r':
-		menu = 0;
+		mode = 0;
 		break;
 	case 'z':
 		tetrimino.rotate(1);
@@ -249,7 +263,9 @@ void keyboard(unsigned char k, int x, int y) {
 		tetrimino.rotate(0);
 		break;
 	case 'a':
-		if(hold_check) Mino_hold();
+		if(mode != 2) {
+			if(hold_check) Mino_hold();
+		}
 		break;
 	default:
 		break;
@@ -265,7 +281,16 @@ void specialkeyboard(int k, int x, int y) {
 		tetrimino.translate(-1, 0, &board);
 		break;
 	case GLUT_KEY_DOWN:
-		if(tetrimino.translate(0, -1, &board)) {
+		if(mode != 2) {
+			if(tetrimino.translate(0, -1, &board)) {
+				hold_check = true;
+				Next_Mino_set();
+			}
+		}
+		break;
+	case GLUT_KEY_UP:
+		if(mode != 2) {
+			while(!tetrimino.translate(0, -1, &board));
 			hold_check = true;
 			Next_Mino_set();
 		}
