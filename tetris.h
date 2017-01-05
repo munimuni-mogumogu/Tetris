@@ -2,6 +2,7 @@
 #define TETRIS_H
 
 #include <iostream>
+#include <vector>
 
 #define BOARD_WIDTH		12
 #define BOARD_HEIGHT	22
@@ -39,8 +40,10 @@ public:
 	void setMino(TmpMino);
 	void setPoint(TmpPoint);
 	void create();
-	void rotate(bool);
-	bool translate(int, int, Board*);
+	void rotate(bool, Board*);
+	bool translate(int, int, bool, Board*);
+	int thouchWall();
+	bool thouchMino(Board*);
 };
 
 class Board {

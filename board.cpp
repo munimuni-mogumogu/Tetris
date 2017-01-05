@@ -80,8 +80,8 @@ bool Board::translateCheck(Tetrimino tm, int vv, int hv) {
 				continue;
 			}
 			if (board[tm.getY() + i + 1][tm.getX() + j + 1 + vv]) {
-				std::cout << tm.getY() << " " << tm.getX() << std::endl;
-				std::cout << tm.getY() + i << " " << tm.getX() + j << std::endl << std::endl;
+				// std::cout << tm.getY() << " " << tm.getX() << std::endl;
+				// std::cout << tm.getY() + i << " " << tm.getX() + j << std::endl << std::endl;
 				return false;
 			}
 		}

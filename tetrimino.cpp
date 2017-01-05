@@ -50,7 +50,7 @@ void Tetrimino::create() {
 	for (int i = 0; i < MINO_HEIGHT; i++) {
 		for (int j = 0; j < MINO_WIDTH; j++) {
 			if (i == 1 && j == 1) continue;
-			mino[i][j] = (rand() % 4 == 1) ? true : false;
+			mino[i][j] = (rand() % 2 == 1) ? true : false;
 		}
 	}
 	/* create デバッグ用 */
@@ -79,89 +79,68 @@ void Tetrimino::rotate(bool vec) {
 /* 引数 : bool 回転方向*/
 /* vec == 1 : 右回転 */
 /* vec == 0 : 左回転 */
-void Tetrimino::rotate(bool vec) {
-	int horVec;	/* 横ベクトル -1 : 左, 1 : 右 */
-	int verVec;	/* 縦ベクトル -1 : 上, 1 : 下 */
-	bool temp = mino[0][0];
-	bool temp2;
-	for (int i = 0; i < 2; i++) {
-		temp = mino[0][0];
-		if (!vec) {
-			verVec = 0;
-			horVec = 1;
-			for (int i = 0, x = 0, y = 0; i < 8; i++) {
-				switch (i) {
-				case 2:
-					verVec = 1;
-					horVec = 0;
-					break;
-				case 4:
-					verVec = 0;
-					horVec = -1;
-					break;
-				case 6:
-					verVec = -1;
-					horVec = 0;
-					break;
-				}
-				x += horVec;
-				y += verVec;
-				temp2 = temp;
-				temp = mino[y][x];
-				mino[y][x] = temp2;
-			}
-		}
-		else {
-			verVec = 1;
-			horVec = 0;
-			for (int i = 0, x = 0, y = 0; i < 8; i++) {
-				switch (i) {
-				case 2:
-					verVec = 0;
-					horVec = 1;
-					break;
-				case 4:
-					verVec = -1;
-					horVec = 0;
-					break;
-				case 6:
-					verVec = 0;
-					horVec = -1;
-					break;
-				}
-				x += horVec;
-				y += verVec;
-				temp2 = temp;
-				temp = mino[y][x];
-				mino[y][x] = temp2;
-			}
-		}
+void Tetrimino::rotate(bool vec, Board* b) {
+	Tetrimino tmpMino = *this;
+	bool tmp[MINO_HEIGHT][MINO_WIDTH];
+
+	if (vec) 
+		for (int i = 0; i < MINO_HEIGHT; i++)
+			for (int j = 0; j < MINO_WIDTH; j++)
+				tmp[j][MINO_HEIGHT - 1 - i] = mino[i][j];
+	else
+		for (int i = 0; i < MINO_HEIGHT; i++)
+			for (int j = 0; j < MINO_WIDTH; j++)
+				tmp[MINO_WIDTH - 1 - j][i] = mino[i][j];
+
+	for (int i = 0; i < MINO_HEIGHT; i++)
+		for (int j = 0; j < MINO_WIDTH; j++)
+			mino[i][j] = tmp[i][j];
+
+	switch (thouchWall()) {
+	case 0:		/* 壁には触れていない */
+		break;
+	case 1:		/* 左壁に触れている */
+		this->x++;
+		break;
+	case 2:		/* 右壁に触れている */
+		this->x--;
+		break;
 	}
+
+	if (thouchMino(b)) this->y++;
+	if (thouchMino(b)) *this = tmpMino;
 }
 
 /* テトリミノを任意の方向に移動させる */
-/* 引数 int, int 横方向ベクトル, 縦方向ベクトル */
+/* 引数 int, int, bool 横方向ベクトル, 縦方向ベクトル */
 /* horVec = -1 : 左, 1 : 右 */
-/* verVec = -1 : 下, 1 : 上 */ 
-bool Tetrimino::translate(int horVec, int verVec, Board* b) {
-	/*
-	for (int i = 0; i < MINO_HEIGHT; i++) {
-		for (int j = 0; j < MINO_WIDTH; j++) {
-			std::cout << mino[MINO_HEIGHT - 1 - i][j];
-		}
-		std::cout << std::endl;
-	}
-	std::cout << std::endl;
-	*/
+/* verVec = -1 : 下, 1 : 上 */
+/* ghost = true : 実体を持った操作ではない, true : 実体を持つ */
+/* 戻り値 bool テトリミノが着地したかどうかを2値で返す */
+bool Tetrimino::translate(int horVec, int verVec, bool ghost, Board* b) {
 	if (verVec == -1) {
 		if (b->landCheck(*this)) {
-			b->set(*this);
+			if (!ghost) b->set(*this);
 			return true;
 		}
-	} 
+	}
 	else
 		if (!b->translateCheck(*this, horVec, verVec)) return false;
 	this->x += horVec;
 	this->y += verVec;
+	return false;
+}
+
+int Tetrimino::thouchWall() {
+	if (this->x == 0 && (mino[0][0] || mino[1][0] || mino[2][0])) return 1;
+	if (this->x == BOARD_WIDTH - 3 && (mino[0][2] || mino[1][2] || mino[2][2])) return 2;
+	return 0;
+}
+
+bool Tetrimino::thouchMino(Board* b) {
+	TmpBoard tmp = b->getBoard();
+	for (int i = 0; i < MINO_HEIGHT; i++)
+		for (int j = 0; j < MINO_WIDTH; j++)
+			if (mino[i][j] && tmp.board[this->y + i][this->x + j]) return true;
 	return false;
 }
