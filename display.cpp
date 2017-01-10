@@ -9,30 +9,31 @@
 #include "tetris.h"
 
 int angle = 80;			//視野角
-int mode = 0;
-GLfloat angle_of_top = 1.0;
-int view_distance = 200;
-double azimuth = 0.0;
-double elevation = 0.0;
-bool view_check = true;
-bool reset_check = true;
-Point2 mousepoint = {0, 0};					//マウスの位置
+int mode = 0;			//gamemode
+GLfloat angle_of_top = 1.0;	//画面の上の設定(1 : 上がyの正, -1 : 下がyの正)
+int view_distance = 200;	//視点から中点の距離
+double azimuth = 0.0;		//方位角
+double elevation = 0.0;		//仰角
+bool view_check = true;		//視点移動の初期化用変数
+bool reset_check = true;	//テトリスのリセット用変数
+Point2 mousepoint = {0, 0};		//マウスの位置
 Point3 viewpoint = {0, 0, view_distance};	//視点
 Point3 center = {(BOARD_WIDTH + MENU_SIZE) / 2 * BLOCK_SIZE, BOARD_HEIGHT / 2 * BLOCK_SIZE, 0};	//全体の中心
-clock_t start = clock();
-TmpPoint mino_pos;
-Tetrimino tetrimino;
-Tetrimino nextmino;
-bool hold_check = true;
-TmpPoint holdmino_pos;
-Tetrimino holdmino;
-TmpPoint forecastmino_pos;
-Tetrimino forecastmino;
-Board board;
-int rank_pos = -1;
-Point2 ranking[10];
-int title_pos = 0;
+clock_t start = clock();	//時間経過の管理用
+TmpPoint mino_pos;			//テトリミノの位置
+Tetrimino tetrimino;		//テトリミノ
+Tetrimino nextmino;			//次のテトリミノ
+bool hold_check = true;		//ホールド初期化用変数
+TmpPoint holdmino_pos;		//ホールドの位置
+Tetrimino holdmino;			//ホールドのテトリミノ
+TmpPoint forecastmino_pos;	//着地点予想位置
+Tetrimino forecastmino;		//着地点のテトリミノ
+Board board;				//ボード
+int rank_pos = -1;			//ランキングの順位
+Point2 ranking[10];			//ランキング格納用の変数
+int title_pos = 0;			//タイトルの位置
 
+//視点のリセット
 void View_reset() {
 	reset_check = false;
 	view_distance = 200;
@@ -43,6 +44,8 @@ void View_reset() {
 	center.x = (BOARD_WIDTH + MENU_SIZE) / 2 * BLOCK_SIZE; center.y = BOARD_HEIGHT / 2 * BLOCK_SIZE; center.z = 0;
 }
 
+//ランキングをテキストファイルから読み出し、スコアと消したライン数を保存する
+//配列へスコアの降順を格納する
 void setRanking(int score, int line) {
 	std::ifstream fin("ranking.txt");
 	if(fin.fail()) {
@@ -73,9 +76,11 @@ void setRanking(int score, int line) {
 	fout.close();
 }
 
+//テトリスの初期化を行なう
 void tetris_init() {
 	board.init();
 	tetrimino.create();
+	holdmino = Tetrimino();
 	mino_pos.x = BOARD_WIDTH / 2;
 	mino_pos.y = BOARD_HEIGHT - 2;
 	holdmino_pos.x = BOARD_WIDTH + 2;
@@ -89,31 +94,38 @@ void tetris_init() {
 	title_pos = 0;
 }
 
-void cube(GLdouble Red = 0, GLdouble Green = 0, GLdouble Blue = 0) {
+//RGBの色の四角形を描画
+void cube(GLdouble Red = 0, GLdouble Green = 0, GLdouble Blue = 0, GLdouble shadow = 1) {
 	glPushMatrix();
-	glColor3d(Red, Green, Blue);
+	glColor4d(Red, Green, Blue, shadow);
 	glutSolidCube(BLOCK_SIZE);
 	glPopMatrix();
 }
 
-void Create_Block(bool block[MINO_HEIGHT][MINO_WIDTH], GLdouble Red = 0, GLdouble Green = 0, GLdouble Blue = 0) {
+//3×3の配列のブロックを描画
+void Create_Block(bool block[MINO_HEIGHT][MINO_WIDTH], GLdouble Red = 0, GLdouble Green = 0, GLdouble Blue = 0, GLdouble shadow = 1) {
 	for(int i = 0; i < MINO_HEIGHT; i++) {
 		for(int j = 0; j < MINO_WIDTH; j++){
 			glPushMatrix();
 			glTranslated(j * BLOCK_SIZE, i * BLOCK_SIZE, 0.0);
-			if(block[i][j]) cube(Red, Green, Blue);
+			if(block[i][j]) cube(Red, Green, Blue, shadow);
 			glPopMatrix();
 		}
 	}
 }
 
+//22×11の配列のブロックを描画
 void Create_Board(bool block[BOARD_HEIGHT][BOARD_WIDTH]) {
 	for(int i = 0; i < BOARD_HEIGHT; i++) {
 		for(int j = 0; j < BOARD_WIDTH; j++){
 			glPushMatrix();
 			glTranslated(j * BLOCK_SIZE, i * BLOCK_SIZE, 0.0);
 			if(block[i][j]) {
-				glColor4d(0, 0, 0, 0.4);
+				if(i == 0 || j == 0 || j == BOARD_WIDTH - 1) {
+					glColor4d(0, 0, 0, 0.4);
+				} else {
+					glColor3d(0, 0, 1);
+				}
 				glutSolidCube(BLOCK_SIZE);
 			}
 			glPopMatrix();
@@ -121,6 +133,7 @@ void Create_Board(bool block[BOARD_HEIGHT][BOARD_WIDTH]) {
 	}
 }
 
+//タイトルの描画
 void Title() {
 
 	glPushMatrix();
@@ -151,6 +164,7 @@ void Title() {
 	glPopMatrix();
 }
 
+//テトリス中の情報の描画
 void draw_information(int score, int line) {
 	glPushMatrix();
 	draw_str score_str("score");
@@ -205,12 +219,14 @@ void draw_information(int score, int line) {
 	glPopMatrix();
 }
 
+//次のテトリミノの設定
 void Next_Mino_set() {
 	tetrimino.setMino(nextmino.getMino());
 	nextmino.create();
 	tetrimino.setPoint(mino_pos);
 }
 
+//ホールドミノの設定
 void Mino_hold() {
 	hold_check = false;
 	TmpMino temp = holdmino.getMino();
@@ -224,6 +240,7 @@ void Mino_hold() {
 	}
 }
 
+//テトリスのメインループ
 void Tetris_Main() {
 	glPushMatrix();
 
@@ -231,21 +248,21 @@ void Tetris_Main() {
 	glTranslated(tetrimino.getX() * BLOCK_SIZE, tetrimino.getY() * BLOCK_SIZE, 0);
 	Create_Block(tetrimino.getMino().mino, 1, 0, 0);
 	glPopMatrix();
-	/*
+	
 	forecastmino.setMino(tetrimino.getMino());
 	forecastmino_pos = tetrimino.getXY();
 	forecastmino.setPoint(forecastmino_pos);
-	while(!forecastmino.translate(0, -1, &board));
+	while(!forecastmino.translate(0, -1, true, &board));
 
 	glPushMatrix();
 	glTranslated(forecastmino.getX() * BLOCK_SIZE, forecastmino.getY() * BLOCK_SIZE, 0);
-	Create_Block(forecastmino.getMino().mino, 0, 0, 0);
+	Create_Block(forecastmino.getMino().mino, 1.0, 0, 0, 0.4);
 	glPopMatrix();
-	*/
+	
 	glPopMatrix();
 	if(clock() - start > 1000) {
 		start = clock();
-		if(tetrimino.translate(0, -1, &board)) {
+		if(tetrimino.translate(0, -1, false, &board)) {
 			hold_check = true;
 			Next_Mino_set();
 		}
@@ -258,6 +275,7 @@ void Tetris_Main() {
 	glPopMatrix();
 }
 
+//ゲームオーバーの処理
 void drawGameOver() {
 	draw_str gameover_str("gameover", 1, 0, 0);
 	glPushMatrix();
@@ -277,7 +295,7 @@ void drawGameOver() {
 	Create_Board(board.getBoard().board);
 }
 
-
+//ランキングの描画
 void drawRanking() {
 	draw_str rank("rank");
 	draw_str score("score");
@@ -320,6 +338,7 @@ void drawRanking() {
 	glPopMatrix();
 }
 
+//描画のメイン関数
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
@@ -335,6 +354,7 @@ void display() {
 	glutSwapBuffers();
 }
 
+//MatrixModeの設定
 void reshape(int w, int h) {
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 	glMatrixMode(GL_PROJECTION);
@@ -344,6 +364,7 @@ void reshape(int w, int h) {
 	glLoadIdentity();
 }
 
+//マウスのクリック処理
 void mouse(int b, int s, int x, int y) {
 	switch(b) {
 	case GLUT_LEFT_BUTTON:
@@ -359,6 +380,7 @@ void mouse(int b, int s, int x, int y) {
 	}
 }
 
+//キーボード処理
 void keyboard(unsigned char k, int x, int y) {
 	switch(k) {
 	case GLUT_KEY_ENTER:
@@ -381,10 +403,10 @@ void keyboard(unsigned char k, int x, int y) {
 		mode = 0;
 		break;
 	case 'z':
-		if(mode == 1) tetrimino.rotate(1);
+		if(mode == 1) tetrimino.rotate(1, &board);
 		break;
 	case 'x':
-		if(mode == 1) tetrimino.rotate(0);
+		if(mode == 1) tetrimino.rotate(0, &board);
 		break;
 	case 'a':
 		if(mode == 1) {
@@ -396,19 +418,20 @@ void keyboard(unsigned char k, int x, int y) {
 	}
 }
 
+//矢印キーなどの特殊キーボードの処理
 void specialkeyboard(int k, int x, int y) {
 	switch(k) {
 	case GLUT_KEY_RIGHT:
-		if(mode == 1) tetrimino.translate(1, 0, &board);
+		if(mode == 1) tetrimino.translate(1, 0, false, &board);
 		break;
 	case GLUT_KEY_LEFT:
-		if(mode == 1) tetrimino.translate(-1, 0, &board);
+		if(mode == 1) tetrimino.translate(-1, 0, false, &board);
 		break;
 	case GLUT_KEY_DOWN:
 		if(mode == 0) {
 			if(title_pos < 1)title_pos++;
 		} else if(mode == 1) {
-			if(tetrimino.translate(0, -1, &board)) {
+			if(tetrimino.translate(0, -1, false, &board)) {
 				hold_check = true;
 				Next_Mino_set();
 			}
@@ -418,7 +441,7 @@ void specialkeyboard(int k, int x, int y) {
 		if(mode == 0) {
 			if(title_pos > 0)title_pos--;
 		} else if(mode == 1) {
-			while(!tetrimino.translate(0, -1, &board));
+			while(!tetrimino.translate(0, -1, false, &board));
 			hold_check = true;
 			Next_Mino_set();
 		}
@@ -428,6 +451,7 @@ void specialkeyboard(int k, int x, int y) {
 	}
 }
 
+//ドラッグ操作の処理
 void motion(int x, int y) {
 	//std::cout << elevation << ", " << azimuth << std::endl;
 	if(view_check) {
@@ -454,6 +478,7 @@ void motion(int x, int y) {
 	}
 }
 
+//マウスホイールの処理
 void MouseWheel(int wheel_number, int direction, int x, int y)
 {
 	view_distance -= direction * 2;
@@ -463,11 +488,13 @@ void MouseWheel(int wheel_number, int direction, int x, int y)
 	//std::cout << view_distance << std::endl;
 }
 
+//再描画関数の呼び出し
 void timer(int value) {
 	glutPostRedisplay();
 	glutTimerFunc(value, timer, 16);
 }
 
+//コールバック関数のまとめ
 void funcgroup() {
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
@@ -480,6 +507,7 @@ void funcgroup() {
 	glutTimerFunc(16, timer, 0);
 }
 
+//OpenGLの初期設定
 void init() {
 	// 背景色
 	glClearColor(1.0, 1.0, 1.0, 0.0);
@@ -502,6 +530,7 @@ void init() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
+//メイン関数
 int main(int argc, char* argv[]) {
 	glutInit(&argc, argv);
 	glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
