@@ -277,6 +277,9 @@ void Tetris_Main() {
 
 //ゲームオーバーの処理
 void drawGameOver() {
+	Create_Board(board.getBoard().board);
+	draw_information(6250, 120);
+
 	draw_str gameover_str("gameover", 1, 0, 0);
 	glPushMatrix();
 	glTranslated((BOARD_WIDTH + MENU_SIZE - 18) / 2 * BLOCK_SIZE, BOARD_HEIGHT / 2 * BLOCK_SIZE, 30);
@@ -290,9 +293,6 @@ void drawGameOver() {
 	glScaled(2, 2, 2);
 	end_str.draw_block();
 	glPopMatrix();
-
-	draw_information(6250, 120);
-	Create_Board(board.getBoard().board);
 }
 
 //ランキングの描画
