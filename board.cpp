@@ -1,5 +1,8 @@
 #include "tetris.h"
 
+/* デバッグ用変数 */
+// Score score;
+
 Board::Board() {
 	
 }
@@ -41,9 +44,16 @@ void Board::set(Tetrimino tm) {
 }
 
 /* 横列消しとゲームオーバーチェック */
-bool Board::boardCheck() {
-	for (int i = 1; i < BOARD_HEIGHT - 1; i++)
-		if (lineCheck(i)) lineErase(i);
+bool Board::boardCheck(Score& score) {
+	int eraseCounter = 0;
+	for (int i = BOARD_HEIGHT - 1; i > 0; i--) {
+		if (lineCheck(i)) {
+			lineErase(i);
+			eraseCounter++;
+		}
+	}
+	if (eraseCounter > 0)
+		score.additional(eraseCounter++);
 	return (gameOverCheck()) ? true : false;
 }
 

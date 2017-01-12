@@ -3,6 +3,8 @@
 #include <cmath>
 #include <iostream>
 
+TetriminoTemplate Tetrimino::TetriminoTemp = TetriminoTemplate();
+
 Tetrimino::Tetrimino() {
 	srand((unsigned int)time(NULL));
 	for (int i = 0; i < MINO_HEIGHT; i++)
@@ -38,21 +40,52 @@ void Tetrimino::setPoint(TmpPoint tmp) {
 	y = tmp.y;
 }
 
+void Tetrimino::clear() {
+	for (int i = 0; i < MINO_HEIGHT; i++)
+		for (int j = 0; j < MINO_WIDTH; j++)
+			mino[i][j] = 0;
+}
+
 /* テトリミノ生成 */
 /* テトリミノは最大 3 * 3 の大きさで中央だけは固定 */
 /* 他はランダムで生成される */
-void Tetrimino::create() {
+void Tetrimino::create(int mode) {
 	x = BOARD_WIDTH + 2;		/* (NEXT)初期位置 */
 	y = 0;						/* (NEXT)初期位置 */
-	
+	clear();
 	mino[1][1] = true;
-
-	for (int i = 0; i < MINO_HEIGHT; i++) {
-		for (int j = 0; j < MINO_WIDTH; j++) {
-			if (i == 1 && j == 1) continue;
-			mino[i][j] = (rand() % 2 == 1) ? true : false;
+	if (mode == 0) {
+		for (int i = 0; i < MINO_HEIGHT; i++) {
+			for (int j = 0; j < MINO_WIDTH; j++) {
+				if (i == 1 && j == 1) continue;
+				mino[i][j] = (rand() % 2 == 1) ? true : false;
+			}
 		}
 	}
+	else if (mode == 1) {
+		int loopCounter = 0;
+		while (loopCounter < 3) {
+			int random = rand() % 9;
+			if (mino[random / 3][random % 3] == false) {
+				mino[random / 3][random % 3] = true;
+				loopCounter++;
+			}
+		}
+	}
+	else if (mode == 2) {
+		int ran = rand() % 7;
+		for (int i = 0; i < MINO_HEIGHT; i++) {
+			for (int j = 0; j < MINO_WIDTH; j++) {
+				mino[i][j] = TetriminoTemp.getTemplate(ran).mino[i][j];
+			}
+		}
+		for (int i = 0; i < rand() % 3; i++)
+			createRotate();
+	}
+	red = rand() % 2;
+	green = rand() % 2;
+	blue = rand() % 2;
+
 	/* create デバッグ用 */
 	/*
 	for (int i = 0; i < MINO_HEIGHT; i++) {
@@ -64,17 +97,19 @@ void Tetrimino::create() {
 	std::cout << std::endl;
 	*/
 }
-/*
-void Tetrimino::rotate(bool vec) {
-	int horVec;
-	int verVec;
-	bool temp = mino[0][0];
 
-	if () {
+void Tetrimino::createRotate() {
+	bool tmp[MINO_HEIGHT][MINO_WIDTH];
 
-	}
+	for (int i = 0; i < MINO_HEIGHT; i++)
+		for (int j = 0; j < MINO_WIDTH; j++)
+			tmp[j][MINO_HEIGHT - 1 - i] = mino[i][j];
+
+	for (int i = 0; i < MINO_HEIGHT; i++)
+		for (int j = 0; j < MINO_WIDTH; j++)
+			mino[i][j] = tmp[i][j];
 }
-*/
+
 /* テトリミノを回転させる */
 /* 引数 : bool 回転方向*/
 /* vec == 1 : 右回転 */
