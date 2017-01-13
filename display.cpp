@@ -32,6 +32,7 @@ Board board;				//ボード
 int rank_pos = -1;			//ランキングの順位
 Point2 ranking[10];			//ランキング格納用の変数
 int title_pos = 0;			//タイトルの位置
+Score score;
 
 //視点のリセット
 void View_reset() {
@@ -267,9 +268,9 @@ void Tetris_Main() {
 			Next_Mino_set();
 		}
 	}
-	draw_information(6250, 120);
+	draw_information(score.getScore(), score.getLine());
 	Create_Board(board.getBoard().board);
-	if(board.boardCheck()) {
+	if(board.boardCheck(score)) {
 		mode = 2;
 	}
 	glPopMatrix();
@@ -278,7 +279,7 @@ void Tetris_Main() {
 //ゲームオーバーの処理
 void drawGameOver() {
 	Create_Board(board.getBoard().board);
-	draw_information(6250, 120);
+	draw_information(score.getScore(), score.getLine());
 
 	draw_str gameover_str("gameover", 1, 0, 0);
 	glPushMatrix();
@@ -392,7 +393,7 @@ void keyboard(unsigned char k, int x, int y) {
 				mode = 3;
 			}
 		} else if(mode == 2) {
-			setRanking(0, 0);
+			setRanking(score.getScore(), score.getLine());
 			mode = 3;
 		}
 		break;
