@@ -281,10 +281,6 @@ void Tetris_Main() {
 		}
 	}
 
-	glRotated();
-	glRotated();
-	glRotated();
-	glTranslated();
 	draw_information(score.getScore(), score.getLine());
 	Create_Board(board.getBoard().board);
 	if(board.boardCheck(score)) {
