@@ -49,6 +49,7 @@ void View_reset() {
 //ランキングをテキストファイルから読み出し、スコアと消したライン数を保存する
 //配列へスコアの降順を格納する
 void setRanking(int score, int line) {
+	rank_pos = -1;
 	std::ifstream fin("ranking.txt");
 	if(fin.fail()) {
 		std::cerr << "Error : Cannot open file" << std::endl;
@@ -132,9 +133,9 @@ void Create_Board(bool block[BOARD_HEIGHT][BOARD_WIDTH]) {
 			glTranslated(j * BLOCK_SIZE, i * BLOCK_SIZE, 0.0);
 			if(block[i][j]) {
 				if(i == 0 || j == 0 || j == BOARD_WIDTH - 1) {
-					glColor4d(0, 0, 0, 0.4);
+					glColor4d(board.getBoard().red[i][j], board.getBoard().green[i][j], board.getBoard().blue[i][j], 0.4);
 				} else {
-					glColor3d(0, 0, 1);
+					glColor3d(board.getBoard().red[i][j], board.getBoard().green[i][j], board.getBoard().blue[i][j]);
 				}
 				glutSolidCube(BLOCK_SIZE);
 			}
@@ -232,6 +233,7 @@ void draw_information(int score, int line) {
 //次のテトリミノの設定
 void Next_Mino_set() {
 	tetrimino.setMino(nextmino.getMino());
+	tetrimino.setColor(nextmino.getR(), nextmino.getG(),nextmino.getB());
 	nextmino.create();
 	tetrimino.setPoint(mino_pos);
 }
@@ -240,12 +242,16 @@ void Next_Mino_set() {
 void Mino_hold() {
 	hold_check = false;
 	TmpMino temp = holdmino.getMino();
+	int color[3] = { holdmino.getR(), holdmino.getG(), holdmino.getB() };
 	if(temp.mino[1][1] == false) {
 		holdmino.setMino(tetrimino.getMino());
+		holdmino.setColor(tetrimino.getR(), tetrimino.getG(), tetrimino.getB());
 		Next_Mino_set();
 	} else {
 		holdmino.setMino(tetrimino.getMino());
+		holdmino.setColor(tetrimino.getR(), tetrimino.getG(), tetrimino.getB());
 		tetrimino.setMino(temp);
+		tetrimino.setColor(color[0], color[1], color[2]);
 		tetrimino.setPoint(mino_pos);
 	}
 }
@@ -314,24 +320,26 @@ void drawRanking() {
 	draw_str rank("rank");
 	draw_str score("score");
 	draw_str line("line");
+	draw_str name("name");
 	glPushMatrix();
 	glTranslated((BOARD_WIDTH - 16) * BLOCK_SIZE, (BOARD_HEIGHT + 2) * BLOCK_SIZE, 0);
-	glScaled(2, 2, 2);
+	glScaled(1.5, 1.5, 1.5);
 	rank.draw_block();
 	glTranslated(4 * BLOCK_SIZE , 0, 0);
 	score.draw_block();
 	glTranslated(6 * BLOCK_SIZE , 0, 0);
 	line.draw_block();
+	glTranslated(4 * BLOCK_SIZE, 0, 0);
+	name.draw_block();
 	glPopMatrix();
 
 	draw_str ranking_str[10][3];
-	Point3 color = {0, 0, 0};
 	for(int i = 0; i < 10; i++) {
 		Point3 color = {0, 0, 0};
 		if(rank_pos == i) color.x = 1;
 		glPushMatrix();
 		glTranslated((BOARD_WIDTH - 16) * BLOCK_SIZE, (BOARD_HEIGHT - i * 2) * BLOCK_SIZE, 0);
-		glScaled(2, 2, 2);
+		glScaled(1.5, 1.5, 1.5);
 		ranking_str[i][0].set_str(i + 1, color.x, color.y, color.z);
 		ranking_str[i][0].draw_block();
 
@@ -344,10 +352,11 @@ void drawRanking() {
 		ranking_str[i][2].draw_block();
 		glPopMatrix();
 	}
+
 	glPushMatrix();
 	glTranslated(-BLOCK_SIZE, 0, 0);
 	draw_str please("please push r key", 1, 0, 0);
-	glScaled(2, 2, 2);
+	glScaled(2.0, 2.0, 2.0);
 	please.draw_block();
 	glPopMatrix();
 }
@@ -414,6 +423,7 @@ void keyboard(unsigned char k, int x, int y) {
 		View_reset();
 		break;
 	case 'r':
+		tetris_init();
 		mode = 0;
 		break;
 	case 'z':
