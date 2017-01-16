@@ -35,6 +35,12 @@ void Tetrimino::setMino(TmpMino tmp) {
 			mino[i][j] = tmp.mino[i][j];
 }
 
+void Tetrimino::setColor(int r, int g, int b) {
+	red = r;
+	green = g;
+	blue = b;
+}
+
 void Tetrimino::setPoint(TmpPoint tmp) {
 	x = tmp.x;
 	y = tmp.y;
@@ -82,10 +88,11 @@ void Tetrimino::create(int mode) {
 		for (int i = 0; i < rand() % 3; i++)
 			createRotate();
 	}
-	red = rand() % 2;
-	green = rand() % 2;
-	blue = rand() % 2;
-
+	do {
+		red = rand() % 2;
+		green = rand() % 2;
+		blue = rand() % 2;
+	} while (red == green && red == blue);
 	/* create デバッグ用 */
 	/*
 	for (int i = 0; i < MINO_HEIGHT; i++) {

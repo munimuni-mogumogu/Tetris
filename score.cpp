@@ -11,19 +11,7 @@ void Score::clear() {
 
 void Score::additional(int lineNum) {
 	line += lineNum;
-	switch (lineNum) {
-	case 1:
-		score += lineNum * 100;
-		break;
-	case 2:
-		score += lineNum * 100 * 2;
-		break;
-	case 3:
-		score += lineNum * 100 * 8;
-		break;
-	default:
-		break;
-	}
+	score += 100 * pow(2, (lineNum - 1) * 2);
 	//std::cout << "line = " << line
 	//		  << ", score = " << score << std::endl;
 }

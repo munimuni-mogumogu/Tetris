@@ -17,6 +17,9 @@ class Board;
 
 struct TmpBoard {
 	bool board[BOARD_HEIGHT][BOARD_WIDTH];
+	int red[BOARD_HEIGHT][BOARD_WIDTH];
+	int green[BOARD_HEIGHT][BOARD_WIDTH];
+	int blue[BOARD_HEIGHT][BOARD_WIDTH];
 };
 
 struct TmpMino {
@@ -73,8 +76,9 @@ public:
 	TmpPoint getXY();
 	TmpMino getMino();
 	void setMino(TmpMino);
+	void setColor(int, int, int);
 	void setPoint(TmpPoint);
-	void create(int = 0);
+	void create(int = 2);
 	void clear();
 	void rotate(bool, Board*);
 	void createRotate();
@@ -86,6 +90,9 @@ public:
 class Board {
 private:
 	bool board[BOARD_HEIGHT][BOARD_WIDTH];
+	int red[BOARD_HEIGHT][BOARD_WIDTH];
+	int green[BOARD_HEIGHT][BOARD_WIDTH];
+	int blue[BOARD_HEIGHT][BOARD_WIDTH];
 public:
 	Board();
 	void init();

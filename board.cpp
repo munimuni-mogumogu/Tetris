@@ -11,10 +11,20 @@ Board::Board() {
 void Board::init() {
 	for (int i = 0; i < BOARD_HEIGHT; i++) {
 		for (int j = 0; j < BOARD_WIDTH; j++) {
-			if (i == 0 || j == 0 || j == BOARD_WIDTH - 1)
+			if (i == 0 || j == 0 || j == BOARD_WIDTH - 1) {
 				board[i][j] = true;
-			else
+				do {
+					red[i][j] = rand() % 2;
+					green[i][j] = rand() % 2;
+					blue[i][j] = rand() % 2;
+				} while (red[i][j] == blue[i][j] && red[i][j] == green[i][j]);
+			}
+			else {
 				board[i][j] = false;
+				red[i][j] = 1;
+				green[i][j] = 1;
+				blue[i][j] = 1;
+			}
 		}
 	}
 	/* デバッグ ボードの縦横確認 */
@@ -26,9 +36,14 @@ void Board::init() {
 /* 盤面取得 */
 TmpBoard Board::getBoard() {
 	TmpBoard tmp;
-	for (int i = 0; i < BOARD_HEIGHT; i++)
-		for (int j = 0; j < BOARD_WIDTH; j++)
+	for (int i = 0; i < BOARD_HEIGHT; i++) {
+		for (int j = 0; j < BOARD_WIDTH; j++) {
 			tmp.board[i][j] = board[i][j];
+			tmp.red[i][j] = red[i][j];
+			tmp.green[i][j] = green[i][j];
+			tmp.blue[i][j] = blue[i][j];
+		}
+	}
 	return tmp;
 }
 
@@ -39,6 +54,10 @@ void Board::set(Tetrimino tm) {
 		for (int j = 0; j < MINO_WIDTH; j++) {
 			if (!tmp.mino[i][j]) continue;
 			board[tm.getY() + i][tm.getX() + j] = tmp.mino[i][j];
+			red[tm.getY() + i][tm.getX() + j] = tm.getR();
+			green[tm.getY() + i][tm.getX() + j] = tm.getG();
+			blue[tm.getY() + i][tm.getX() + j] = tm.getB();
+
 		}
 	}
 }
