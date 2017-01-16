@@ -32,7 +32,8 @@ Board board;				//ボード
 int rank_pos = -1;			//ランキングの順位
 Point2 ranking[10];			//ランキング格納用の変数
 int title_pos = 0;			//タイトルの位置
-Score score;
+Score score;				//スコア
+double speed = 1000;		//落下速度(ms)
 
 //視点のリセット
 void View_reset() {
@@ -64,6 +65,13 @@ void setRanking(int score, int line) {
 			temp2.x = ranking[i].x; temp2.y = ranking[i].y;
 			ranking[i].x = temp1.x; ranking[i].y = temp1.y;
 			temp1.x = temp2.x; temp1.y = temp2.y;
+		}else if(ranking[i].x == temp1.x) {
+			if(ranking[i].y < temp1.y) {
+				if(rank_pos == -1) rank_pos = i;
+				temp2.x = ranking[i].x; temp2.y = ranking[i].y;
+				ranking[i].x = temp1.x; ranking[i].y = temp1.y;
+				temp1.x = temp2.x; temp1.y = temp2.y;
+			}
 		}
 	}
 
@@ -93,6 +101,7 @@ void tetris_init() {
 	rank_pos = -1;
 	setRanking(0, 0);
 	title_pos = 0;
+	score.clear();
 }
 
 //RGBの色の四角形を描画
@@ -204,7 +213,7 @@ void draw_information(int score, int line) {
 
 	glPushMatrix();
 	glTranslated(holdmino.getX() * BLOCK_SIZE, holdmino.getY() * BLOCK_SIZE, 0);
-	Create_Block(holdmino.getMino().mino, 1, 0, 0);
+	Create_Block(holdmino.getMino().mino, holdmino.getR(), holdmino.getG(), holdmino.getB());
 	glPopMatrix();
 
 	glPushMatrix();
@@ -216,7 +225,7 @@ void draw_information(int score, int line) {
 
 	glPushMatrix();
 	glTranslated(nextmino.getX() * BLOCK_SIZE, nextmino.getY() * BLOCK_SIZE, 0);
-	Create_Block(nextmino.getMino().mino, 1, 0, 0);
+	Create_Block(nextmino.getMino().mino, nextmino.getR(), nextmino.getG(), nextmino.getB());
 	glPopMatrix();
 }
 
@@ -247,9 +256,9 @@ void Tetris_Main() {
 
 	glPushMatrix();
 	glTranslated(tetrimino.getX() * BLOCK_SIZE, tetrimino.getY() * BLOCK_SIZE, 0);
-	Create_Block(tetrimino.getMino().mino, 1, 0, 0);
+	Create_Block(tetrimino.getMino().mino, tetrimino.getR(), tetrimino.getG(), tetrimino.getB());
 	glPopMatrix();
-	
+
 	forecastmino.setMino(tetrimino.getMino());
 	forecastmino_pos = tetrimino.getXY();
 	forecastmino.setPoint(forecastmino_pos);
@@ -259,15 +268,23 @@ void Tetris_Main() {
 	glTranslated(forecastmino.getX() * BLOCK_SIZE, forecastmino.getY() * BLOCK_SIZE, 0);
 	Create_Block(forecastmino.getMino().mino, 1.0, 0, 0, 0.4);
 	glPopMatrix();
-	
+
 	glPopMatrix();
-	if(clock() - start > 1000) {
+
+	speed = 1000 * pow(0.9, score.getLine() / 1);
+
+	if(clock() - start > speed) {
 		start = clock();
 		if(tetrimino.translate(0, -1, false, &board)) {
 			hold_check = true;
 			Next_Mino_set();
 		}
 	}
+
+	glRotated();
+	glRotated();
+	glRotated();
+	glTranslated();
 	draw_information(score.getScore(), score.getLine());
 	Create_Board(board.getBoard().board);
 	if(board.boardCheck(score)) {
