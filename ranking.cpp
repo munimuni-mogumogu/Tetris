@@ -29,10 +29,10 @@ void Tetris::Set_Get_Ranking() {
 	}
 	/*
 	for(int i = 0; i < 10; i++) {
-		fin >> ranking[i].x >> ranking[i].y;
-		for(int j = 0; j < RANKNAME; j++) {
-			fin >> rank_name[i][j];
-		}
+	fin >> ranking[i].x >> ranking[i].y;
+	for(int j = 0; j < RANKNAME; j++) {
+	fin >> rank_name[i][j];
+	}
 	}
 	*/
 
@@ -58,8 +58,7 @@ void Tetris::Set_Get_Ranking() {
 			rank_name[i][j] = str[j];
 		i++;
 	}
-	/***/
-	// score.additional(2);
+
 	Point2 temp1 = {score.getScore(), score.getLine()};
 	Point2 temp2;
 	char tempname1[RANKNAME] = {' ', ' ', ' ', ' ', ' ', ' '};
@@ -148,7 +147,7 @@ void Tetris::Ranking_Display() {
 		glTranslated(6 * BLOCK_SIZE, 0, 0);
 		ranking_str[i][2].set_str(ranking[i].y, color.x, color.y, color.z);
 		ranking_str[i][2].draw_block();
-		
+
 		glTranslated(4 * BLOCK_SIZE, 0, 0);
 		if(rank_pos == i) {
 			glPushMatrix();
@@ -200,14 +199,18 @@ void Tetris::Ranking_Specialkeyboard(int k, int x, int y) {
 		if(name_pos > 0) name_pos--;
 		break;
 	case GLUT_KEY_UP:
-		if(rank_name[rank_pos][name_pos] == ' ') rank_name[rank_pos][name_pos] = 'A';
-		else if(rank_name[rank_pos][name_pos] == 'Z') rank_name[rank_pos][name_pos] = ' ';
-		else rank_name[rank_pos][name_pos]++;
+		if(rank_pos != -1) {
+			if(rank_name[rank_pos][name_pos] == ' ') rank_name[rank_pos][name_pos] = 'A';
+			else if(rank_name[rank_pos][name_pos] == 'Z') rank_name[rank_pos][name_pos] = ' ';
+			else rank_name[rank_pos][name_pos]++;
+		}
 		break;
 	case GLUT_KEY_DOWN:
-		if(rank_name[rank_pos][name_pos] == ' ') rank_name[rank_pos][name_pos] = 'Z';
-		else if(rank_name[rank_pos][name_pos] == 'A') rank_name[rank_pos][name_pos] = ' ';
-		else rank_name[rank_pos][name_pos]--;
+		if(rank_pos != -1) {
+			if(rank_name[rank_pos][name_pos] == ' ') rank_name[rank_pos][name_pos] = 'Z';
+			else if(rank_name[rank_pos][name_pos] == 'A') rank_name[rank_pos][name_pos] = ' ';
+			else rank_name[rank_pos][name_pos]--;
+		}
 		break;
 	default:
 		break;
