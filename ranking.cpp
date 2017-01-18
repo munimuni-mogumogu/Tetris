@@ -161,7 +161,9 @@ void Tetris::Ranking_Display() {
 			glEnd();
 			glPopMatrix();
 		}
-		ranking_str[i][3].set_str(rank_name[i], color.x, color.y, color.z);
+		char temp[RANKNAME];
+		for(int j = 0; j < RANKNAME; j++) temp[j] = rank_name[i][j];
+		ranking_str[i][3].set_str(temp, color.x, color.y, color.z);
 		ranking_str[i][3].draw_block();
 		glPopMatrix();
 	}
