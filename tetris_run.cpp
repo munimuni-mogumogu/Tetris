@@ -30,7 +30,7 @@ void Tetris::Next_Mino() {
 void Tetris::Mino_Hold() {
 	hold_check = false;
 	TmpMino temp = holdmino.getMino();
-	int color[3] = { holdmino.getR(), holdmino.getG(), holdmino.getB() };
+	double color[3] = { holdmino.getR(), holdmino.getG(), holdmino.getB() };
 	if(temp.mino[1][1] == false) {
 		holdmino.setMino(tetrimino.getMino());
 		holdmino.setColor(tetrimino.getR(), tetrimino.getG(), tetrimino.getB());

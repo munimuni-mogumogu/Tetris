@@ -44,6 +44,7 @@ void Tetris::Title_Display() {
 }
 
 void Tetris::Title_Keyboard(unsigned char k, int x, int y) {
+	
 	switch(k) {
 	case GLUT_KEY_ENTER:
 		if(title_pos == 0) {
@@ -70,7 +71,6 @@ void Tetris::Title_Keyboard(unsigned char k, int x, int y) {
 		break;
 	}
 }
-
 
 void Tetris::Title_Specialkeyboard(int k, int x, int y) {
 	switch(k) {

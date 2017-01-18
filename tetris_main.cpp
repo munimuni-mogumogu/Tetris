@@ -8,8 +8,8 @@ bool Tetris::Run(int argc, char** argv) {
 	Gl_Init();
 	Tetris_Init();
 	Funcgroup();
-	glutMainLoop();
-	return false;
+	if(run) glutMainLoop();
+	return run;
 }
 
 void Tetris::Funcgroup() {
@@ -59,8 +59,8 @@ void Tetris::Motion(int x, int y) {
 		mousepoint.x = x;
 		mousepoint.y = y;
 	} else {
-		int dx = (x - mousepoint.x) / 2;
-		int dy = (y - mousepoint.y) / 2;
+		double dx = (x - mousepoint.x) / 2;
+		double dy = (y - mousepoint.y) / 2;
 		center.x -= dx * cos(azimuth) - dy * sin(elevation) * sin(azimuth);
 		center.y += dy * cos(elevation);
 		center.z += -dx * sin(azimuth) - dy * sin(elevation) * cos(azimuth);

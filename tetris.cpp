@@ -1,5 +1,6 @@
 #include "tetris.h"
 
+bool Tetris::run;
 int Tetris::angle;			//視野角
 int Tetris::mode;			//ゲームモード
 GLfloat Tetris::angle_of_top;	//画面の上の設定(1 : 上がyの正, -1 : 下がyの正)
@@ -31,6 +32,7 @@ double Tetris::speed;		//落下速度(ms)
 bool Tetris::light_check;	//ライトのオンオフ
 
 Tetris::Tetris() {
+	run = true;
 	angle = 90;
 	mode = 0;
 	angle_of_top = 1.0;

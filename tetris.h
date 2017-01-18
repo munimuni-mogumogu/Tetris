@@ -49,18 +49,19 @@
 #include "tetrimino_template.h"
 
 struct Point2 {
-	int x;
-	int y;
+	double x;
+	double y;
 };
 
 struct Point3 {
-	int x;
-	int y;
-	int z;
+	double x;
+	double y;
+	double z;
 };
 
 class Tetris {
 private:
+	static bool run;			//ゲーム終了判定
 	static int angle;			//視野角
 	static int mode;			//ゲームモード
 	static GLfloat angle_of_top;	//画面の上の設定(1 : 上がyの正, -1 : 下がyの正)
