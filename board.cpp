@@ -84,11 +84,12 @@ bool Board::lineCheck(int line) {
 /* w’è‚µ‚½—ñ‚ğÁ‹ */
 /* w’è—ñ‚æ‚èã’i‚Ì—ñ‚ğˆê‚Â‚¸‚Â‚¸‚ç‚· */
 void Board::lineErase(int line) {
-	for (int j = 1; j < BOARD_WIDTH - 1; j++)
-		board[line][j] = false;
 	for (int line_num = line; line_num < BOARD_HEIGHT - 1; line_num++) {
 		for (int j = 1; j < BOARD_WIDTH - 1; j++) {
 			board[line_num][j] = board[line_num + 1][j];
+			red[line_num][j] = red[line_num + 1][j];
+			green[line_num][j] = green[line_num + 1][j];
+			blue[line_num][j] = blue[line_num + 1][j];
 			board[line_num + 1][j] = false;
 		}
 	}
