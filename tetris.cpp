@@ -23,6 +23,7 @@ Tetrimino Tetris::forecastmino;		//着地点のテトリミノ
 Board Tetris::board;				//ボード
 int Tetris::rank_pos;			//ランキングの順位
 char Tetris::rank_name[10][6];
+int Tetris::name_pos;
 Point2 Tetris::ranking[10];			//ランキング格納用の変数
 int Tetris::title_pos;			//タイトルの位置
 Score Tetris::score;				//スコア
@@ -44,6 +45,7 @@ Tetris::Tetris() {
 	start = clock();
 	hold_check = true;
 	rank_pos = -1;
+	name_pos = 0;
 	title_pos = 0;
 	speed = 1000;
 	light_check = false;
@@ -72,6 +74,7 @@ void Tetris::Tetris_Init() {
 	nextmino.create();
 	start = clock();
 	rank_pos = -1;
+	name_pos = 0;
 	title_pos = 0;
 	score.clear();
 }
@@ -92,7 +95,6 @@ void Tetris::Gl_Init() {
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, lcol0);
 	glDisable(GL_LIGHTING);
 
-	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }

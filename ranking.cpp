@@ -6,6 +6,7 @@ void Tetris::Ranking() {
 	glutKeyboardFunc(Ranking_Keyboard);
 	glutSpecialFunc(Ranking_Specialkeyboard);
 }
+
 void Tetris::Change_Name(char name1[], char name2[], int size) {
 	char temp[RANKNAME];
 	for(int j = 0; j < size; j++) {
@@ -27,13 +28,15 @@ void Tetris::Set_Get_Ranking() {
 	}
 	for(int i = 0; i < 10; i++) {
 		fin >> ranking[i].x >> ranking[i].y;
-		fin.get(rank_name[i], '\n');
+		for(int j = 0; j < RANKNAME; j++) {
+			fin >> rank_name[i][j];
+		}
 	}
 
 	score.additional(2);
 	Point2 temp1 = {score.getScore(), score.getLine()};
 	Point2 temp2;
-	char tempname1[RANKNAME] = " ";
+	char tempname1[RANKNAME] = {' ', ' ', ' ', ' ', ' ', ' '};
 	for(int i = 0; i < 10; i++) {
 		if(ranking[i].x < temp1.x) {
 			if(rank_pos == -1) {
@@ -59,9 +62,8 @@ void Tetris::Set_Get_Ranking() {
 	fin.close();
 }
 
-void Tetris::Save_Ranking_Name(char name[RANKNAME]) {
-	for(int i = 0; i < RANKNAME; i++) rank_name[rank_pos][i] = name[i];
-	
+void Tetris::Save_Ranking_Name() {
+
 	std::ofstream fout("ranking.txt");
 	if(fout.fail()) {
 		std::cerr << "Error : Cannot open file" << std::endl;
@@ -73,9 +75,11 @@ void Tetris::Save_Ranking_Name(char name[RANKNAME]) {
 		}
 		fout << std::endl;
 	}
-	fout.close();
-}
 
+	fout.close();
+
+	rank_pos = -1;
+}
 
 void Tetris::Ranking_Display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -118,8 +122,19 @@ void Tetris::Ranking_Display() {
 		glTranslated(6 * BLOCK_SIZE, 0, 0);
 		ranking_str[i][2].set_str(ranking[i].y, color.x, color.y, color.z);
 		ranking_str[i][2].draw_block();
-
+		
 		glTranslated(4 * BLOCK_SIZE, 0, 0);
+		if(rank_pos == i) {
+			glPushMatrix();
+			glTranslated(name_pos * (STR_BLOCK_SIZE + 1), -STR_BLOCK_SIZE, 0);
+			glBegin(GL_QUADS);
+			glVertex2d(0, 0);
+			glVertex2d(0, 2);
+			glVertex2d(STR_BLOCK_SIZE, 2);
+			glVertex2d(STR_BLOCK_SIZE, 0);
+			glEnd();
+			glPopMatrix();
+		}
 		ranking_str[i][3].set_str(rank_name[i], color.x, color.y, color.z);
 		ranking_str[i][3].draw_block();
 		glPopMatrix();
@@ -138,7 +153,8 @@ void Tetris::Ranking_Display() {
 void Tetris::Ranking_Keyboard(unsigned char k, int x, int y) {
 	switch(k) {
 	case GLUT_KEY_ENTER:
-		Save_Ranking_Name("name");
+		Save_Ranking_Name();
+		Tetris_Init();
 		mode = TITLE;
 		break;
 	default:
@@ -149,7 +165,21 @@ void Tetris::Ranking_Keyboard(unsigned char k, int x, int y) {
 
 void Tetris::Ranking_Specialkeyboard(int k, int x, int y) {
 	switch(k) {
+	case GLUT_KEY_RIGHT:
+		if(name_pos < 5) name_pos++;
+		break;
+	case GLUT_KEY_LEFT:
+		if(name_pos > 0) name_pos--;
+		break;
 	case GLUT_KEY_UP:
+		if(rank_name[rank_pos][name_pos] == ' ') rank_name[rank_pos][name_pos] = 'A';
+		else if(rank_name[rank_pos][name_pos] == 'Z') rank_name[rank_pos][name_pos] = ' ';
+		else rank_name[rank_pos][name_pos]++;
+		break;
+	case GLUT_KEY_DOWN:
+		if(rank_name[rank_pos][name_pos] == ' ') rank_name[rank_pos][name_pos] = 'Z';
+		else if(rank_name[rank_pos][name_pos] == 'A') rank_name[rank_pos][name_pos] = ' ';
+		else rank_name[rank_pos][name_pos]--;
 		break;
 	default:
 		break;

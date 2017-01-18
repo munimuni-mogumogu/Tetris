@@ -85,6 +85,7 @@ private:
 	static int rank_pos;			//ランキングの順位
 	static Point2 ranking[10];			//ランキング格納用の変数
 	static char rank_name[10][RANKNAME];	//名前
+	static int name_pos;		//入力位置
 	static int title_pos;			//タイトルの位置
 	static Score score;				//スコア
 	static double speed;		//落下速度(ms)
@@ -123,7 +124,7 @@ public:
 	static void Ranking();
 	static void Change_Name(char[], char[], int);
 	static void Set_Get_Ranking();
-	static void Save_Ranking_Name(char[]);
+	static void Save_Ranking_Name();
 	static void Ranking_Display();
 	static void Ranking_Keyboard(unsigned char, int, int);
 	static void Ranking_Specialkeyboard(int, int, int);
