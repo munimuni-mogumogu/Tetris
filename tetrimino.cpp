@@ -1,4 +1,4 @@
-#include "tetris.h"
+#include "tetrimino.h"
 #include "time.h"
 #include <cmath>
 #include <iostream>
@@ -35,7 +35,7 @@ void Tetrimino::setMino(TmpMino tmp) {
 			mino[i][j] = tmp.mino[i][j];
 }
 
-void Tetrimino::setColor(int r, int g, int b) {
+void Tetrimino::setColor(double r, double g, double b) {
 	red = r;
 	green = g;
 	blue = b;
@@ -89,9 +89,9 @@ void Tetrimino::create(int mode) {
 			createRotate();
 	}
 	do {
-		red = rand() % 2;
-		green = rand() % 2;
-		blue = rand() % 2;
+		red = rand() % 2 / 1.1;
+		green = rand() % 2 / 1.1;
+		blue = rand() % 2 / 1.1;
 	} while (red == green && red == blue);
 	/* create デバッグ用 */
 	/*

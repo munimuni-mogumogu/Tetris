@@ -1,4 +1,4 @@
-#include "tetris.h"
+#include "score.h"
 
 Score::Score() {
 	clear();
@@ -11,7 +11,7 @@ void Score::clear() {
 
 void Score::additional(int lineNum) {
 	line += lineNum;
-	score += 100 * pow(2, (lineNum - 1) * 2);
+	score += 100 * (int)pow(2, (lineNum - 1) * 2);
 	//std::cout << "line = " << line
 	//		  << ", score = " << score << std::endl;
 }

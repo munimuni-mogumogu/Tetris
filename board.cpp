@@ -1,4 +1,4 @@
-#include "tetris.h"
+#include "board.h"
 
 /* デバッグ用変数 */
 // Score score;
@@ -13,11 +13,9 @@ void Board::init() {
 		for (int j = 0; j < BOARD_WIDTH; j++) {
 			if (i == 0 || j == 0 || j == BOARD_WIDTH - 1) {
 				board[i][j] = true;
-				do {
-					red[i][j] = rand() % 2;
-					green[i][j] = rand() % 2;
-					blue[i][j] = rand() % 2;
-				} while (red[i][j] == blue[i][j] && red[i][j] == green[i][j]);
+				red[i][j] = 0;
+				green[i][j] = 0;
+				blue[i][j] = 1;
 			}
 			else {
 				board[i][j] = false;

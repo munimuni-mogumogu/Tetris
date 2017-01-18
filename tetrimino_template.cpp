@@ -1,4 +1,4 @@
-#include "tetris.h"
+#include "tetrimino_template.h"
 
 TetriminoTemplate::TetriminoTemplate() {
 	for (int i = 0; i < 7; i++)
