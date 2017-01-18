@@ -1,4 +1,4 @@
-#include "draw_str.h"
+#include "tetris.h"
 #include "GL/freeglut.h"
 
 
@@ -7,6 +7,8 @@ draw_str::draw_str() {
 	color[0] = 0;
 	color[1] = 0;
 	color[2] = 0;
+	str_pos = 0;
+	while(str[str_pos++] != '\0');
 }
 
 draw_str::draw_str(char figure[], int Red, int Blue, int Green) {
@@ -14,21 +16,23 @@ draw_str::draw_str(char figure[], int Red, int Blue, int Green) {
 	color[0] = Red;
 	color[1] = Blue;
 	color[2] = Green;
+	str_pos = 0;
+	while(str[str_pos++] != '\0');
 }
 
 draw_str::draw_str(int number, int Red, int Blue, int Green) {
 	int pos_check = 10;
-	int pos = 1;
+	str_pos = 1;
 	while(number >= pos_check) {
 		pos_check *= 10;
-		pos++;
+		str_pos++;
 	}
-	str = new char[pos + 1];
-	for(int i = pos - 1; i >= 0; i--) {
+	str = new char[str_pos + 1];
+	for(int i = str_pos - 1; i >= 0; i--) {
 		str[i] = (char)(number % 10) + '0';
 		number /= 10;
 	}
-	str[pos] = '\0';
+	str[str_pos] = '\0';
 	color[0] = Red;
 	color[1] = Blue;
 	color[2] = Green;
@@ -39,21 +43,23 @@ void draw_str::set_str(char figure[],int Red, int Blue, int Green) {
 	color[0] = Red;
 	color[1] = Blue;
 	color[2] = Green;
+	str_pos = 0;
+	while(str[str_pos++] != '\0');
 }
 
 void draw_str::set_str(int number, int Red, int Blue, int Green) {
 	int pos_check = 10;
-	int pos = 1;
+	str_pos = 1;
 	while(number >= pos_check) {
 		pos_check *= 10;
-		pos++;
+		str_pos++;
 	}
-	str = new char[pos + 1];
-	for(int i = pos - 1; i >= 0; i--) {
+	str = new char[str_pos + 1];
+	for(int i = str_pos - 1; i >= 0; i--) {
 		str[i] = (char)(number % 10) + '0';
 		number /= 10;
 	}
-	str[pos] = '\0';
+	str[str_pos] = '\0';
 	color[0] = Red;
 	color[1] = Blue;
 	color[2] = Green;
@@ -72,9 +78,9 @@ void draw_str::glDrawStr(bool block[STR_BLOCK_SIZE][STR_BLOCK_SIZE]) {
 	}
 }
 
-void draw_str::draw_block() {
-	int i = 0;
-	while(str[i] != '\0') {
+void draw_str::draw_block(int pos) {
+	if(pos == CENTER) glTranslated(-STR_BLOCK_SIZE * ((double)str_pos / 2), 0, 0);
+	for(int i = 0; i < str_pos; i++) {
 		glPushMatrix();
 		glTranslated((STR_BLOCK_SIZE + 1) * i, 0, 0);
 		bool block[STR_BLOCK_SIZE][STR_BLOCK_SIZE];
@@ -366,7 +372,6 @@ void draw_str::draw_block() {
 			break;
 		}
 		glDrawStr(block);
-		i++;
 		glPopMatrix();
 	}
 }
