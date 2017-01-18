@@ -8,7 +8,7 @@ bool Tetris::Run(int argc, char** argv) {
 	Gl_Init();
 	Tetris_Init();
 	Funcgroup();
-	if(run) glutMainLoop();
+	glutMainLoop();
 	return run;
 }
 
@@ -94,6 +94,7 @@ void Tetris::Timer(int value) {
 		Ranking();
 		break;
 	}
+	if(!run) glutLeaveMainLoop();
 	glutPostRedisplay();
 	glutTimerFunc(value, Timer, 16);
 }

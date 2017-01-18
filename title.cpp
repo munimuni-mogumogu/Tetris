@@ -44,7 +44,6 @@ void Tetris::Title_Display() {
 }
 
 void Tetris::Title_Keyboard(unsigned char k, int x, int y) {
-	
 	switch(k) {
 	case GLUT_KEY_ENTER:
 		if(title_pos == 0) {
@@ -54,6 +53,9 @@ void Tetris::Title_Keyboard(unsigned char k, int x, int y) {
 			Set_Get_Ranking();
 			mode = RANKING;
 		}
+		break;
+	case '\033':
+		run = false;
 		break;
 	case 'v':
 		View_Reset();
