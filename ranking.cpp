@@ -1,5 +1,6 @@
 #include "tetris.h"
 #include <fstream>
+#include <string>
 
 void Tetris::Ranking() {
 	glutDisplayFunc(Ranking_Display);
@@ -26,14 +27,39 @@ void Tetris::Set_Get_Ranking() {
 	if(fin.fail()) {
 		std::cerr << "Error : Cannot open file" << std::endl;
 	}
+	/*
 	for(int i = 0; i < 10; i++) {
 		fin >> ranking[i].x >> ranking[i].y;
 		for(int j = 0; j < RANKNAME; j++) {
 			fin >> rank_name[i][j];
 		}
 	}
+	*/
 
-	score.additional(2);
+	/***/
+	std::string str;
+	int i = 0;
+	while (std::getline(fin, str)) {
+		std::string s = "";
+		std::string l = "";
+		std::string n = "";
+		int tmp = str.find(' ');
+		for (int j = 0; j < tmp; j++)
+			s += str[j];
+		str = str.substr(tmp + 1);
+		tmp = str.find(' ');
+		for (int j = 0; j < tmp; j++)
+			l += str[j];
+		str = str.substr(tmp + 1);
+		ranking[i].x = stoi(s);
+		ranking[i].y = stoi(l);
+		while (str.size() != RANKNAME) str += " ";
+		for (int j = 0; j < RANKNAME; j++)
+			rank_name[i][j] = str[j];
+		i++;
+	}
+	/***/
+	// score.additional(2);
 	Point2 temp1 = {score.getScore(), score.getLine()};
 	Point2 temp2;
 	char tempname1[RANKNAME] = {' ', ' ', ' ', ' ', ' ', ' '};
@@ -69,7 +95,7 @@ void Tetris::Save_Ranking_Name() {
 		std::cerr << "Error : Cannot open file" << std::endl;
 	}
 	for(int i = 0; i < 10; i++) {
-		fout << ranking[i].x << " " << ranking[i].y;
+		fout << ranking[i].x << " " << ranking[i].y << " ";
 		for(int j = 0; j < RANKNAME; j++) {
 			fout << rank_name[i][j];
 		}
