@@ -86,6 +86,9 @@ void Tetris::Gl_Init() {
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_DEPTH_TEST);
 
+	GLfloat material[] = { 0.5, 0.5, 0.5, 0.5 };
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, material);
+
 	//ŒõŒ¹‚Ìİ’è
 	GLfloat lightPosition[4] = { 0.0, 0.0, -500.0, 1.0 }; //ŒõŒ¹‚ÌˆÊ’u
 	GLfloat lightDiffuse[3]  = { 1.0,   1.0, 1.0  }; //ŠgUŒõ
