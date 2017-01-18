@@ -184,6 +184,18 @@ void Tetris::Ranking_Keyboard(unsigned char k, int x, int y) {
 		Tetris_Init();
 		mode = TITLE;
 		break;
+	case 'v':
+		View_Reset();
+		break;
+	case 'r':
+		Tetris_Init();
+		mode = TITLE;
+		break;
+	case 'l':
+		light_check = !light_check;
+		if(light_check) glEnable(GL_LIGHTING);
+		else glDisable(GL_LIGHTING);
+		break;
 	default:
 		break;
 	}
