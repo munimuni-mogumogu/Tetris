@@ -39,6 +39,18 @@ void Tetris::Gameover_Keyboard(unsigned char k, int x, int y) {
 		Set_Get_Ranking();
 		mode = RANKING;
 		break;
+	case 'v':
+		View_Reset();
+		break;
+	case 'r':
+		Tetris_Init();
+		mode = TITLE;
+		break;
+	case 'l':
+		light_check = !light_check;
+		if(light_check) glEnable(GL_LIGHTING);
+		else glDisable(GL_LIGHTING);
+		break;
 	default:
 		break;
 	}
