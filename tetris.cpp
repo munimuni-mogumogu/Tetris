@@ -87,12 +87,16 @@ void Tetris::Gl_Init() {
 	glEnable(GL_DEPTH_TEST);
 
 	//åıåπÇÃê›íË
-	GLfloat lpos0[4] = { 10.0, 10.0, 10.0, 1.0 };
-	GLfloat lcol0[4] = { 1.0, 1.0, 1.0, 1.0 };
+	GLfloat lightPosition[4] = { 0.0, 0.0, -500.0, 1.0 }; //åıåπÇÃà íu
+	GLfloat lightDiffuse[3]  = { 1.0,   1.0, 1.0  }; //ägéUåı
+	GLfloat lightAmbient[3]  = { 0.25, 0.25, 0.25 }; //ä¬ã´åı
+	GLfloat lightSpecular[3] = { 1.0,   1.0, 1.0  }; //ãæñ åı
 	glEnable(GL_LIGHTING);
+	glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE,  lightDiffuse);
+	glLightfv(GL_LIGHT0, GL_AMBIENT,  lightAmbient);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpecular);
 	glEnable(GL_LIGHT0);
-	glLightfv(GL_LIGHT0, GL_POSITION, lpos0);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, lcol0);
 	glDisable(GL_LIGHTING);
 
 	glEnable(GL_BLEND);
