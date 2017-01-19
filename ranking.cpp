@@ -141,11 +141,11 @@ void Tetris::Ranking_Display() {
 		ranking_str[i][0].draw_block();
 
 		glTranslated(4 * BLOCK_SIZE, 0, 0);
-		ranking_str[i][1].set_str(ranking[i].x, color.x, color.y, color.z);
+		ranking_str[i][1].set_str((int)ranking[i].x, color.x, color.y, color.z);
 		ranking_str[i][1].draw_block();
 
 		glTranslated(6 * BLOCK_SIZE, 0, 0);
-		ranking_str[i][2].set_str(ranking[i].y, color.x, color.y, color.z);
+		ranking_str[i][2].set_str((int)ranking[i].y, color.x, color.y, color.z);
 		ranking_str[i][2].draw_block();
 
 		glTranslated(4 * BLOCK_SIZE, 0, 0);

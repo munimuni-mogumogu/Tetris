@@ -11,7 +11,7 @@ draw_str::draw_str() {
 	while(str[str_pos++] != '\0');
 }
 
-draw_str::draw_str(char figure[], int Red, int Blue, int Green) {
+draw_str::draw_str(char figure[], GLdouble Red, GLdouble Blue, GLdouble Green) {
 	str = figure;
 	color[0] = Red;
 	color[1] = Blue;
@@ -20,7 +20,7 @@ draw_str::draw_str(char figure[], int Red, int Blue, int Green) {
 	while(str[str_pos++] != '\0');
 }
 
-draw_str::draw_str(int number, int Red, int Blue, int Green) {
+draw_str::draw_str(int number, GLdouble Red, GLdouble Blue, GLdouble Green) {
 	int pos_check = 10;
 	str_pos = 1;
 	while(number >= pos_check) {
@@ -38,7 +38,7 @@ draw_str::draw_str(int number, int Red, int Blue, int Green) {
 	color[2] = Green;
 }
 
-void draw_str::set_str(char figure[],int Red, int Blue, int Green) {
+void draw_str::set_str(char figure[], GLdouble Red, GLdouble Blue, GLdouble Green) {
 	str = figure;
 	color[0] = Red;
 	color[1] = Blue;
@@ -47,7 +47,7 @@ void draw_str::set_str(char figure[],int Red, int Blue, int Green) {
 	while(str[str_pos++] != '\0');
 }
 
-void draw_str::set_str(int number, int Red, int Blue, int Green) {
+void draw_str::set_str(int number, GLdouble Red, GLdouble Blue, GLdouble Green) {
 	int pos_check = 10;
 	str_pos = 1;
 	while(number >= pos_check) {
