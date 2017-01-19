@@ -10,9 +10,11 @@
 
 #define BOARD_WIDTH 12
 #define BOARD_HEIGHT 22
+#define BOARD_DEPTH 12
 
 #define MINO_WIDTH 3
 #define MINO_HEIGHT 3
+#define MINO_DEPTH 3
 
 #define BLOCK_SIZE 10
 
@@ -27,6 +29,7 @@
 #define TETRIS 1
 #define GAMEOVER 2
 #define RANKING 3
+#define TETRIS3D 4
 
 #define RANKNAME 6
 
@@ -106,7 +109,7 @@ public:
 	
 	//テトリスの関数
 	static void Tetris_Main();
-	static void Create_Block(bool [MINO_HEIGHT][MINO_WIDTH], GLdouble, GLdouble, GLdouble, GLdouble);
+	static void Create_Block(bool[MINO_HEIGHT][MINO_WIDTH], GLdouble, GLdouble, GLdouble, GLdouble);
 	static void Create_Board(bool[BOARD_HEIGHT][BOARD_WIDTH]);
 	static void Draw_Information(int, int);
 	static void Next_Mino();
@@ -129,6 +132,14 @@ public:
 	static void Ranking_Display();
 	static void Ranking_Keyboard(unsigned char, int, int);
 	static void Ranking_Specialkeyboard(int, int, int);
+
+	//3Dテトリスの関数
+	static void Tetris3D();
+	static void Create_Block3D(bool[MINO_DEPTH][MINO_HEIGHT][MINO_WIDTH], GLdouble, GLdouble, GLdouble, GLdouble);
+	static void Create_Board3D(bool[BOARD_DEPTH][BOARD_HEIGHT][BOARD_WIDTH]);
+	static void Tetris3D_Display();
+	static void Tetris3D_Keyboard(unsigned char, int, int);
+	static void Tetris3D_Specialkeyboard(int, int, int);
 	
 	//全体で共通のコールバック関数
 	static void Funcgroup();

@@ -93,6 +93,9 @@ void Tetris::Timer(int value) {
 	case RANKING:
 		Ranking();
 		break;
+	case TETRIS3D:
+		Tetris3D();
+		break;
 	}
 	if(!run) glutLeaveMainLoop();
 	glutPostRedisplay();
