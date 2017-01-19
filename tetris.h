@@ -46,9 +46,10 @@
 #define TEMPLATE_PATTERN	7
 
 #include "tetrimino.h"
-#include "board.h"
-#include "score.h"
 #include "tmp_struct.h"
+#include "board.h"
+#include "board3d.h"
+#include "score.h"
 #include "tetrimino_template.h"
 
 struct Point2 {
@@ -94,6 +95,7 @@ private:
 	static Score score;				//スコア
 	static double speed;		//落下速度(ms)
 	static bool light_check;	//ライトのオンオフ
+	static Board3D board3d;
 public:
 	Tetris();		//コンストラクタ
 	static void View_Reset();	//視点のリセット

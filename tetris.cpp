@@ -31,6 +31,8 @@ Score Tetris::score;				//スコア
 double Tetris::speed;		//落下速度(ms)
 bool Tetris::light_check;	//ライトのオンオフ
 
+Board3D Tetris::board3d;
+
 Tetris::Tetris() {
 	run = true;
 	angle = 90;
@@ -79,6 +81,8 @@ void Tetris::Tetris_Init() {
 	name_pos = 0;
 	title_pos = 0;
 	score.clear();
+
+	board3d.init();
 }
 
 void Tetris::Gl_Init() {

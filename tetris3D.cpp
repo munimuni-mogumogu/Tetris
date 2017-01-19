@@ -28,16 +28,16 @@ void Tetris::Create_Board3D(bool block[BOARD_DEPTH][BOARD_HEIGHT][BOARD_WIDTH]) 
 			for(int k = 0; k < BOARD_WIDTH; k++) {
 				glPushMatrix();
 				glTranslated(k * BLOCK_SIZE, j * BLOCK_SIZE, i * BLOCK_SIZE);
-				if(block[i][j]) {
+				if(block[i][j][k]) {
 					if(i == 0 || j == 0 || k == 0 || i == BOARD_DEPTH - 1 || k == BOARD_WIDTH - 1) {
-						glColor4d(board.getBoard().red[i][j], board.getBoard().green[i][j], board.getBoard().blue[i][j], 0.4);
+						glColor4d(board3d.getBoard().red[i][j][k], board3d.getBoard().green[i][j][k], board3d.getBoard().blue[i][j][k], 0.4);
 					} else {
-						glColor3d(board.getBoard().red[i][j], board.getBoard().green[i][j], board.getBoard().blue[i][j]);
+						glColor3d(board3d.getBoard().red[i][j][k], board3d.getBoard().green[i][j][k], board3d.getBoard().blue[i][j][k]);
 					}
 					glutSolidCube(BLOCK_SIZE);
 				}
+				glPopMatrix();
 			}
-			glPopMatrix();
 		}
 	}
 }
@@ -48,8 +48,10 @@ void Tetris::Tetris3D_Display() {
 	gluLookAt(viewpoint.x + center.x, viewpoint.y + center.y, viewpoint.z + center.z,
 		center.x, center.y, center.z,
 		0.0, angle_of_top, 0.0);
-		glPushMatrix();
-	
+	glPushMatrix();
+
+	Create_Board3D(board3d.getBoard().board);
+
 	glPopMatrix();
 	glutSwapBuffers();
 

@@ -89,9 +89,9 @@ void Tetrimino::create(int mode) {
 			createRotate();
 	}
 	do {
-		red = (rand() % 2) / 1.1;
-		green = (rand() % 2) / 1.1;
-		blue = (rand() % 2) / 1.1;
+		red = rand() % 2 / 1.1;
+		green = rand() % 2 / 1.1;
+		blue = rand() % 2 / 1.1;
 	} while (red == green && red == blue);
 	/* create デバッグ用 */
 	/*
