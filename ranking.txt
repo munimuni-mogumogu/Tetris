@@ -1,10 +1,10 @@
 1600 3 CCD   
+1000 8 MIKI  
 800 4 EFG   
+700 5 MIKI  
+500 5 SUPA  
 500 3 CCC   
 400 2 yuu   
 400 2 name  
 400 2 LKCCCE
-100 1 CBBA  
-2 0 name  
-0 0 name  
-0 0 name  
+100 1 CA   A
