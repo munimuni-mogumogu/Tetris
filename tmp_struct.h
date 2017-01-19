@@ -10,6 +10,13 @@ struct TmpBoard {
 	double blue[BOARD_HEIGHT][BOARD_WIDTH];
 };
 
+struct TmpBoard3D {
+	bool board[BOARD_DEPTH][BOARD_HEIGHT][BOARD_WIDTH];
+	bool red[BOARD_DEPTH][BOARD_HEIGHT][BOARD_WIDTH];
+	bool green[BOARD_DEPTH][BOARD_HEIGHT][BOARD_WIDTH];
+	bool blue[BOARD_DEPTH][BOARD_HEIGHT][BOARD_WIDTH];
+};
+
 struct TmpMino {
 	bool mino[MINO_HEIGHT][MINO_WIDTH];
 };
