@@ -1,5 +1,10 @@
 #include "board.h"
 
+/* library header */
+#include "tmp_struct.h"
+#include "tetrimino.h"
+#include "score.h"
+
 /* デバッグ用変数 */
 // Score score;
 

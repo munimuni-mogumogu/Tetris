@@ -1,7 +1,7 @@
 #ifndef BOARD3D_H
 #define BOARD3D_H
 
-#include "tetris.h"
+#include "tetris_def.h"
 
 struct TmpBoard3D;
 

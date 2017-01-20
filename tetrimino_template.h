@@ -1,7 +1,7 @@
 #ifndef TETRIMINO_TEMPLATE_H
 #define TETRIMINO_TEMPLATE_H
 
-#include "tetris.h"
+#include "tetris_def.h"
 
 struct TemplatePattern {
 	bool mino[MINO_HEIGHT][MINO_WIDTH];

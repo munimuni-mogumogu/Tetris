@@ -1,5 +1,6 @@
 #include "tetris.h"
 #include <fstream>
+#include <iostream>
 #include <string>
 
 void Tetris::Ranking() {

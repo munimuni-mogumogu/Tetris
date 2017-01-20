@@ -1,5 +1,8 @@
 #include "board3d.h"
 
+/* library header */
+#include "tmp_struct.h"
+
 Board3D::Board3D() {
 
 }

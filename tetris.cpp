@@ -32,6 +32,7 @@ double Tetris::speed;		//落下速度(ms)
 bool Tetris::light_check;	//ライトのオンオフ
 
 Board3D Tetris::board3d;
+Tetrimino3D Tetris::tetrimino3d;
 
 Tetris::Tetris() {
 	run = true;

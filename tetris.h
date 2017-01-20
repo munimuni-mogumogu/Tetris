@@ -5,52 +5,17 @@
 #include <cmath>
 #include <GL/freeglut.h>
 #include <time.h>
-#include "tetris.h"
 #include "draw_str.h"
 
-#define BOARD_WIDTH 12
-#define BOARD_HEIGHT 22
-#define BOARD_DEPTH 12
-
-#define MINO_WIDTH 3
-#define MINO_HEIGHT 3
-#define MINO_DEPTH 3
-
-#define BLOCK_SIZE 10
-
-#define MENU_SIZE 8
-
-#define WINDOW_WIDTH 600
-#define WINDOW_HEIGHT 600
-
-#define GLUT_KEY_ENTER 0x000d
-
-#define TITLE 0
-#define TETRIS 1
-#define GAMEOVER 2
-#define RANKING 3
-#define TETRIS3D 4
-
-#define RANKNAME 6
-
-/*** 定数定義 ***/
-/* ボードサイズ */
-#define BOARD_WIDTH		12
-#define BOARD_HEIGHT	22
-
-/* テトリミノサイズ */
-#define MINO_WIDTH		3
-#define MINO_HEIGHT		3
-
-/* テンプレートパターン数 */
-#define TEMPLATE_PATTERN	7
-
 #include "tetrimino.h"
+#include "tetrimino3d.h"
 #include "tmp_struct.h"
 #include "board.h"
 #include "board3d.h"
 #include "score.h"
 #include "tetrimino_template.h"
+#include "tetris_def.h"
+
 
 struct Point2 {
 	double x;
@@ -95,7 +60,9 @@ private:
 	static Score score;				//スコア
 	static double speed;		//落下速度(ms)
 	static bool light_check;	//ライトのオンオフ
+	
 	static Board3D board3d;
+	static Tetrimino3D tetrimino3d;
 public:
 	Tetris();		//コンストラクタ
 	static void View_Reset();	//視点のリセット

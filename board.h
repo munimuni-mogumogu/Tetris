@@ -1,7 +1,7 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-#include "tetris.h"
+#include "tetris_def.h"
 
 struct TmpBoard;
 class Score;

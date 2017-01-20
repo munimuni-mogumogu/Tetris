@@ -6,7 +6,7 @@ TetriminoTemplate::TetriminoTemplate() {
 }
 
 void TetriminoTemplate::setTemplate(TemplatePattern& ptn, int n) {
-	/*TemplatePattern* tmpPtn;
+	TemplatePattern* tmpPtn;
 	switch (n) {
 	case 0:
 		tmpPtn = new TemplatePattern{ { { false, true, false },
@@ -54,7 +54,7 @@ void TetriminoTemplate::setTemplate(TemplatePattern& ptn, int n) {
 										{ false, false, false } } };
 		copyPtn(ptn, *tmpPtn);
 		break;
-	}*/
+	}
 }
 
 void TetriminoTemplate::copyPtn(TemplatePattern& tmpPtn, TemplatePattern tmp) {

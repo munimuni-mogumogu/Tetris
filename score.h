@@ -1,8 +1,7 @@
 #ifndef SCORE_H
 #define SCORE_H
 
-#include <iostream>
-#include "tetris.h"
+#include "tetris_def.h"
 
 class Score {
 private:

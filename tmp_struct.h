@@ -1,7 +1,7 @@
 #ifndef TMP_STRUCT_H
 #define TMP_STRUCT_H
 
-#include "tetris.h"
+#include "tetris_def.h"
 
 struct TmpBoard {
 	bool board[BOARD_HEIGHT][BOARD_WIDTH];
@@ -19,6 +19,10 @@ struct TmpBoard3D {
 
 struct TmpMino {
 	bool mino[MINO_HEIGHT][MINO_WIDTH];
+};
+
+struct TmpMino3D {
+	bool mino[MINO_DEPTH][MINO_HEIGHT][MINO_WIDTH];
 };
 
 struct TmpPoint {

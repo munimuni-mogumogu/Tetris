@@ -1,4 +1,10 @@
 #include "tetrimino.h"
+
+/* library header */
+#include "board.h"
+#include "tmp_struct.h"
+#include "tetrimino_template.h"
+
 #include "time.h"
 #include <cmath>
 #include <iostream>

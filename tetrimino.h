@@ -1,7 +1,7 @@
 #ifndef TETRIMINO_H
 #define TETRIMINO_H
 
-#include "tetris.h"
+#include "tetris_def.h"
 
 struct TmpPoint;
 struct TmpMino;
@@ -29,7 +29,7 @@ public:
 	void setMino(TmpMino);
 	void setColor(double, double, double);
 	void setPoint(TmpPoint);
-	void create(int = 0);
+	void create(int = 2);
 	void clear();
 	void rotate(bool, Board*);
 	void createRotate();
