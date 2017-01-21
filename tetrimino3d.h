@@ -4,6 +4,7 @@
 #include "tetris_def.h"
 
 struct TmpMino3D;
+struct TmpPoint3D;
 class Board3D;
 
 class Tetrimino3D {
@@ -17,8 +18,23 @@ private:
 	double blue;
 public:
 	Tetrimino3D();
+	int getX() { return x; }
+	int getY() { return y; }
+	int getZ() { return z; }
+	double getR() { return red; }
+	double getG() { return green; }
+	double getB() { return blue; }
+	TmpPoint3D getXYZ();
+	TmpMino3D getMino();
+	void setMino(TmpMino3D);
+	void setColor(double, double, double);
+	void setPoint(TmpPoint3D);
 	void create();
-	// TmpMino3D getMino();
+	void clear();
+	void rotate(bool, bool, bool, bool, Board3D*);
+	bool translate(int, int, int, bool, Board3D*);
+	int thouchWall();
+	bool thouchMino(Board3D*);
 };
 
 #endif

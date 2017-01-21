@@ -55,7 +55,7 @@ void Tetrimino::setPoint(TmpPoint tmp) {
 void Tetrimino::clear() {
 	for (int i = 0; i < MINO_HEIGHT; i++)
 		for (int j = 0; j < MINO_WIDTH; j++)
-			mino[i][j] = 0;
+			mino[i][j] = false;
 }
 
 /* ƒeƒgƒŠƒ~ƒm¶¬ */

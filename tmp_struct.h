@@ -30,4 +30,10 @@ struct TmpPoint {
 	int y;
 };
 
+struct TmpPoint3D {
+	int x;
+	int y;
+	int z;
+};
+
 #endif
