@@ -46,6 +46,84 @@ void Tetris::Create_Board3D(bool block[BOARD_DEPTH][BOARD_HEIGHT][BOARD_WIDTH]) 
 	}
 }
 
+void Tetris::Next_Mino3D() {
+	tetrimino3d.setMino(nextmino3d.getMino());
+	tetrimino3d.setColor(nextmino3d.getR(), nextmino3d.getG(),nextmino3d.getB());
+	nextmino3d.create();
+	tetrimino3d.setPoint(mino_pos3d);
+}
+
+void Tetris::Mino_Hold3D() {
+	hold_check = false;
+	TmpMino3D temp = holdmino3d.getMino();
+	double color[3] = { holdmino3d.getR(), holdmino3d.getG(), holdmino3d.getB() };
+	if(temp.mino[1][1] == false) {
+		holdmino3d.setMino(tetrimino3d.getMino());
+		holdmino3d.setColor(tetrimino3d.getR(), tetrimino3d.getG(), tetrimino3d.getB());
+		Next_Mino();
+	} else {
+		holdmino3d.setMino(tetrimino3d.getMino());
+		holdmino3d.setColor(tetrimino3d.getR(), tetrimino3d.getG(), tetrimino3d.getB());
+		tetrimino3d.setMino(temp);
+		tetrimino3d.setColor(color[0], color[1], color[2]);
+		tetrimino3d.setPoint(mino_pos3d);
+	}
+}
+
+void Tetris::Draw_Information3D(int score, int line) {
+	glPushMatrix();
+	draw_str score_str("score");
+	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, (BOARD_HEIGHT - 2) * BLOCK_SIZE, 0);
+	glScaled(2, 2, 0);
+	score_str.draw_block();
+	glPopMatrix();
+
+	glPushMatrix();
+	draw_str draw_score(score);
+	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, (BOARD_HEIGHT - 4) * BLOCK_SIZE, 0);
+	glScaled(2, 2, 0);
+	draw_score.draw_block();
+	glPopMatrix();
+
+	glPushMatrix();
+	draw_str line_str("line");
+	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, (BOARD_HEIGHT - 6) * BLOCK_SIZE, 0);
+	glScaled(2, 2, 0);
+	line_str.draw_block();
+	glPopMatrix();
+
+	glPushMatrix();
+	draw_str draw_line(line);
+	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, (BOARD_HEIGHT - 8) * BLOCK_SIZE, 0);
+	glScaled(2, 2, 0);
+	draw_line.draw_block();
+	glPopMatrix();
+
+	glPushMatrix();
+	draw_str hold_str("hold");
+	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, (BOARD_HEIGHT - 11) * BLOCK_SIZE, 0);
+	glScaled(2, 2, 0);
+	hold_str.draw_block();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslated(holdmino3d.getX() * BLOCK_SIZE, holdmino3d.getY() * BLOCK_SIZE, holdmino3d.getZ() * BLOCK_SIZE);
+	Create_Block3D(holdmino3d.getMino().mino, holdmino3d.getR(), holdmino3d.getG(), holdmino3d.getB());
+	glPopMatrix();
+
+	glPushMatrix();
+	draw_str next_str("next");
+	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, 4 * BLOCK_SIZE, 0);
+	glScaled(2, 2, 0);
+	next_str.draw_block();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslated(nextmino3d.getX() * BLOCK_SIZE, nextmino3d.getY() * BLOCK_SIZE, nextmino3d.getZ() * BLOCK_SIZE);
+	Create_Block3D(nextmino3d.getMino().mino, nextmino3d.getR(), nextmino3d.getG(), nextmino3d.getB());
+	glPopMatrix();
+}
+
 void Tetris::Tetris3D_Display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
@@ -54,8 +132,38 @@ void Tetris::Tetris3D_Display() {
 		0.0, angle_of_top, 0.0);
 	glPushMatrix();
 
-	Create_Board3D(board3d.getBoard().board);
+	glPushMatrix();
+	glTranslated(tetrimino3d.getX() * BLOCK_SIZE, tetrimino3d.getY() * BLOCK_SIZE, tetrimino3d.getZ() * BLOCK_SIZE);
+	Create_Block3D(tetrimino3d.getMino().mino, tetrimino3d.getR(), tetrimino3d.getG(), tetrimino3d.getB());
+	glPopMatrix();
 
+	forecastmino3d.setMino(tetrimino3d.getMino());
+	forecastmino_pos3d = tetrimino3d.getXYZ();
+	forecastmino3d.setPoint(forecastmino_pos3d);
+	//while(!forecastmino3d.translate(0, -1, 0, true, &board3d));
+
+	glPushMatrix();
+	glTranslated(forecastmino3d.getX() * BLOCK_SIZE, forecastmino3d.getY() * BLOCK_SIZE, forecastmino3d.getZ() * BLOCK_SIZE);
+	Create_Block3D(forecastmino3d.getMino().mino, 1.0, 0, 0, 0.4);
+	glPopMatrix();
+
+	glPopMatrix();
+
+	speed = 1000 * pow(0.9, score.getLine() / 1);
+
+	if(clock() - start > speed) {
+		start = clock();
+		if(tetrimino3d.translate(0, -1, 0, false, &board3d)) {
+			hold_check = true;
+			Next_Mino3D();
+		}
+	}
+
+	Draw_Information3D(score.getScore(), score.getLine());
+	Create_Board3D(board3d.getBoard().board);
+	if(board3d.boardCheck(score)) {
+		mode = GAMEOVER;
+	}
 	glPopMatrix();
 	glutSwapBuffers();
 

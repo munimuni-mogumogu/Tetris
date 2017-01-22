@@ -17,7 +17,6 @@ TmpPoint Tetris::mino_pos;			//テトリミノの位置
 Tetrimino Tetris::tetrimino;		//テトリミノ
 Tetrimino Tetris::nextmino;			//次のテトリミノ
 bool Tetris::hold_check;		//ホールド初期化用変数
-TmpPoint Tetris::holdmino_pos;		//ホールドの位置
 Tetrimino Tetris::holdmino;			//ホールドのテトリミノ
 TmpPoint Tetris::forecastmino_pos;	//着地点予想位置
 Tetrimino Tetris::forecastmino;		//着地点のテトリミノ
@@ -32,7 +31,12 @@ double Tetris::speed;		//落下速度(ms)
 bool Tetris::light_check;	//ライトのオンオフ
 
 Board3D Tetris::board3d;
+TmpPoint3D Tetris::mino_pos3d;
 Tetrimino3D Tetris::tetrimino3d;
+Tetrimino3D Tetris::nextmino3d;
+Tetrimino3D Tetris::holdmino3d;
+TmpPoint3D Tetris::forecastmino_pos3d;
+Tetrimino3D Tetris::forecastmino3d;
 
 Tetris::Tetris() {
 	run = true;
@@ -72,6 +76,7 @@ void Tetris::Tetris_Init() {
 	holdmino = Tetrimino();
 	mino_pos.x = BOARD_WIDTH / 2;
 	mino_pos.y = BOARD_HEIGHT - 2;
+	TmpPoint holdmino_pos;
 	holdmino_pos.x = BOARD_WIDTH + 2;
 	holdmino_pos.y = 7;
 	tetrimino.setPoint(mino_pos);
@@ -84,6 +89,18 @@ void Tetris::Tetris_Init() {
 	score.clear();
 
 	board3d.init();
+	tetrimino3d.create();
+	holdmino3d = Tetrimino3D();
+	mino_pos3d.x =  BOARD_WIDTH / 2;
+	mino_pos3d.y = BOARD_HEIGHT - 2;
+	mino_pos3d.z = BOARD_DEPTH / 2;
+	tetrimino3d.setPoint(mino_pos3d);
+	TmpPoint3D holdmino_pos3d;
+	holdmino_pos3d.x = BOARD_WIDTH + 2;
+	holdmino_pos3d.y = 7;
+	holdmino_pos3d.z = 0;
+	holdmino3d.setPoint(holdmino_pos3d);
+	nextmino3d.create();
 }
 
 void Tetris::Gl_Init() {

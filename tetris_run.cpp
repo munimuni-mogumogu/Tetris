@@ -20,6 +20,24 @@ void Tetris::Create_Block(bool block[MINO_HEIGHT][MINO_WIDTH], GLdouble Red = 0,
 	glPopMatrix();
 }
 
+void Tetris::Create_Board(bool block[BOARD_HEIGHT][BOARD_WIDTH]) {
+	for(int i = 0; i < BOARD_HEIGHT; i++) {
+		for(int j = 0; j < BOARD_WIDTH; j++){
+			glPushMatrix();
+			glTranslated(j * BLOCK_SIZE, i * BLOCK_SIZE, 0.0);
+			if(block[i][j]) {
+				if(i == 0 || j == 0 || j == BOARD_WIDTH - 1) {
+					glColor4d(board.getBoard().red[i][j], board.getBoard().green[i][j], board.getBoard().blue[i][j], 0.4);
+				} else {
+					glColor3d(board.getBoard().red[i][j], board.getBoard().green[i][j], board.getBoard().blue[i][j]);
+				}
+				glutSolidCube(BLOCK_SIZE);
+			}
+			glPopMatrix();
+		}
+	}
+}
+
 void Tetris::Next_Mino() {
 	tetrimino.setMino(nextmino.getMino());
 	tetrimino.setColor(nextmino.getR(), nextmino.getG(),nextmino.getB());
@@ -41,24 +59,6 @@ void Tetris::Mino_Hold() {
 		tetrimino.setMino(temp);
 		tetrimino.setColor(color[0], color[1], color[2]);
 		tetrimino.setPoint(mino_pos);
-	}
-}
-
-void Tetris::Create_Board(bool block[BOARD_HEIGHT][BOARD_WIDTH]) {
-	for(int i = 0; i < BOARD_HEIGHT; i++) {
-		for(int j = 0; j < BOARD_WIDTH; j++){
-			glPushMatrix();
-			glTranslated(j * BLOCK_SIZE, i * BLOCK_SIZE, 0.0);
-			if(block[i][j]) {
-				if(i == 0 || j == 0 || j == BOARD_WIDTH - 1) {
-					glColor4d(board.getBoard().red[i][j], board.getBoard().green[i][j], board.getBoard().blue[i][j], 0.4);
-				} else {
-					glColor3d(board.getBoard().red[i][j], board.getBoard().green[i][j], board.getBoard().blue[i][j]);
-				}
-				glutSolidCube(BLOCK_SIZE);
-			}
-			glPopMatrix();
-		}
 	}
 }
 
@@ -115,7 +115,6 @@ void Tetris::Draw_Information(int score, int line) {
 	Create_Block(nextmino.getMino().mino, nextmino.getR(), nextmino.getG(), nextmino.getB());
 	glPopMatrix();
 }
-
 
 void Tetris::Tetris_Display() {
 

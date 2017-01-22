@@ -47,7 +47,6 @@ private:
 	static Tetrimino tetrimino;		//テトリミノ
 	static Tetrimino nextmino;			//次のテトリミノ
 	static bool hold_check;		//ホールド初期化用変数
-	static TmpPoint holdmino_pos;		//ホールドの位置
 	static Tetrimino holdmino;			//ホールドのテトリミノ
 	static TmpPoint forecastmino_pos;	//着地点予想位置
 	static Tetrimino forecastmino;		//着地点のテトリミノ
@@ -62,7 +61,13 @@ private:
 	static bool light_check;	//ライトのオンオフ
 	
 	static Board3D board3d;
+	static TmpPoint3D mino_pos3d;
 	static Tetrimino3D tetrimino3d;
+	static Tetrimino3D nextmino3d;
+	static Tetrimino3D holdmino3d;
+	static TmpPoint3D forecastmino_pos3d;
+	static Tetrimino3D forecastmino3d;
+
 public:
 	Tetris();		//コンストラクタ
 	static void View_Reset();	//視点のリセット
@@ -106,6 +111,9 @@ public:
 	static void Tetris3D();
 	static void Create_Block3D(bool[MINO_DEPTH][MINO_HEIGHT][MINO_WIDTH], GLdouble, GLdouble, GLdouble, GLdouble);
 	static void Create_Board3D(bool[BOARD_DEPTH][BOARD_HEIGHT][BOARD_WIDTH]);
+	static void Draw_Information3D(int, int);
+	static void Next_Mino3D();
+	static void Mino_Hold3D();
 	static void Tetris3D_Display();
 	static void Tetris3D_Keyboard(unsigned char, int, int);
 	static void Tetris3D_Specialkeyboard(int, int, int);
