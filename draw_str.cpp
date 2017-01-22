@@ -1,7 +1,17 @@
-#include "tetris.h"
+/**
+*	@file	draw_str.cpp
+*	@brief	文字列の描画
+*	@author	三木 陽平
+*	@date	2017/01/22
+*/
+
+#include "draw_str.h"
 #include "GL/freeglut.h"
 
-
+/**
+*	@brief		draw_strのコンストラクタ
+*	@return		なし
+*/
 draw_str::draw_str() {
 	str = "null";
 	color[0] = 0;
@@ -11,6 +21,14 @@ draw_str::draw_str() {
 	while(str[str_pos++] != '\0');
 }
 
+/**
+*	@brief		draw_strのコンストラクタ
+*	@param [in]	figure[]	描画したい文字列
+*	@param [in]	Red		赤色(=0, 0 < Red < 1)
+*	@param [in]	blue	青色(=0. 0 < Blue < 1)
+*	@param [in]	Green	緑色(=0, 0 < Green < 1)
+*	@return		なし
+*/
 draw_str::draw_str(char figure[], GLdouble Red, GLdouble Blue, GLdouble Green) {
 	str = figure;
 	color[0] = Red;
@@ -20,6 +38,14 @@ draw_str::draw_str(char figure[], GLdouble Red, GLdouble Blue, GLdouble Green) {
 	while(str[str_pos++] != '\0');
 }
 
+/**
+*	@brief		draw_strのコンストラクタ
+*	@param [in]	number	描画したい数字
+*	@param [in]	Red		赤色(=0, 0 < Red < 1)
+*	@param [in]	blue	青色(=0. 0 < Blue < 1)
+*	@param [in]	Green	緑色(=0, 0 < Green < 1)
+*	@return		なし
+*/
 draw_str::draw_str(int number, GLdouble Red, GLdouble Blue, GLdouble Green) {
 	int pos_check = 10;
 	str_pos = 1;
@@ -38,6 +64,14 @@ draw_str::draw_str(int number, GLdouble Red, GLdouble Blue, GLdouble Green) {
 	color[2] = Green;
 }
 
+/**
+*	@brief		セット関数
+*	@param [in]	figure[]	描画したい文字列
+*	@param [in]	Red		赤色(=0, 0 < Red < 1)
+*	@param [in]	blue	青色(=0. 0 < Blue < 1)
+*	@param [in]	Green	緑色(=0, 0 < Green < 1)
+*	@return		なし
+*/
 void draw_str::set_str(char figure[], GLdouble Red, GLdouble Blue, GLdouble Green) {
 	str = figure;
 	color[0] = Red;
@@ -47,6 +81,14 @@ void draw_str::set_str(char figure[], GLdouble Red, GLdouble Blue, GLdouble Gree
 	while(str[str_pos++] != '\0');
 }
 
+/**
+*	@brief		セット関数
+*	@param [in]	figure[]	描画したい数字
+*	@param [in]	Red		赤色(=0, 0 < Red < 1)
+*	@param [in]	blue	青色(=0. 0 < Blue < 1)
+*	@param [in]	Green	緑色(=0, 0 < Green < 1)
+*	@return		なし
+*/
 void draw_str::set_str(int number, GLdouble Red, GLdouble Blue, GLdouble Green) {
 	int pos_check = 10;
 	str_pos = 1;
@@ -65,7 +107,11 @@ void draw_str::set_str(int number, GLdouble Red, GLdouble Blue, GLdouble Green) 
 	color[2] = Green;
 }
 
-
+/**
+*	@brief		描画関数(文字の描画)
+*	@param [in]	block[STR_BLOCK_SIZE][STR_BLOCK_SIZE]
+*	@return		なし
+*/
 void draw_str::glDrawStr(bool block[STR_BLOCK_SIZE][STR_BLOCK_SIZE]) {
 	glColor3d(color[0], color[1], color[2]);
 	for(int j = 1; j <= STR_BLOCK_SIZE; j++) {
@@ -78,11 +124,19 @@ void draw_str::glDrawStr(bool block[STR_BLOCK_SIZE][STR_BLOCK_SIZE]) {
 	}
 }
 
+/**
+*	@brief		文字の描画
+*	@param [in]	pos	どこに描画するか(=LEFT, CENTER)
+*	@return		なし
+*/
 void draw_str::draw_block(int pos) {
+	//真ん中に描画するとき
 	if(pos == CENTER) glTranslated(-STR_BLOCK_SIZE * ((double)str_pos / 2), 0, 0);
 	for(int i = 0; i < str_pos; i++) {
 		glPushMatrix();
+		//文字数分移動
 		glTranslated((STR_BLOCK_SIZE + 1) * i, 0, 0);
+		//文字作成
 		bool block[STR_BLOCK_SIZE][STR_BLOCK_SIZE];
 		switch(str[i]) {
 		case 'a':
@@ -378,6 +432,7 @@ void draw_str::draw_block(int pos) {
 			block[0][0] = 0; block[0][1] = 0; block[0][2] = 0; block[0][3] = 0; block[0][4] = 0;
 			break;
 		}
+		//描画
 		glDrawStr(block);
 		glPopMatrix();
 	}

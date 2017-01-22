@@ -1,3 +1,10 @@
+/**
+*	@file	draw_str.h
+*	@brief	•¶š—ñ(”š)‚ğOpenGL‚Å•`‰æ‚·‚éŠÖ”
+*	@author	O–Ø—z•½
+*	@date	2017/1/22
+*/
+
 #ifndef DRWA_STR_H
 #define DRAW_STR_H
 

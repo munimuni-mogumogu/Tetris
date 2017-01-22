@@ -1,14 +1,32 @@
+/**
+*	@file	ranking.cpp
+*	@brief	ランキングモード
+*	@author	三木 陽平
+*	@date	2017/01/22
+*/
+
 #include "tetris.h"
 #include <fstream>
 #include <iostream>
 #include <string>
 
+/**
+*	@brief		ランキングモードのメイン関数
+*	@return		なし
+*/
 void Tetris::Ranking() {
 	glutDisplayFunc(Ranking_Display);
 	glutKeyboardFunc(Ranking_Keyboard);
 	glutSpecialFunc(Ranking_Specialkeyboard);
 }
 
+/**
+*	@brief		char配列の中を交換
+*	@param [in, out]	name1[]	入れ替える物
+*	@param [in, out]	name2[]	入れ替える物
+*	@param [in]			size	配列サイズ
+*	@return		なし
+*/
 void Tetris::Change_Name(char name1[], char name2[], int size) {
 	char temp[RANKNAME];
 	for(int j = 0; j < size; j++) {
@@ -22,13 +40,21 @@ void Tetris::Change_Name(char name1[], char name2[], int size) {
 	}
 }
 
-void Tetris::Set_Get_Ranking(char text_name[]) {
+/**
+*	@brief		ランキングをファイルから呼び出し,順位にScoreとLineを組み込む
+*	@param [in]	file_name[]	ファイルの名前
+*	@return		なし
+*/
+void Tetris::Set_Get_Ranking(char file_name[]) {
+	//ランキング順位の初期化
 	rank_pos = -1;
-	std::ifstream fin(text_name);
+	//ファイルオープン
+	std::ifstream fin(file_name);
 	if(fin.fail()) {
 		std::cerr << "Error : Cannot open file" << std::endl;
 	}
 
+	//ファイルからScore,Line,名前の呼び出し
 	std::string str;
 	int i = 0;
 	while (std::getline(fin, str)) {
@@ -51,15 +77,19 @@ void Tetris::Set_Get_Ranking(char text_name[]) {
 		i++;
 	}
 
+	//名前の末尾に\0をつける
 	for(int i = 0; i < 10; i++) {
 		rank_name[i][RANKNAME - 1] = '\0';
 	}
 
+	//今回の順位を組み込む
 	Point2 temp1 = {score.getScore(), score.getLine()};
 	Point2 temp2;
 	char tempname1[RANKNAME] = {' ', ' ', ' ', ' ', ' ', '\0'};
 	for(int i = 0; i < 10; i++) {
+		//ランキングに入っているかの判定
 		if(ranking[i].x < temp1.x) {
+			//入っている時
 			if(rank_pos == -1) {
 				rank_pos = i;
 			}
@@ -68,7 +98,9 @@ void Tetris::Set_Get_Ranking(char text_name[]) {
 			temp1.x = temp2.x; temp1.y = temp2.y;
 			Change_Name(rank_name[i], tempname1, RANKNAME);
 		}else if(ranking[i].x == temp1.x) {
+			//同じ時Line数が多い方の判定
 			if(ranking[i].y < temp1.y) {
+				//Line数が多い時
 				if(rank_pos == -1) {
 					rank_pos = i;
 				}
@@ -79,17 +111,24 @@ void Tetris::Set_Get_Ranking(char text_name[]) {
 			}
 		}
 	}
+	//Scoreの初期化
 	score.clear();
 	fin.close();
 }
 
-void Tetris::Save_Ranking_Name(char text_name[]) {
-
-	std::ofstream fout(text_name);
+/**
+*	@brief		ランキングをファイルに保存する
+*	@param [in]	file_name[]	ファイルの名前
+*	@return		なし
+*/
+void Tetris::Save_Ranking_Name(char file_name[]) {
+	//ファイルオープン
+	std::ofstream fout(file_name);
 	if(fout.fail()) {
 		std::cerr << "Error : Cannot open file" << std::endl;
 	}
 
+	//Score,Line,名前をファイルに保存
 	for(int i = 0; i < 10; i++) {
 		fout << ranking[i].x << " " << ranking[i].y << " ";
 		for(int j = 0; j < RANKNAME; j++) {
@@ -100,9 +139,14 @@ void Tetris::Save_Ranking_Name(char text_name[]) {
 
 	fout.close();
 
+	//ランキングの順位を初期化
 	rank_pos = -1;
 }
 
+/**
+*	@brief		ランキングモードの描画のメイン関数
+*	@return		なし
+*/
 void Tetris::Ranking_Display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
@@ -110,10 +154,12 @@ void Tetris::Ranking_Display() {
 		center.x, center.y, center.z,
 		0.0, angle_of_top, 0.0);
 
+	//タイトルの描画
 	draw_str title;
-	if(page == 0) {
+	//どのランキングかの判定
+	if(page == TETRIS) {
 		title.set_str("TETRIS");
-	} else if(page == 1) {
+	} else if(page == TETRIS3D) {
 		title.set_str("3D TETRIS");
 	}
 	glPushMatrix();
@@ -121,15 +167,20 @@ void Tetris::Ranking_Display() {
 	glScaled(4, 4, 4);
 	title.draw_block(CENTER);
 	glScaled(1, 1, 1);
+
+	//三角形の描画(どのページがあるか)
 	glColor3d(0.0, 0.0, 0.0);
-	if(page == 0) {
+	//どのランキングかの判定
+	if(page == TETRIS) {
+		//右三角の描画
 		glTranslated(BLOCK_SIZE * 4, 0, 0);
 		glBegin(GL_TRIANGLES);
 		glVertex3d(0.0, 0.0, 0.0);
 		glVertex3d(0.0, BLOCK_SIZE / 2, 0.0);
 		glVertex3d(BLOCK_SIZE / 2, BLOCK_SIZE / 4, 0.0);
 		glEnd();
-	}else if(page == 1) {
+	}else if(page == TETRIS3D) {
+		//左三角の描画
 		glTranslated(-BLOCK_SIZE, 0, 0);
 		glBegin(GL_TRIANGLES);
 		glVertex3d(BLOCK_SIZE / 2, 0.0, 0.0);
@@ -138,12 +189,15 @@ void Tetris::Ranking_Display() {
 		glEnd();
 	}
 	glPopMatrix();
+
+	//rank, score,line(plane)の描画
 	draw_str rank("rank");
 	draw_str score("score");
 	draw_str line;
-	if(page == 0) {
+	//どのランキングかの判定
+	if(page == TETRIS) {
 		line.set_str("line");
-	} else if(page == 1) {
+	} else if(page == TETRIS3D) {
 		line.set_str("plane");
 	}
 	draw_str name("name");
@@ -159,8 +213,8 @@ void Tetris::Ranking_Display() {
 	name.draw_block();
 	glPopMatrix();
 
+	//ランキングの名前の描画
 	draw_str ranking_str[10][4];
-
 	for(int i = 0; i < 10; i++) {
 		Point3 color = {0, 0, 0};
 		if(rank_pos == i) color.x = 1;
@@ -179,7 +233,9 @@ void Tetris::Ranking_Display() {
 		ranking_str[i][2].draw_block();
 
 		glTranslated(4 * BLOCK_SIZE, 0, 0);
+		//ランキングに入っているとき
 		if(rank_pos == i) {
+			//どこに入力しているかの"_"の描画
 			glPushMatrix();
 			glTranslated(name_pos * (STR_BLOCK_SIZE + 1), -STR_BLOCK_SIZE, 0);
 			glBegin(GL_QUADS);
@@ -197,6 +253,7 @@ void Tetris::Ranking_Display() {
 		glPopMatrix();
 	}
 
+	//please push enter keyの描画
 	glPushMatrix();
 	glTranslated((BOARD_WIDTH + MENU_SIZE - 2) / 2 * BLOCK_SIZE, -3 * BLOCK_SIZE, 0);
 	draw_str please("please push enter key", 1, 0, 0);
@@ -204,8 +261,11 @@ void Tetris::Ranking_Display() {
 	please.draw_block(CENTER);
 	glPopMatrix();
 
+	//ダイアログの判定
 	if(dialog_check == true) {
+		//ダイアログの描画
 		glPushMatrix();
+		//背景に白の四角形を描画
 		glTranslated((BOARD_WIDTH + MENU_SIZE - 2) / 2 * BLOCK_SIZE, (BOARD_HEIGHT + 2) * BLOCK_SIZE / 2, BLOCK_SIZE);
 		glBegin(GL_QUADS);
 		glColor3d(1, 1, 1);
@@ -214,6 +274,8 @@ void Tetris::Ranking_Display() {
 		glVertex3d(BLOCK_SIZE * 10, BLOCK_SIZE * 2, 0);
 		glVertex3d(BLOCK_SIZE * 10, -BLOCK_SIZE * 4, 0);
 		glEnd();
+
+		//decide,yes,/,noの描画
 		Point3 color = { 0.0, 0.5, 0.5 };
 		draw_str decide("decide", color.x, color.y, color.z);
 		draw_str slash("/", color.x, color.y, color.z);
@@ -236,26 +298,37 @@ void Tetris::Ranking_Display() {
 	glutSwapBuffers();
 }
 
+/**
+*	@brief		ランキングモードのキー操作関数
+*	@param [in]	k	キー
+*	@param [in] x	マウスx座標
+*	@param [in] y	マウスy座標
+*	@return		なし
+*/
 void Tetris::Ranking_Keyboard(unsigned char k, int x, int y) {
 	switch(k) {
-	case GLUT_KEY_ENTER:
+	case GLUT_KEY_ENTER:	//Enterキー
+		//どの決定家の判定
 		if(rank_pos == -1) {
+			//ランキング外の時
 			Tetris_Init();
 			mode = TITLE;
 		} else if(rank_pos != -1 && dialog_check == true && dialog_pos == 0) {
+			//ダイアログが出ているときにyesを押したとき
 			dialog_check = false;
-			if(page == 0) Save_Ranking_Name(RANKINGTXT);
-			if(page == 1) Save_Ranking_Name(RANKING3DTXT);
+			//どのランキングかの判定
+			if(page == TETRIS) Save_Ranking_Name(RANKINGTXT);
+			else if(page == TETRIS3D) Save_Ranking_Name(RANKING3DTXT);
 		} else if(rank_pos != -1 && dialog_check == true && dialog_pos == 1) {
+			//ダイアログが出ている時にnoを押したとき
 			dialog_pos = 0;
 			dialog_check = false;
-		} else if(rank_pos != -1 && dialog_check == false)
-			dialog_check = true;
+		} else if(rank_pos != -1 && dialog_check == false) dialog_check = true;	//名前を決めてEnterを押したとき
 		break;
-	case 'v':
+	case 'v':	//視点のリセット
 		View_Reset();
 		break;
-	case 'l':
+	case 'l':	//ライティングのon/offの切り替え
 		light_check = !light_check;
 		if(light_check) glEnable(GL_LIGHTING);
 		else glDisable(GL_LIGHTING);
@@ -265,36 +338,44 @@ void Tetris::Ranking_Keyboard(unsigned char k, int x, int y) {
 	}
 }
 
-
+/**
+*	@brief		ランキングモードの特殊キー操作関数
+*	@param [in]	k	キー
+*	@param [in] x	マウスx座標
+*	@param [in] y	マウスy座標
+*	@return		なし
+*/
 void Tetris::Ranking_Specialkeyboard(int k, int x, int y) {
 	switch(k) {
-	case GLUT_KEY_RIGHT:
-		if(dialog_check == true && dialog_pos < 1) dialog_pos++;
-		else if(dialog_check == false && name_pos < RANKNAME - 2 && rank_pos != -1) name_pos++;
-		else if(page == 0 && rank_pos == -1){
+	case GLUT_KEY_RIGHT:	//右矢印キーを押したとき
+		if(dialog_check == true && dialog_pos < 1) dialog_pos++;	//ダイアログが出ているとき
+		else if(dialog_check == false && name_pos < RANKNAME - 2 && rank_pos != -1) name_pos++;	//名前を決めているとき
+		else if(page == TETRIS && rank_pos == -1){
+			//ランキング外の時に通常テトリスモードのランキングを見ているとき
 			Set_Get_Ranking(RANKING3DTXT);
-			page = 1;
+			page = TETRIS3D;
 		}
 		break;
-	case GLUT_KEY_LEFT:
-		if(dialog_check == true && dialog_pos > 0) dialog_pos--;
-		else if(dialog_check == false && name_pos > 0 && rank_pos != -1) name_pos--;
-		else if(page == 1 && rank_pos == -1){
+	case GLUT_KEY_LEFT:	//左矢印キーを押したとき
+		if(dialog_check == true && dialog_pos > 0) dialog_pos--;		//ダイアログが出ているとき
+		else if(dialog_check == false && name_pos > 0 && rank_pos != -1) name_pos--;	//名前を決めているとき
+		else if(page == TETRIS3D && rank_pos == -1){
+			//ランキング外の時に3Dテトリスモードのランキングを見ているとき
 			Set_Get_Ranking(RANKINGTXT);
-			page = 0;
+			page = TETRIS;
 		}
 		break;
-	case GLUT_KEY_UP:
+	case GLUT_KEY_UP:	//上矢印キーを押したとき
 		if(rank_pos != -1 && dialog_check == false) {
-			if(rank_name[rank_pos][name_pos] == ' ') rank_name[rank_pos][name_pos] = 'A';
-			else if(rank_name[rank_pos][name_pos] == 'Z') rank_name[rank_pos][name_pos] = ' ';
+			if(rank_name[rank_pos][name_pos] == ' ') rank_name[rank_pos][name_pos] = 'A';	//名前入力時" "から"A"に切り替える処理
+			else if(rank_name[rank_pos][name_pos] == 'Z') rank_name[rank_pos][name_pos] = ' ';	//名前入力時"Z"から" "に切り替える処理
 			else rank_name[rank_pos][name_pos]++;
 		}
 		break;
-	case GLUT_KEY_DOWN:
+	case GLUT_KEY_DOWN:	//下矢印キーを押したとき
 		if(rank_pos != -1 && dialog_check == false) {
-			if(rank_name[rank_pos][name_pos] == ' ') rank_name[rank_pos][name_pos] = 'Z';
-			else if(rank_name[rank_pos][name_pos] == 'A') rank_name[rank_pos][name_pos] = ' ';
+			if(rank_name[rank_pos][name_pos] == ' ') rank_name[rank_pos][name_pos] = 'Z';	//名前入力時" "から"Z"に切り替える処理
+			else if(rank_name[rank_pos][name_pos] == 'A') rank_name[rank_pos][name_pos] = ' ';	//名前入力時"A"から" "に切り替える処理
 			else rank_name[rank_pos][name_pos]--;
 		}
 		break;

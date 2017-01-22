@@ -1,46 +1,57 @@
+/**
+*	@file	tetris.cpp
+*	@brief	テトリスの初期化及び全体で使用する関数のまとめ
+*	@author	三木 陽平
+*	@date	2017/01/22
+*/
+
 #include "tetris.h"
 
-bool Tetris::run;
-int Tetris::angle;			//視野角
-int Tetris::mode;			//ゲームモード
+//Tetris classの変数の初期化
+bool Tetris::run;				//ゲーム終了判定用
+int Tetris::angle;				//視野角
+int Tetris::mode;				//ゲームモード
 GLfloat Tetris::angle_of_top;	//画面の上の設定(1 : 上がyの正, -1 : 下がyの正)
-int Tetris::view_distance;	//視点から中点の距離
-double Tetris::azimuth;		//方位角
+int Tetris::view_distance;		//視点から中点の距離
+double Tetris::azimuth;			//方位角
 double Tetris::elevation;		//仰角
-bool Tetris::view_check;		//視点移動の初期化用変数
-bool Tetris::reset_check;	//テトリスのリセット用変数
+bool Tetris::view_check;		//視点移動の初期化用
 Point2 Tetris::mousepoint;		//マウスの位置
-Point3 Tetris::viewpoint;	//視点
-Point3 Tetris::center;	//全体の中心
-clock_t Tetris::start;	//時間経過の管理用
-TmpPoint Tetris::mino_pos;			//テトリミノの位置
-Tetrimino Tetris::tetrimino;		//テトリミノ
-Tetrimino Tetris::nextmino;			//次のテトリミノ
-bool Tetris::hold_check;		//ホールド初期化用変数
-Tetrimino Tetris::holdmino;			//ホールドのテトリミノ
-TmpPoint Tetris::forecastmino_pos;	//着地点予想位置
-Tetrimino Tetris::forecastmino;		//着地点のテトリミノ
-Board Tetris::board;				//ボード
+Point3 Tetris::viewpoint;		//視点
+Point3 Tetris::center;			//全体の中心
+clock_t Tetris::start;			//時間経過の管理用
+TmpPoint Tetris::mino_pos;		//テトリミノの位置
+Tetrimino Tetris::tetrimino;	//テトリミノ
+Tetrimino Tetris::nextmino;		//次のテトリミノ
+bool Tetris::hold_check;		//ホールド初期化用
+Tetrimino Tetris::holdmino;		//ホールドのテトリミノ
+TmpPoint Tetris::forecastmino_pos;	//着地点予測位置
+Tetrimino Tetris::forecastmino;	//着地点のテトリミノ
+Board Tetris::board;			//ボード
 int Tetris::rank_pos;			//ランキングの順位
-char Tetris::rank_name[10][6];
-int Tetris::name_pos;
-int Tetris::dialog_pos;
-bool Tetris::dialog_check;
-int Tetris::page;
-Point2 Tetris::ranking[10];			//ランキング格納用の変数
+char Tetris::rank_name[10][6];	//ランキングの名前用
+int Tetris::name_pos;			//名前入力時の入力位置
+int Tetris::dialog_pos;			//選択位置
+bool Tetris::dialog_check;		//ダイアログが出ているかどうか
+int Tetris::page;				//ランキングのページ
+Point2 Tetris::ranking[10];		//ランキング格納用
 int Tetris::title_pos;			//タイトルの位置
-Score Tetris::score;				//スコア
-double Tetris::speed;		//落下速度(ms)
-bool Tetris::light_check;	//ライトのオンオフ
+Score Tetris::score;			//スコア
+double Tetris::speed;			//落下速度(ms)
+bool Tetris::light_check;		//ライトのオンオフ
 
-Board3D Tetris::board3d;
-TmpPoint3D Tetris::mino_pos3d;
-Tetrimino3D Tetris::tetrimino3d;
-Tetrimino3D Tetris::nextmino3d;
-Tetrimino3D Tetris::holdmino3d;
-TmpPoint3D Tetris::forecastmino_pos3d;
-Tetrimino3D Tetris::forecastmino3d;
+Board3D Tetris::board3d;		//3Dテトリスのボード
+TmpPoint3D Tetris::mino_pos3d;	//3Dテトリスのミノの位置
+Tetrimino3D Tetris::tetrimino3d;//3Dテトリスのミノ
+Tetrimino3D Tetris::nextmino3d;	//次のミノ
+Tetrimino3D Tetris::holdmino3d;	//ホールドミノ
+TmpPoint3D Tetris::forecastmino_pos3d;	//着地点予測位置
+Tetrimino3D Tetris::forecastmino3d;		//着地点予測用ミノ
 
+/**
+*	@brief		Tetrisのコンストラクタ
+*	@return		なし
+*/
 Tetris::Tetris() {
 	run = true;
 	angle = 90;
@@ -50,7 +61,6 @@ Tetris::Tetris() {
 	azimuth = 0.0;
 	elevation = 0.0;
 	view_check = true;
-	reset_check = true;
 	mousepoint.x = 0; mousepoint.y = 0;
 	viewpoint.x = 0; viewpoint.y = 0; viewpoint.z = view_distance;
 	center.x = (BOARD_WIDTH + MENU_SIZE) / 2 * BLOCK_SIZE; center.y = BOARD_HEIGHT / 2 * BLOCK_SIZE; center.z = 0;
@@ -60,14 +70,17 @@ Tetris::Tetris() {
 	name_pos = 0;
 	dialog_pos = 0;
 	dialog_check = false;
-	page = 0;
+	page = TETRIS;
 	title_pos = 0;
 	speed = 1000;
 	light_check = false;
 }
 
+/**
+*	@brief		視点位置リセット
+*	@return		なし
+*/
 void Tetris::View_Reset() {
-	reset_check = false;
 	view_distance = 200;
 	azimuth = 0.0;
 	elevation = 0.0;
@@ -76,6 +89,10 @@ void Tetris::View_Reset() {
 	center.x = (BOARD_WIDTH + MENU_SIZE) / 2 * BLOCK_SIZE; center.y = BOARD_HEIGHT / 2 * BLOCK_SIZE; center.z = 0;
 }
 
+/**
+*	@brief		テトリスの初期化用
+*	@return		なし
+*/
 void Tetris::Tetris_Init() {
 	board.init();
 	tetrimino.create();
@@ -93,7 +110,7 @@ void Tetris::Tetris_Init() {
 	name_pos = 0;
 	dialog_pos = 0;
 	dialog_check = false;
-	page = 0;
+	page = TETRIS;
 	title_pos = 0;
 	score.clear();
 
@@ -112,6 +129,10 @@ void Tetris::Tetris_Init() {
 	nextmino3d.create();
 }
 
+/**
+*	@brief		OpenGLの初期設定
+*	@return		なし
+*/
 void Tetris::Gl_Init() {
 	// 背景色
 	glClearColor(1.0, 1.0, 1.0, 0.0);
@@ -119,6 +140,7 @@ void Tetris::Gl_Init() {
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_DEPTH_TEST);
 
+	//ライティングをonにした時の物体の質感(翡翠を参照)
 	GLfloat ambient[] = { (GLfloat)0.135, (GLfloat)0.2225, (GLfloat)0.1575, (GLfloat)1.0 };
 	GLfloat diffuse[] = { (GLfloat)0.54, (GLfloat)0.89, (GLfloat)0.63, (GLfloat)1.0 };
 	GLfloat specular[] = { (GLfloat)0.316228, (GLfloat)0.316228, (GLfloat)0.316228, (GLfloat)1.0 };
@@ -141,7 +163,10 @@ void Tetris::Gl_Init() {
 	glEnable(GL_LIGHT0);
 	glDisable(GL_LIGHTING);
 
+	//両面表示指定
 	glDisable(GL_CULL_FACE);
+
+	//透過処理
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }

@@ -16,7 +16,6 @@
 #include "tetrimino_template.h"
 #include "tetris_def.h"
 
-
 struct Point2 {
 	double x;
 	double y;
@@ -38,7 +37,6 @@ private:
 	static double azimuth;		//方位角
 	static double elevation;		//仰角
 	static bool view_check;		//視点移動の初期化用変数
-	static bool reset_check;	//テトリスのリセット用変数
 	static Point2 mousepoint;		//マウスの位置
 	static Point3 viewpoint;	//視点
 	static Point3 center;	//全体の中心
