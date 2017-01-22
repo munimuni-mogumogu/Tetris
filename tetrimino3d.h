@@ -29,7 +29,7 @@ public:
 	void setMino(TmpMino3D);
 	void setColor(double, double, double);
 	void setPoint(TmpPoint3D);
-	void create(int = 0);
+	void create(int = 3);
 	void clear();
 	void rotate(bool, bool, bool, bool, Board3D*);
 	bool translate(int, int, int, bool, Board3D*);

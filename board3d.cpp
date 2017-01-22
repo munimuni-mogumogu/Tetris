@@ -51,10 +51,10 @@ void Board3D::set(Tetrimino3D tm) {
 		for (int j = 0; j < MINO_HEIGHT; j++) {
 			for (int k = 0; k < MINO_WIDTH; k++) {
 				if (!tmp.mino[i][j][k]) continue;
-				board[tm.getZ() + i][tm.getY() + j][tm.getZ() + k] = tmp.mino[i][j][k];
-				red[tm.getZ() + i][tm.getY() + j][tm.getZ() + k] = tm.getR();
-				green[tm.getZ() + i][tm.getY() + j][tm.getZ() + k] = tm.getG();
-				blue[tm.getZ() + i][tm.getY() + j][tm.getZ() + k] = tm.getB();
+				board[tm.getZ() + i][tm.getY() + j][tm.getX() + k] = tmp.mino[i][j][k];
+				red[tm.getZ() + i][tm.getY() + j][tm.getX() + k] = tm.getR();
+				green[tm.getZ() + i][tm.getY() + j][tm.getX() + k] = tm.getG();
+				blue[tm.getZ() + i][tm.getY() + j][tm.getX() + k] = tm.getB();
 			}
 		}
 	}
@@ -118,7 +118,9 @@ bool Board3D::landCheck(Tetrimino3D tm) {
 	for (int i = -1; i < MINO_DEPTH - 1; i++) {
 		for (int j = -1; j < MINO_HEIGHT - 1; j++) {
 			for (int k = -1; k < MINO_WIDTH - 1; k++) {
-				return true;
+				if (!(tm.getMino().mino[i + 1][j + 1][k + 1])) continue;
+				if (board[tm.getZ() + i + 1][tm.getY() + j][tm.getX() + k + 1])
+					return true;
 			}
 		}
 	}

@@ -8,6 +8,27 @@
 #include <iostream>
 #include "time.h"
 
+int oneNum(int l, int m, int n) {
+	int oneCounter = 0;
+	if (l == 1) oneCounter++;
+	if (m == 1) oneCounter++;
+	if (n == 1) oneCounter++;
+	return oneCounter;
+}
+
+bool adjacent(TmpMino3D tmp, int l, int m, int n) {
+	for (int i = -1; i < 2; i++) {
+		if (i == 0) continue;
+		if (!(l == 0 && i == -1) && !(l == 2 && i == 1) && tmp.mino[l + i][m][n])
+			return true;
+		if (!(m == 0 && i == -1) && !(m == 2 && i == 1) && tmp.mino[l][m + i][n])
+			return true;
+		if (!(n == 0 && i == -1) && !(n == 2 && i == 1) && tmp.mino[l][m][n + i])
+			return true;
+	}
+	return false;
+}
+
 Tetrimino3D::Tetrimino3D() {
 	srand((unsigned int)time(NULL));
 	for (int i = 0; i < MINO_DEPTH; i++)
@@ -55,9 +76,11 @@ void Tetrimino3D::setPoint(TmpPoint3D tmp) {
 void Tetrimino3D::create(int mode) {
 	x = BOARD_WIDTH + 2;
 	y = 0;
+	int loopCounter;
 	clear();
 	switch (mode) {
 	case 0:
+		/* 同確率ランダム生成 */
 		for (int i = 0; i < MINO_DEPTH; i++) {
 			for (int j = 0; j < MINO_HEIGHT; j++) {
 				for (int k = 0; k < MINO_WIDTH; k++) {
@@ -68,15 +91,65 @@ void Tetrimino3D::create(int mode) {
 		}
 		break;
 	case 1:
-		int loopCounter = 0;
+		/* 生成合計数を確定 */
+		mino[1][1][1] = true;
+		loopCounter = 0;
 		while (loopCounter < 3) {
 			int random = rand() % 27;
-			if (mino[random / 3 / 3][random / 3][random % 3] == false) {
-				mino[random / 3 / 3][random / 3][random % 3] = true;
+			if (mino[random / 3 / 3][random / 3 % 3][random % 3] == false) {
+				mino[random / 3 / 3][random / 3 % 3][random % 3] = true;
 				loopCounter++;
 			}
 		}
+		break;
+	case 2:
+		/* 中心に近いほど高い確率で生成 */
+		for (int i = 0; i < MINO_DEPTH; i++) {
+			for (int j = 0; j < MINO_HEIGHT; j++) {
+				for (int k = 0; k < MINO_WIDTH; k++) {
+					if (i == 1 && j == 1 && k == 1) mino[i][j][k] = true;
+					if (oneNum(i, j, k) == 2)
+						mino[i][j][k] = (rand() % 2 == 1) ? true : false;
+					else if (oneNum(i, j, k == 1))
+						mino[i][j][k] = (rand() % 3 == 1) ? true : false;
+					else
+						mino[i][j][k] = (rand() % 4 == 1) ? true : false;
+				}
+			}
+		}
+		break;
+	case 3:
+		/* case 2 に加え、飛びが生成されない */
+		for (int i = 0; i < MINO_DEPTH; i++) {
+			for (int j = 0; j < MINO_HEIGHT; j++) {
+				for (int k = 0; k < MINO_WIDTH; k++) {
+					if (i == 1 && j == 1 && k == 1) mino[i][j][k] = true;
+					if (oneNum(i, j, k) == 2)
+						mino[i][j][k] = (rand() % 2 == 1) ? true : false;
+				}
+			}
+		}
+		for (int i = 0; i < MINO_DEPTH; i++) {
+			for (int j = 0; j < MINO_HEIGHT; j++) {
+				for (int k = 0; k < MINO_WIDTH; k++) {
+					if (mino[i][j][k]) continue;
+					if (oneNum(i, j, k) == 1 && adjacent(getMino(), i, j, k))
+						mino[i][j][k] = (rand() % 3 == 1) ? true : false;
+				}
+			}
+		}
+		for (int i = 0; i < MINO_DEPTH; i++) {
+			for (int j = 0; j < MINO_HEIGHT; j++) {
+				for (int k = 0; k < MINO_WIDTH; k++) {
+					if (mino[i][j][k]) continue;
+					if (oneNum(i, j, k) == 0 && adjacent(getMino(), i, j, k))
+						mino[i][j][k] = (rand() % 4 == 1) ? true : false;
+				}
+			}
+		}
+		break;
 	}
+
 	do {
 		red = rand() % 2 / 1.1;
 		green = rand() % 2 / 1.1;
@@ -105,6 +178,8 @@ void Tetrimino3D::rotate(bool vec, bool x_axis, bool y_axis, bool z_axis, Board3
 				}
 			}
 		}
+	}
+	else {
 		for (int i = 0; i < MINO_DEPTH; i++) {
 			for (int j = 0; j < MINO_HEIGHT; j++) {
 				for (int k = 0; k < MINO_WIDTH; k++) {
@@ -143,7 +218,7 @@ void Tetrimino3D::rotate(bool vec, bool x_axis, bool y_axis, bool z_axis, Board3
 }
 
 bool Tetrimino3D::translate(int xVec, int yVec, int zVec, bool ghost, Board3D* b) {
-	if (xVec == -1) {
+	if (yVec == -1) {
 		if (b->landCheck(*this)) {
 			if (!ghost) b->set(*this);
 			return true;
