@@ -259,7 +259,7 @@ void Tetris::Tetris3D_Keyboard(unsigned char k, int x, int y) {
 		tetrimino3d.rotate(1, 1, 0, 0, &board3d);
 		break;
 	case 'x':	//回転(右)
-		tetrimino3d.rotate(-1, 1, 0, 0, &board3d);
+		tetrimino3d.rotate(0, 1, 0, 0, &board3d);
 		break;
 	case 'v':	//視点のリセット
 		View_Reset();

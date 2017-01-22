@@ -8,6 +8,8 @@
 #ifndef DRWA_STR_H
 #define DRAW_STR_H
 
+#include "GL/freeglut.h"
+
 #define STR_BLOCK_SIZE 5
 #define LEFT 0
 #define CENTER 1

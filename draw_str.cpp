@@ -6,7 +6,6 @@
 */
 
 #include "draw_str.h"
-#include "GL/freeglut.h"
 
 /**
 *	@brief		draw_strのコンストラクタ
