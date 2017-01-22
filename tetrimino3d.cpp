@@ -5,6 +5,7 @@
 #include "tmp_struct.h"
 
 #include <cmath>
+#include <iostream>
 #include "time.h"
 
 Tetrimino3D::Tetrimino3D() {
@@ -51,9 +52,36 @@ void Tetrimino3D::setPoint(TmpPoint3D tmp) {
 	z = tmp.z;
 }
 
-void Tetrimino3D::create() {
+void Tetrimino3D::create(int mode) {
 	x = BOARD_WIDTH + 2;
 	y = 0;
+	clear();
+	switch (mode) {
+	case 0:
+		for (int i = 0; i < MINO_DEPTH; i++) {
+			for (int j = 0; j < MINO_HEIGHT; j++) {
+				for (int k = 0; k < MINO_WIDTH; k++) {
+					if (i == 1 && j == 1 && k == 1) mino[i][j][k] = true;
+					else mino[i][j][k] = (rand() % 2 == 1) ? true : false;
+				}
+			}
+		}
+		break;
+	case 1:
+		int loopCounter = 0;
+		while (loopCounter < 3) {
+			int random = rand() % 27;
+			if (mino[random / 3 / 3][random / 3][random % 3] == false) {
+				mino[random / 3 / 3][random / 3][random % 3] = true;
+				loopCounter++;
+			}
+		}
+	}
+	do {
+		red = rand() % 2 / 1.1;
+		green = rand() % 2 / 1.1;
+		blue = rand() % 2 / 1.1;
+	} while (red == green && red == blue);
 }
 
 void Tetrimino3D::clear() {
