@@ -239,7 +239,7 @@ void Tetris::Tetris3D_Display() {
 	if(light_check) glEnable(GL_LIGHTING);
 	//ゲームオーバーの判定
 	if(board3d.boardCheck(score)) {
-		page = 1;
+		page = TETRIS3D;
 		mode = GAMEOVER;
 	}
 	glPopMatrix();
@@ -266,7 +266,7 @@ void Tetris::Tetris3D_Keyboard(unsigned char k, int x, int y) {
 		break;
 	case 'r':	//タイトルへ戻る
 		Tetris_Init();
-		mode = 0;
+		mode = TITLE;
 		break;
 	case 'l':	//ライティングのon/offの切り替え
 		light_check = !light_check;
