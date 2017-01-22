@@ -13,7 +13,8 @@ void Tetris::Gameover_Display() {
 		center.x, center.y, center.z,
 		0.0, angle_of_top, 0.0);
 
-	Create_Board(board.getBoard().board);
+	if(page == 0) Create_Board(board.getBoard().board);
+	else if(page == 1) Create_Board3D(board3d.getBoard().board);
 	Draw_Information(score.getScore(), score.getLine());
 
 	draw_str gameover_str("gameover", 1, 0, 0);
@@ -36,7 +37,8 @@ void Tetris::Gameover_Display() {
 void Tetris::Gameover_Keyboard(unsigned char k, int x, int y) {
 	switch(k) {
 	case GLUT_KEY_ENTER:
-		Set_Get_Ranking();
+		if(page == 0) Set_Get_Ranking(RANKINGTXT);
+		else if(page == 1) Set_Get_Ranking(RANKING3DTXT);
 		mode = RANKING;
 		break;
 	case 'v':

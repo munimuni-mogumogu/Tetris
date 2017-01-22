@@ -59,7 +59,7 @@ void Tetris::Title_Keyboard(unsigned char k, int x, int y) {
 		} else if (title_pos == 1) {
 			mode = TETRIS3D;
 		} else if(title_pos == 2) {
-			Set_Get_Ranking();
+			Set_Get_Ranking(RANKINGTXT);
 			mode = RANKING;
 		}
 		break;

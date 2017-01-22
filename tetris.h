@@ -55,7 +55,10 @@ private:
 	static Point2 ranking[10];			//ランキング格納用の変数
 	static char rank_name[10][RANKNAME];	//名前
 	static int name_pos;		//入力位置
+	static bool dialog_check;	//はい/いいえの入力
+	static int dialog_pos;		//はい/いいえの入力位置
 	static int title_pos;			//タイトルの位置
+	static int page;
 	static Score score;				//スコア
 	static double speed;		//落下速度(ms)
 	static bool light_check;	//ライトのオンオフ
@@ -67,13 +70,15 @@ private:
 	static Tetrimino3D holdmino3d;
 	static TmpPoint3D forecastmino_pos3d;
 	static Tetrimino3D forecastmino3d;
-
+	
 public:
 	Tetris();		//コンストラクタ
+	static bool Run(int, char**);	//実行
+
+private:
 	static void View_Reset();	//視点のリセット
 	static void Tetris_Init();	//テトリスの初期設定
 	static void Gl_Init();		//OpenGLの初期設定
-	static bool Run(int, char**);	//実行
 
 	//タイトルの関数
 	static void Title();
@@ -101,8 +106,8 @@ public:
 	//ランキングの関数
 	static void Ranking();
 	static void Change_Name(char[], char[], int);
-	static void Set_Get_Ranking();
-	static void Save_Ranking_Name();
+	static void Set_Get_Ranking(char[]);
+	static void Save_Ranking_Name(char[]);
 	static void Ranking_Display();
 	static void Ranking_Keyboard(unsigned char, int, int);
 	static void Ranking_Specialkeyboard(int, int, int);

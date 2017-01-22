@@ -363,6 +363,13 @@ void draw_str::draw_block(int pos) {
 			block[1][0] = 0; block[1][1] = 0; block[1][2] = 0; block[1][3] = 0; block[1][4] = 1;
 			block[0][0] = 0; block[0][1] = 1; block[0][2] = 1; block[0][3] = 1; block[0][4] = 0;
 			break;
+		case '/':
+			block[4][0] = 0; block[4][1] = 0; block[4][2] = 0; block[4][3] = 0; block[4][4] = 1;
+			block[3][0] = 0; block[3][1] = 0; block[3][2] = 0; block[3][3] = 1; block[3][4] = 0;
+			block[2][0] = 0; block[2][1] = 0; block[2][2] = 1; block[2][3] = 0; block[2][4] = 0;
+			block[1][0] = 0; block[1][1] = 1; block[1][2] = 0; block[1][3] = 0; block[1][4] = 0;
+			block[0][0] = 1; block[0][1] = 0; block[0][2] = 0; block[0][3] = 0; block[0][4] = 0;
+			break;
 		default:
 			block[4][0] = 0; block[4][1] = 0; block[4][2] = 0; block[4][3] = 0; block[4][4] = 0;
 			block[3][0] = 0; block[3][1] = 0; block[3][2] = 0; block[3][3] = 0; block[3][4] = 0;

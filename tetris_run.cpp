@@ -8,6 +8,7 @@ void Tetris::Tetris_Main() {
 
 void Tetris::Create_Block(bool block[MINO_HEIGHT][MINO_WIDTH], GLdouble Red = 0, GLdouble Green = 0, GLdouble Blue = 0, GLdouble shadow = 1) {
 	glPushMatrix();
+	if(shadow != 1) glDepthMask(GL_FALSE);
 	glColor4d(Red, Green, Blue, shadow);
 	for(int i = 0; i < MINO_HEIGHT; i++) {
 		for(int j = 0; j < MINO_WIDTH; j++){
@@ -17,6 +18,7 @@ void Tetris::Create_Block(bool block[MINO_HEIGHT][MINO_WIDTH], GLdouble Red = 0,
 			glPopMatrix();
 		}
 	}
+	glDepthMask(GL_TRUE);
 	glPopMatrix();
 }
 
@@ -27,8 +29,10 @@ void Tetris::Create_Board(bool block[BOARD_HEIGHT][BOARD_WIDTH]) {
 			glTranslated(j * BLOCK_SIZE, i * BLOCK_SIZE, 0.0);
 			if(block[i][j]) {
 				if(i == 0 || j == 0 || j == BOARD_WIDTH - 1) {
+					glDepthMask(GL_FALSE);
 					glColor4d(board.getBoard().red[i][j], board.getBoard().green[i][j], board.getBoard().blue[i][j], 0.4);
 				} else {
+					glDepthMask(GL_TRUE);
 					glColor3d(board.getBoard().red[i][j], board.getBoard().green[i][j], board.getBoard().blue[i][j]);
 				}
 				glutSolidCube(BLOCK_SIZE);
@@ -36,6 +40,7 @@ void Tetris::Create_Board(bool block[BOARD_HEIGHT][BOARD_WIDTH]) {
 			glPopMatrix();
 		}
 	}
+	glDepthMask(GL_TRUE);
 }
 
 void Tetris::Next_Mino() {
@@ -130,18 +135,6 @@ void Tetris::Tetris_Display() {
 	Create_Block(tetrimino.getMino().mino, tetrimino.getR(), tetrimino.getG(), tetrimino.getB());
 	glPopMatrix();
 
-	forecastmino.setMino(tetrimino.getMino());
-	forecastmino_pos = tetrimino.getXY();
-	forecastmino.setPoint(forecastmino_pos);
-	while(!forecastmino.translate(0, -1, true, &board));
-
-	glPushMatrix();
-	glTranslated(forecastmino.getX() * BLOCK_SIZE, forecastmino.getY() * BLOCK_SIZE, 0);
-	Create_Block(forecastmino.getMino().mino, 1.0, 0, 0, 0.4);
-	glPopMatrix();
-
-	glPopMatrix();
-
 	speed = 1000 * pow(0.9, score.getLine() / 1);
 
 	if(clock() - start > speed) {
@@ -153,8 +146,20 @@ void Tetris::Tetris_Display() {
 	}
 
 	Draw_Information(score.getScore(), score.getLine());
+
+	forecastmino.setMino(tetrimino.getMino());
+	forecastmino_pos = tetrimino.getXY();
+	forecastmino.setPoint(forecastmino_pos);
+	while(!forecastmino.translate(0, -1, true, &board));
+
+	glPushMatrix();
+	glTranslated(forecastmino.getX() * BLOCK_SIZE, forecastmino.getY() * BLOCK_SIZE, 0);
+	Create_Block(forecastmino.getMino().mino, 1.0, 0, 0, 0.4);
+	glPopMatrix();
+
 	Create_Board(board.getBoard().board);
 	if(board.boardCheck(score)) {
+		page = 0;
 		mode = GAMEOVER;
 	}
 	glPopMatrix();

@@ -24,6 +24,9 @@ Board Tetris::board;				//ボード
 int Tetris::rank_pos;			//ランキングの順位
 char Tetris::rank_name[10][6];
 int Tetris::name_pos;
+int Tetris::dialog_pos;
+bool Tetris::dialog_check;
+int Tetris::page;
 Point2 Tetris::ranking[10];			//ランキング格納用の変数
 int Tetris::title_pos;			//タイトルの位置
 Score Tetris::score;				//スコア
@@ -55,6 +58,9 @@ Tetris::Tetris() {
 	hold_check = true;
 	rank_pos = -1;
 	name_pos = 0;
+	dialog_pos = 0;
+	dialog_check = false;
+	page = 0;
 	title_pos = 0;
 	speed = 1000;
 	light_check = false;
@@ -85,6 +91,9 @@ void Tetris::Tetris_Init() {
 	start = clock();
 	rank_pos = -1;
 	name_pos = 0;
+	dialog_pos = 0;
+	dialog_check = false;
+	page = 0;
 	title_pos = 0;
 	score.clear();
 
@@ -110,14 +119,20 @@ void Tetris::Gl_Init() {
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_DEPTH_TEST);
 
-	GLfloat material[] = { 0.5, 0.5, 0.5, 0.5 };
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, material);
+	GLfloat ambient[] = { (GLfloat)0.135, (GLfloat)0.2225, (GLfloat)0.1575, (GLfloat)1.0 };
+	GLfloat diffuse[] = { (GLfloat)0.54, (GLfloat)0.89, (GLfloat)0.63, (GLfloat)1.0 };
+	GLfloat specular[] = { (GLfloat)0.316228, (GLfloat)0.316228, (GLfloat)0.316228, (GLfloat)1.0 };
+	GLfloat shininess = (GLfloat)12.8;
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, &shininess);
 
 	//光源の設定
-	GLfloat lightPosition[4] = { 0.0, 0.0, -500.0, 1.0 }; //光源の位置
-	GLfloat lightDiffuse[3]  = { 1.0,   1.0, 1.0  }; //拡散光
+	GLfloat lightPosition[4] = { (BOARD_WIDTH + MENU_SIZE) * BLOCK_SIZE / 2, BOARD_HEIGHT / 2, -500, 1.0 }; //光源の位置
+	GLfloat lightDiffuse[3]  = { 1.0, 1.0, 1.0 }; //拡散光
 	GLfloat lightAmbient[3]  = { 0.25, 0.25, 0.25 }; //環境光
-	GLfloat lightSpecular[3] = { 1.0,   1.0, 1.0  }; //鏡面光
+	GLfloat lightSpecular[3] = { 0.25, 0.25, 0.25 }; //鏡面光
 	glEnable(GL_LIGHTING);
 	glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE,  lightDiffuse);
@@ -126,6 +141,7 @@ void Tetris::Gl_Init() {
 	glEnable(GL_LIGHT0);
 	glDisable(GL_LIGHTING);
 
+	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }

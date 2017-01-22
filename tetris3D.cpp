@@ -8,17 +8,19 @@ void Tetris::Tetris3D() {
 
 void Tetris::Create_Block3D(bool block[MINO_DEPTH][MINO_HEIGHT][MINO_WIDTH], GLdouble Red = 0, GLdouble Green = 0, GLdouble Blue = 0, GLdouble shadow = 1) {
 	glPushMatrix();
+	if(shadow != 1) glDepthMask(GL_FALSE);
 	glColor4d(Red, Green, Blue, shadow);
 	for(int i = 0; i < MINO_DEPTH; i++) {
 		for(int j = 0; j < MINO_HEIGHT; j++){
 			for(int k = 0; k < MINO_WIDTH; k++) {
 				glPushMatrix();
-				glTranslated(k * BLOCK_SIZE, j * BLOCK_SIZE, i * BLOCK_SIZE);
+				glTranslated(k * BLOCK_SIZE, j * BLOCK_SIZE, -i * BLOCK_SIZE);
 				if(block[i][j][k]) glutSolidCube(BLOCK_SIZE);
 				glPopMatrix();
 			}
 		}
 	}
+	glDepthMask(GL_TRUE);
 	glPopMatrix();
 }
 
@@ -31,11 +33,14 @@ void Tetris::Create_Board3D(bool block[BOARD_DEPTH][BOARD_HEIGHT][BOARD_WIDTH]) 
 				if(block[i][j][k]) {
 					if(i == 0 || j == 0 || k == 0 || i == BOARD_DEPTH - 1 || k == BOARD_WIDTH - 1) {
 						if((i == 0 && j == 0) || (i == 0 && k == 0) || (i == 0 && k == BOARD_WIDTH - 1) || (i == BOARD_DEPTH - 1 && j == 0) || (i == BOARD_DEPTH - 1 && k == 0) || (i == BOARD_DEPTH - 1 && k == BOARD_WIDTH - 1) || (j == 0 && k == 0) || (j == 0 && k == BOARD_WIDTH - 1)) {
+							glDepthMask(GL_FALSE);
 							glColor4d(board3d.getBoard().red[i][j][k], board3d.getBoard().green[i][j][k], board3d.getBoard().blue[i][j][k], 0.4);
 						} else {
+							glDepthMask(GL_FALSE);
 							glColor4d(board3d.getBoard().red[i][j][k], board3d.getBoard().green[i][j][k], board3d.getBoard().blue[i][j][k], 0.01);
 						}
 					} else {
+						glDepthMask(GL_TRUE);
 						glColor3d(board3d.getBoard().red[i][j][k], board3d.getBoard().green[i][j][k], board3d.getBoard().blue[i][j][k]);
 					}
 					glutSolidCube(BLOCK_SIZE);
@@ -44,6 +49,7 @@ void Tetris::Create_Board3D(bool block[BOARD_DEPTH][BOARD_HEIGHT][BOARD_WIDTH]) 
 			}
 		}
 	}
+	glDepthMask(GL_TRUE);
 }
 
 void Tetris::Next_Mino3D() {
@@ -127,26 +133,15 @@ void Tetris::Draw_Information3D(int score, int line) {
 void Tetris::Tetris3D_Display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
+	glEnable(GL_DEPTH_TEST);
 	gluLookAt(viewpoint.x + center.x, viewpoint.y + center.y, viewpoint.z + center.z,
 		center.x, center.y, center.z,
 		0.0, angle_of_top, 0.0);
 	glPushMatrix();
 
 	glPushMatrix();
-	glTranslated(tetrimino3d.getX() * BLOCK_SIZE, tetrimino3d.getY() * BLOCK_SIZE, tetrimino3d.getZ() * BLOCK_SIZE);
+	glTranslated(tetrimino3d.getX() * BLOCK_SIZE, tetrimino3d.getY() * BLOCK_SIZE, -tetrimino3d.getZ() * BLOCK_SIZE);
 	Create_Block3D(tetrimino3d.getMino().mino, tetrimino3d.getR(), tetrimino3d.getG(), tetrimino3d.getB());
-	glPopMatrix();
-
-	forecastmino3d.setMino(tetrimino3d.getMino());
-	forecastmino_pos3d = tetrimino3d.getXYZ();
-	forecastmino3d.setPoint(forecastmino_pos3d);
-	//while(!forecastmino3d.translate(0, -1, 0, true, &board3d));
-
-	glPushMatrix();
-	glTranslated(forecastmino3d.getX() * BLOCK_SIZE, forecastmino3d.getY() * BLOCK_SIZE, forecastmino3d.getZ() * BLOCK_SIZE);
-	Create_Block3D(forecastmino3d.getMino().mino, 1.0, 0, 0, 0.4);
-	glPopMatrix();
-
 	glPopMatrix();
 
 	speed = 1000 * pow(0.9, score.getLine() / 1);
@@ -160,13 +155,26 @@ void Tetris::Tetris3D_Display() {
 	}
 
 	Draw_Information3D(score.getScore(), score.getLine());
+	
+	forecastmino3d.setMino(tetrimino3d.getMino());
+	forecastmino_pos3d = tetrimino3d.getXYZ();
+	forecastmino3d.setPoint(forecastmino_pos3d);
+	//while(!forecastmino3d.translate(0, -1, 0, true, &board3d));
+
+	glPushMatrix();
+	glTranslated(forecastmino3d.getX() * BLOCK_SIZE, forecastmino3d.getY() * BLOCK_SIZE, -forecastmino3d.getZ() * BLOCK_SIZE);
+	Create_Block3D(forecastmino3d.getMino().mino, 1.0, 0, 0, 0.4);
+	glPopMatrix();
+
+	glDisable(GL_LIGHTING);
 	Create_Board3D(board3d.getBoard().board);
+	if(light_check) glEnable(GL_LIGHTING);
 	if(board3d.boardCheck(score)) {
+		page = 1;
 		mode = GAMEOVER;
 	}
 	glPopMatrix();
 	glutSwapBuffers();
-
 }
 
 void Tetris::Tetris3D_Keyboard(unsigned char k, int x, int y) {
@@ -191,6 +199,7 @@ void Tetris::Tetris3D_Keyboard(unsigned char k, int x, int y) {
 void Tetris::Tetris3D_Specialkeyboard(int k, int x, int y) {
 	switch(k) {
 	case GLUT_KEY_RIGHT:
+		tetrimino3d.translate(1, 0, 0, false, &board3d);
 		break;
 	case GLUT_KEY_LEFT:
 		break;

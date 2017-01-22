@@ -26,6 +26,9 @@
 
 #define RANKNAME 6
 
+#define RANKINGTXT "ranking.txt"
+#define RANKING3DTXT "ranking3d.txt"
+
 /* テンプレートパターン数 */
 #define TEMPLATE_PATTERN	7
 
