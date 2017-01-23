@@ -263,9 +263,7 @@ void Tetris::Tetris3D_Display() {
 *	@param [in]	y	マウスy座標
 *	@return		なし
 */
-#include <iostream>
 void Tetris::Tetris3D_Keyboard(unsigned char k, int x, int y) {
-	std::cout << (int)' ' << std::endl;
 	switch(k) {
 	case 'z':	//回転(x左)
 		tetrimino3d.rotate(1, 1, 0, 0, &board3d);
@@ -274,16 +272,16 @@ void Tetris::Tetris3D_Keyboard(unsigned char k, int x, int y) {
 		tetrimino3d.rotate(0, 1, 0, 0, &board3d);
 		break;
 	case 'a':	//回転(y左)
-		//tetrimino3d.rotate(1, 0, 1, 0, &board3d);
+		tetrimino3d.rotate(1, 0, 1, 0, &board3d);
 		break;
 	case 's':	//回転(y右)
-		//tetrimino3d.rotate(0, 0, 1, 0, &board3d);
+		tetrimino3d.rotate(0, 0, 1, 0, &board3d);
 		break;
 	case 'q':	//回転(z左)
-		//tetrimino3d.rotate(1, 0, 0, 1, &board3d);
+		tetrimino3d.rotate(1, 0, 0, 1, &board3d);
 		break;
 	case 'w':	//回転(z右)
-		//tetrimino3d.rotate(0, 0, 0, 1, &board3d);
+		tetrimino3d.rotate(0, 0, 0, 1, &board3d);
 		break;
 	case ' ':	//ホールド
 		//2度連続でホールドしていないかの判定
@@ -326,14 +324,14 @@ void Tetris::Tetris3D_Specialkeyboard(int k, int x, int y) {
 		break;
 	case GLUT_KEY_UP:		//移動(上)
 		tetrimino3d.translate(0, 0, 1, false, &board3d);
-	case 112://移動(下)
+	case 112:		//移動(下)Shift左
 		//着地判定
 		if(tetrimino3d.translate(0, -1, 0, false, &board3d)) {
 			hold_check = true;
 			Next_Mino();
 		}
 		break;
-	case 113:		//移動(着地)
+	case 113:		//移動(着地)Shift右
 		//着地するまで移動
 		while(!tetrimino3d.translate(0, -1, 0, false, &board3d));
 		hold_check = true;
