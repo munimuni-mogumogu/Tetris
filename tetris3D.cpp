@@ -118,7 +118,7 @@ void Tetris::Mino_Hold3D() {
 		//ホールドミノがない
 		holdmino3d.setMino(tetrimino3d.getMino());
 		holdmino3d.setColor(tetrimino3d.getR(), tetrimino3d.getG(), tetrimino3d.getB());
-		Next_Mino();
+		Next_Mino3D();
 	} else {
 		//ホールドミノがある
 		holdmino3d.setMino(tetrimino3d.getMino());
@@ -285,7 +285,7 @@ void Tetris::Tetris3D_Keyboard(unsigned char k, int x, int y) {
 		break;
 	case ' ':	//ホールド
 		//2度連続でホールドしていないかの判定
-		if(hold_check) Mino_Hold();
+		if(hold_check) Mino_Hold3D();
 		break;
 	case 'v':	//視点のリセット
 		View_Reset();
@@ -328,14 +328,14 @@ void Tetris::Tetris3D_Specialkeyboard(int k, int x, int y) {
 		//着地判定
 		if(tetrimino3d.translate(0, -1, 0, false, &board3d)) {
 			hold_check = true;
-			Next_Mino();
+			Next_Mino3D();
 		}
 		break;
 	case 113:		//移動(着地)Shift右
 		//着地するまで移動
 		while(!tetrimino3d.translate(0, -1, 0, false, &board3d));
 		hold_check = true;
-		Next_Mino();
+		Next_Mino3D();
 		break;
 	default:
 		break;
