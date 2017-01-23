@@ -17,67 +17,40 @@ void Tetris::Tetris_Main() {
 	glutSpecialFunc(Tetris_Specialkeyboard);
 }
 
+/**
+*	@brief		立方体の描画(線付き)
+*	@param [in]	block[MINO_HEIGHT][MINO_WIDTH]	テトリミノ
+*	@param [in]	Red		赤色(=0, 0 < Red < 1)
+*	@param [in]	blue	青色(=0. 0 < Blue < 1)
+*	@param [in]	Green	緑色(=0, 0 < Green < 1)
+*	@param [in]	shadow	透明度(=1, 0 < shadow < 1)
+*	@return		なし
+*/
 void Tetris::DrawCube(int size, GLdouble Red, GLdouble Green, GLdouble Blue, GLdouble shadow) {
-	GLdouble vertex[][3] = {
-		{ -0.49, -0.49, -0.49 },
-		{  0.49, -0.49, -0.49 },
-		{  0.49,  0.49, -0.49 },
-		{ -0.49,  0.49, -0.49 },
-		{ -0.49, -0.49,  0.49 },
-		{  0.49, -0.49,  0.49 },
-		{  0.49,  0.49,  0.49 },
-		{ -0.49,  0.49,  0.49 }
-	};
-	int face[][4] = {//面の定義
-		{ 3, 2, 1, 0 },
-		{ 1, 2, 6, 5 },
-		{ 4, 5, 6, 7 },
-		{ 0, 4, 7, 3 },
-		{ 0, 1, 5, 4 },
-		{ 2, 3, 7, 6 }
-	};
-	GLdouble normal[][3] = {//面の法線ベクトル
-		{ 0.0, 0.0, -1.0 },
-		{ 1.0, 0.0, 0.0 },
-		{ 0.0, 0.0, 1.0 },
-		{-1.0, 0.0, 0.0 },
-		{ 0.0,-1.0, 0.0 },
-		{ 0.0, 1.0, 0.0 }
-	};
 	glPushMatrix();
 	glScaled(size, size, size);
 	glColor4d(Red, Green, Blue, shadow);
 	glBegin(GL_QUADS);
 	for (int j = 0; j < 6; ++j) {
-		glNormal3dv(normal[j]); //法線ベクトルの指定
+		glNormal3dv(draw_rect.normal[j]); //法線ベクトルの指定
 		for (int i = 0; i < 4; ++i) {
-			glVertex3dv(vertex[face[j][i]]);
+			glVertex3dv(draw_rect.vertex[draw_rect.face[j][i]]);
 		}
 	}
 	glEnd();
-	GLdouble vertex2[][3] = {
-		{ -0.5, -0.5, -0.5 },
-		{  0.5, -0.5, -0.5 },
-		{  0.5,  0.5, -0.5 },
-		{ -0.5,  0.5, -0.5 },
-		{ -0.5, -0.5,  0.5 },
-		{  0.5, -0.5,  0.5 },
-		{  0.5,  0.5,  0.5 },
-		{ -0.5,  0.5,  0.5 },
-	};
 	glColor4d(Red / 2, Green / 2, Blue / 2, shadow);
 	glBegin(GL_LINE_LOOP);
 	for(int i = 0; i < 4; i++)
-		glVertex3d(vertex2[i][0], vertex2[i][1], vertex2[i][2]);
+		glVertex3d(draw_rect.vertex2[i][0], draw_rect.vertex2[i][1], draw_rect.vertex2[i][2]);
 	glEnd();
 	glBegin(GL_LINE_LOOP);
 	for(int i = 4; i < 8; i++)
-		glVertex3d(vertex2[i][0], vertex2[i][1], vertex2[i][2]);
+		glVertex3d(draw_rect.vertex2[i][0], draw_rect.vertex2[i][1], draw_rect.vertex2[i][2]);
 	glEnd();
 	for(int i = 0; i < 4; i++) {
 		glBegin(GL_LINE_LOOP);
-		glVertex3d(vertex2[i][0], vertex2[i][1], vertex2[i][2]);
-		glVertex3d(vertex2[i + 4][0], vertex2[i + 4][1], vertex2[i + 4][2]);
+		glVertex3d(draw_rect.vertex2[i][0], draw_rect.vertex2[i][1], draw_rect.vertex2[i][2]);
+		glVertex3d(draw_rect.vertex2[i + 4][0], draw_rect.vertex2[i + 4][1], draw_rect.vertex2[i + 4][2]);
 		glEnd();
 	}
 	glPopMatrix();
@@ -143,7 +116,8 @@ void Tetris::Create_Board(bool block[BOARD_HEIGHT][BOARD_WIDTH]) {
 void Tetris::Next_Mino() {
 	tetrimino.setMino(nextmino.getMino());
 	tetrimino.setColor(nextmino.getR(), nextmino.getG(),nextmino.getB());
-	nextmino.create();
+	if(page == TETRIS) nextmino.create(2);
+	else if(page == TETRISRAND) nextmino.create(0);
 	tetrimino.setPoint(mino_pos);
 }
 
@@ -288,7 +262,6 @@ void Tetris::Tetris_Display() {
 	Create_Board(board.getBoard().board);
 	//ゲームオーバーの判定
 	if(board.boardCheck(score)) {
-		page = TETRIS;
 		mode = GAMEOVER;
 	}
 	glPopMatrix();
