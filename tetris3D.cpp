@@ -114,7 +114,7 @@ void Tetris::Mino_Hold3D() {
 	TmpMino3D temp = holdmino3d.getMino();
 	double color[3] = { holdmino3d.getR(), holdmino3d.getG(), holdmino3d.getB() };
 	//ホールドされているミノが既にあるかの判定
-	if(temp.mino[1][1] == false) {
+	if(temp.mino[1][1][1] == false) {
 		//ホールドミノがない
 		holdmino3d.setMino(tetrimino3d.getMino());
 		holdmino3d.setColor(tetrimino3d.getR(), tetrimino3d.getG(), tetrimino3d.getB());
