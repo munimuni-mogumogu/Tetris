@@ -91,18 +91,19 @@ void Tetris::Title_Keyboard(unsigned char k, int x, int y) {
 		//タイトルでどれが選択されているかの判定
 		if(title_pos == TETRIS) {
 			//通常テトリスの時
-			Tetris_Init();
 			page = TETRIS;
 			mode = TETRIS;
+			Tetris_Init();
 		} else if (title_pos == TETRISRAND) {
 			//ランダムテトリスの時
-			Tetris_Init();
 			page = TETRISRAND;
 			mode = TETRIS;
+			Tetris_Init();
 		} else if (title_pos == TETRIS3D) {
 			//3Dテトリスの時
 			page = TETRIS3D;
 			mode = TETRIS3D;
+			Tetris_Init();
 		} else if(title_pos == RANKING) {
 			//ランキングの時
 			Set_Get_Ranking(RANKINGTXT);
