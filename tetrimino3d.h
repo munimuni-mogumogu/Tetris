@@ -6,9 +6,11 @@
 struct TmpMino3D;
 struct TmpPoint3D;
 class Board3D;
+class TetriminoTemplate;
 
 class Tetrimino3D {
 private:
+	static TetriminoTemplate tetriminoTemp;
 	bool mino[MINO_DEPTH][MINO_HEIGHT][MINO_WIDTH];
 	int x;
 	int y;
@@ -29,7 +31,7 @@ public:
 	void setMino(TmpMino3D);
 	void setColor(double, double, double);
 	void setPoint(TmpPoint3D);
-	void create(int = 3);
+	void create(int = 4);
 	void clear();
 	void rotate(bool, bool, bool, bool, Board3D*);
 	bool translate(int, int, int, bool, Board3D*);

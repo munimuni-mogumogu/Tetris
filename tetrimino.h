@@ -29,7 +29,7 @@ public:
 	void setMino(TmpMino);
 	void setColor(double, double, double);
 	void setPoint(TmpPoint);
-	void create(int = 2);
+	void create(int = 0);
 	void clear();
 	void rotate(bool, Board*);
 	void createRotate();

@@ -3,10 +3,13 @@
 /* library header */
 #include "board3d.h"
 #include "tmp_struct.h"
+#include "tetrimino_template.h"
 
 #include <cmath>
 #include <iostream>
 #include "time.h"
+
+TetriminoTemplate Tetrimino3D::tetriminoTemp = TetriminoTemplate();
 
 int oneNum(int l, int m, int n) {
 	int oneCounter = 0;
@@ -148,6 +151,14 @@ void Tetrimino3D::create(int mode) {
 			}
 		}
 		break;
+	case 4:
+		/* ‚¸‚é‚·‚é‚Æ‚« */
+		int ran = rand() % 7;
+		for (int j = 0; j < MINO_HEIGHT; j++) {
+			for (int k = 0; k < MINO_WIDTH; k++) {
+				mino[1][j][k] = tetriminoTemp.getTemplate(ran).mino[j][k];
+			}
+		}
 	}
 
 	do {
@@ -183,9 +194,9 @@ void Tetrimino3D::rotate(bool vec, bool x_axis, bool y_axis, bool z_axis, Board3
 		for (int i = 0; i < MINO_DEPTH; i++) {
 			for (int j = 0; j < MINO_HEIGHT; j++) {
 				for (int k = 0; k < MINO_WIDTH; k++) {
-					if (x_axis) tmp[MINO_WIDTH - 1 - j][i][k] = mino[i][j][k];
-					if (y_axis) tmp[MINO_HEIGHT - 1 - j][j][i] = mino[i][j][k];
-					if (z_axis) tmp[i][MINO_DEPTH - 1 - k][j] = mino[i][j][k];
+					if (x_axis) tmp[MINO_HEIGHT - 1 - j][i][k] = mino[i][j][k];
+					if (y_axis) tmp[MINO_WIDTH - 1 - k][j][i] = mino[i][j][k];
+					if (z_axis) tmp[i][MINO_WIDTH - 1 - k][j] = mino[i][j][k];
 				}
 			}
 		}
