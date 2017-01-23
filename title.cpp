@@ -30,7 +30,7 @@ void Tetris::Title_Display() {
 
 	//選択コマンドの球
 	glPushMatrix();
-	glTranslated((BOARD_WIDTH + MENU_SIZE - 18) / 2 * BLOCK_SIZE, (BOARD_HEIGHT / 2 - 3 - (title_pos * 2)) * BLOCK_SIZE - 6, 0);
+	glTranslated((BOARD_WIDTH + MENU_SIZE - 22) / 2 * BLOCK_SIZE, (BOARD_HEIGHT / 2 - 1 - (title_pos * 2)) * BLOCK_SIZE - 6, 0);
 	glColor3d(1, 0, 0);
 	glutSolidSphere(5, 5, 10);
 	glPopMatrix();
@@ -51,10 +51,18 @@ void Tetris::Title_Display() {
 	Start_str.draw_block(CENTER);
 	glPopMatrix();
 	
+	//通常テトリスの描画
+	glPushMatrix();
+	draw_str Startrand("start random tetris");
+	glTranslated((BOARD_WIDTH + MENU_SIZE) / 2 * BLOCK_SIZE, (BOARD_HEIGHT / 2 - 6) * BLOCK_SIZE, 0);
+	glScaled(2, 2, 2);
+	Startrand.draw_block(CENTER);
+	glPopMatrix();
+
 	//3Dテトリスの描画
 	glPushMatrix();
 	draw_str start3d("start 3D tetris");
-	glTranslated((BOARD_WIDTH + MENU_SIZE) / 2 * BLOCK_SIZE, (BOARD_HEIGHT / 2 - 6) * BLOCK_SIZE, 0);
+	glTranslated((BOARD_WIDTH + MENU_SIZE) / 2 * BLOCK_SIZE, (BOARD_HEIGHT / 2 - 8) * BLOCK_SIZE, 0);
 	glScaled(2, 2, 2);
 	start3d.draw_block(CENTER);
 	glPopMatrix();
@@ -62,7 +70,7 @@ void Tetris::Title_Display() {
 	//ランキングの描画
 	glPushMatrix();
 	draw_str ranking_str("ranking");
-	glTranslated((BOARD_WIDTH + MENU_SIZE) / 2 * BLOCK_SIZE, (BOARD_HEIGHT / 2 - 8) * BLOCK_SIZE, 0);
+	glTranslated((BOARD_WIDTH + MENU_SIZE) / 2 * BLOCK_SIZE, (BOARD_HEIGHT / 2 - 10) * BLOCK_SIZE, 0);
 	glScaled(2, 2, 2);
 	ranking_str.draw_block(CENTER);
 	glPopMatrix();
@@ -81,14 +89,21 @@ void Tetris::Title_Keyboard(unsigned char k, int x, int y) {
 	switch(k) {
 	case GLUT_KEY_ENTER:	//Enterキーの時
 		//タイトルでどれが選択されているかの判定
-		if(title_pos == 0) {
+		if(title_pos == TETRIS) {
 			//通常テトリスの時
 			Tetris_Init();
+			page = TETRIS;
 			mode = TETRIS;
-		} else if (title_pos == 1) {
+		} else if (title_pos == TETRISRAND) {
+			//ランダムテトリスの時
+			Tetris_Init();
+			page = TETRISRAND;
+			mode = TETRIS;
+		} else if (title_pos == TETRIS3D) {
 			//3Dテトリスの時
+			page = TETRIS3D;
 			mode = TETRIS3D;
-		} else if(title_pos == 2) {
+		} else if(title_pos == RANKING) {
 			//ランキングの時
 			Set_Get_Ranking(RANKINGTXT);
 			mode = RANKING;
@@ -120,10 +135,10 @@ void Tetris::Title_Keyboard(unsigned char k, int x, int y) {
 void Tetris::Title_Specialkeyboard(int k, int x, int y) {
 	switch(k) {
 	case GLUT_KEY_DOWN:	//タイトルの選択を下へ移動させる
-		if(title_pos < 2)title_pos++;
+		if(title_pos < RANKING)title_pos++;
 		break;
 	case GLUT_KEY_UP:	//タイトルの選択を上へ移動させる
-		if(title_pos > 0)title_pos--;
+		if(title_pos > TETRIS)title_pos--;
 		break;
 	default:
 		break;
