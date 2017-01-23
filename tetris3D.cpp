@@ -67,6 +67,11 @@ void Tetris::Create_Board3D(bool block[BOARD_DEPTH][BOARD_HEIGHT][BOARD_WIDTH]) 
 			}
 		}
 	}
+	//落下予測位置にテトリミノの描画(透明度60%)
+	glPushMatrix();
+	glTranslated(forecastmino3d.getX() * BLOCK_SIZE, forecastmino3d.getY() * BLOCK_SIZE, -forecastmino3d.getZ() * BLOCK_SIZE);
+	Create_Block3D(forecastmino3d.getMino().mino, 0, 0, 0, 0.4);
+	glPopMatrix();
 	for(int i = 0; i < BOARD_DEPTH; i++) {
 		for(int j = 0; j < BOARD_HEIGHT; j++){
 			for(int k = 0; k < BOARD_WIDTH; k++) {
@@ -236,11 +241,6 @@ void Tetris::Tetris3D_Display() {
 	forecastmino_pos3d = tetrimino3d.getXYZ();
 	forecastmino3d.setPoint(forecastmino_pos3d);
 	while(!forecastmino3d.translate(0, -1, 0, true, &board3d));
-	//落下予測位置にテトリミノの描画(透明度60%)
-	glPushMatrix();
-	glTranslated(forecastmino3d.getX() * BLOCK_SIZE, forecastmino3d.getY() * BLOCK_SIZE, -forecastmino3d.getZ() * BLOCK_SIZE);
-	Create_Block3D(forecastmino3d.getMino().mino, 1.0, 0, 0, 0.4);
-	glPopMatrix();
 
 	//ボードの描画
 	//3Dなのでボードは透過処理を行うためライティングの影響を受けない
