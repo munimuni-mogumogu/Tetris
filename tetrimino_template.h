@@ -9,12 +9,16 @@ struct TemplatePattern {
 
 class TetriminoTemplate {
 private:
-	TemplatePattern temp[TEMPLATE_PATTERN];
+	static TemplatePattern Imino;
+	static TemplatePattern Omino;
+	static TemplatePattern Tmino;
+	static TemplatePattern Jmino;
+	static TemplatePattern Lmino;
+	static TemplatePattern Smino;
+	static TemplatePattern Zmino;
 public:
 	TetriminoTemplate();
-	void setTemplate(TemplatePattern&, int);
-	TemplatePattern getTemplate(int n) { return temp[n]; }
-	void copyPtn(TemplatePattern&, TemplatePattern);
+	TemplatePattern getTemplate(int n);
 };
 
 #endif
