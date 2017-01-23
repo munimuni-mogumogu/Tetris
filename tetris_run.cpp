@@ -17,6 +17,72 @@ void Tetris::Tetris_Main() {
 	glutSpecialFunc(Tetris_Specialkeyboard);
 }
 
+void Tetris::DrawCube(int size, GLdouble Red, GLdouble Green, GLdouble Blue, GLdouble shadow) {
+	GLdouble vertex[][3] = {
+		{ -0.49, -0.49, -0.49 },
+		{  0.49, -0.49, -0.49 },
+		{  0.49,  0.49, -0.49 },
+		{ -0.49,  0.49, -0.49 },
+		{ -0.49, -0.49,  0.49 },
+		{  0.49, -0.49,  0.49 },
+		{  0.49,  0.49,  0.49 },
+		{ -0.49,  0.49,  0.49 }
+	};
+	int face[][4] = {//面の定義
+		{ 3, 2, 1, 0 },
+		{ 1, 2, 6, 5 },
+		{ 4, 5, 6, 7 },
+		{ 0, 4, 7, 3 },
+		{ 0, 1, 5, 4 },
+		{ 2, 3, 7, 6 }
+	};
+	GLdouble normal[][3] = {//面の法線ベクトル
+		{ 0.0, 0.0, -1.0 },
+		{ 1.0, 0.0, 0.0 },
+		{ 0.0, 0.0, 1.0 },
+		{-1.0, 0.0, 0.0 },
+		{ 0.0,-1.0, 0.0 },
+		{ 0.0, 1.0, 0.0 }
+	};
+	glPushMatrix();
+	glScaled(size, size, size);
+	glColor4d(Red, Green, Blue, shadow);
+	glBegin(GL_QUADS);
+	for (int j = 0; j < 6; ++j) {
+		glNormal3dv(normal[j]); //法線ベクトルの指定
+		for (int i = 0; i < 4; ++i) {
+			glVertex3dv(vertex[face[j][i]]);
+		}
+	}
+	glEnd();
+	GLdouble vertex2[][3] = {
+		{ -0.5, -0.5, -0.5 },
+		{  0.5, -0.5, -0.5 },
+		{  0.5,  0.5, -0.5 },
+		{ -0.5,  0.5, -0.5 },
+		{ -0.5, -0.5,  0.5 },
+		{  0.5, -0.5,  0.5 },
+		{  0.5,  0.5,  0.5 },
+		{ -0.5,  0.5,  0.5 },
+	};
+	glColor4d(Red / 2, Green / 2, Blue / 2, shadow);
+	glBegin(GL_LINE_LOOP);
+	for(int i = 0; i < 4; i++)
+		glVertex3d(vertex2[i][0], vertex2[i][1], vertex2[i][2]);
+	glEnd();
+	glBegin(GL_LINE_LOOP);
+	for(int i = 4; i < 8; i++)
+		glVertex3d(vertex2[i][0], vertex2[i][1], vertex2[i][2]);
+	glEnd();
+	for(int i = 0; i < 4; i++) {
+		glBegin(GL_LINE_LOOP);
+		glVertex3d(vertex2[i][0], vertex2[i][1], vertex2[i][2]);
+		glVertex3d(vertex2[i + 4][0], vertex2[i + 4][1], vertex2[i + 4][2]);
+		glEnd();
+	}
+	glPopMatrix();
+}
+
 /**
 *	@brief		テトリミノの描画関数
 *				透明度を利用する場合奥のものから描画することに注意
@@ -31,12 +97,11 @@ void Tetris::Create_Block(bool block[MINO_HEIGHT][MINO_WIDTH], GLdouble Red = 0,
 	glPushMatrix();
 	//透明度利用時はデプスバッファへの書き込みをしない
 	if(shadow != 1) glDepthMask(GL_FALSE);
-	glColor4d(Red, Green, Blue, shadow);
 	for(int i = 0; i < MINO_HEIGHT; i++) {
 		for(int j = 0; j < MINO_WIDTH; j++){
 			glPushMatrix();
 			glTranslated(j * BLOCK_SIZE, i * BLOCK_SIZE, 0.0);
-			if(block[i][j]) glutSolidCube(BLOCK_SIZE);
+			if(block[i][j]) DrawCube(BLOCK_SIZE, Red, Green, Blue, shadow);
 			glPopMatrix();
 		}
 	}
@@ -59,12 +124,11 @@ void Tetris::Create_Board(bool block[BOARD_HEIGHT][BOARD_WIDTH]) {
 				if(i == 0 || j == 0 || j == BOARD_WIDTH - 1) {
 					//枠は半透明に描画
 					glDepthMask(GL_FALSE);
-					glColor4d(board.getBoard().red[i][j], board.getBoard().green[i][j], board.getBoard().blue[i][j], 0.4);
+					DrawCube(BLOCK_SIZE, board.getBoard().red[i][j], board.getBoard().green[i][j], board.getBoard().blue[i][j], 0.4);
 				} else {
 					glDepthMask(GL_TRUE);
-					glColor3d(board.getBoard().red[i][j], board.getBoard().green[i][j], board.getBoard().blue[i][j]);
+					DrawCube(BLOCK_SIZE, board.getBoard().red[i][j], board.getBoard().green[i][j], board.getBoard().blue[i][j]);
 				}
-				glutSolidCube(BLOCK_SIZE);
 			}
 			glPopMatrix();
 		}

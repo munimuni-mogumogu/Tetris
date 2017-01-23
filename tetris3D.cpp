@@ -17,7 +17,6 @@ void Tetris::Tetris3D() {
 	glutSpecialFunc(Tetris3D_Specialkeyboard);
 }
 
-
 /**
 *	@brief		テトリミノ3Dの描画関数
 *				透明度を利用する場合奥のものから描画することに注意
@@ -32,13 +31,12 @@ void Tetris::Create_Block3D(bool block[MINO_DEPTH][MINO_HEIGHT][MINO_WIDTH], GLd
 	glPushMatrix();
 	//透明度利用時はデプスバッファへの書き込みをしない
 	if(shadow != 1) glDepthMask(GL_FALSE);
-	glColor4d(Red, Green, Blue, shadow);
 	for(int i = 0; i < MINO_DEPTH; i++) {
 		for(int j = 0; j < MINO_HEIGHT; j++){
 			for(int k = 0; k < MINO_WIDTH; k++) {
 				glPushMatrix();
 				glTranslated(k * BLOCK_SIZE, j * BLOCK_SIZE, -i * BLOCK_SIZE);
-				if(block[i][j][k]) glutSolidCube(BLOCK_SIZE);
+				if(block[i][j][k]) DrawCube(BLOCK_SIZE, Red, Green, Blue, shadow);
 				glPopMatrix();
 			}
 		}
@@ -60,8 +58,7 @@ void Tetris::Create_Board3D(bool block[BOARD_DEPTH][BOARD_HEIGHT][BOARD_WIDTH]) 
 				glPushMatrix();
 				glTranslated(k * BLOCK_SIZE, j * BLOCK_SIZE, -i * BLOCK_SIZE);
 				if(block[i][j][k]) {
-					glColor3d(board3d.getBoard().red[i][j][k], board3d.getBoard().green[i][j][k], board3d.getBoard().blue[i][j][k]);
-					glutSolidCube(BLOCK_SIZE);
+					DrawCube(BLOCK_SIZE, board3d.getBoard().red[i][j][k], board3d.getBoard().green[i][j][k], board3d.getBoard().blue[i][j][k]);
 				}
 				glPopMatrix();
 			}
@@ -83,14 +80,13 @@ void Tetris::Create_Board3D(bool block[BOARD_DEPTH][BOARD_HEIGHT][BOARD_WIDTH]) 
 						if((i == 0 && j == 0) || (i == 0 && k == 0) || (i == 0 && k == BOARD_WIDTH - 1) || (i == BOARD_DEPTH - 1 && j == 0) || (i == BOARD_DEPTH - 1 && k == 0) || (i == BOARD_DEPTH - 1 && k == BOARD_WIDTH - 1) || (j == 0 && k == 0) || (j == 0 && k == BOARD_WIDTH - 1)) {
 							//箱の時
 							glDepthMask(GL_FALSE);
-							glColor4d(board3d.getBoard().red[i][j][k], board3d.getBoard().green[i][j][k], board3d.getBoard().blue[i][j][k], 0.4);
+							DrawCube(BLOCK_SIZE, board3d.getBoard().red[i][j][k], board3d.getBoard().green[i][j][k], board3d.getBoard().blue[i][j][k], 0.4);
 						} else {
 							//柱の時
 							glDepthMask(GL_FALSE);
-							glColor4d(board3d.getBoard().red[i][j][k], board3d.getBoard().green[i][j][k], board3d.getBoard().blue[i][j][k], 0.01);
+							DrawCube(BLOCK_SIZE, board3d.getBoard().red[i][j][k], board3d.getBoard().green[i][j][k], board3d.getBoard().blue[i][j][k], 0.01);
 						}
 					}
-					glutSolidCube(BLOCK_SIZE);
 				}
 				glPopMatrix();
 			}

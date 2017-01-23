@@ -86,6 +86,7 @@ private:
 	
 	//ÉeÉgÉäÉXÇÃä÷êî
 	static void Tetris_Main();
+	static void DrawCube(int = 0, GLdouble = 0, GLdouble = 0, GLdouble = 0, GLdouble = 1);
 	static void Create_Block(bool[MINO_HEIGHT][MINO_WIDTH], GLdouble, GLdouble, GLdouble, GLdouble);
 	static void Create_Board(bool[BOARD_HEIGHT][BOARD_WIDTH]);
 	static void Draw_Information(int, int);
