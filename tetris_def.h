@@ -13,8 +13,8 @@
 
 #define MENU_SIZE 8			//メニューの大きさ
 
-#define WINDOW_WIDTH 600	//ウィンドウの幅
-#define WINDOW_HEIGHT 600	//ウィンドウの高さ
+#define WINDOW_WIDTH 1600	//ウィンドウの幅
+#define WINDOW_HEIGHT 800	//ウィンドウの高さ
 
 #define GLUT_KEY_ENTER 0x000d	//エンターキー
 

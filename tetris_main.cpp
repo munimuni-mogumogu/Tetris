@@ -17,6 +17,7 @@ bool Tetris::Run(int argc, char** argv) {
 	glutInit(&argc, argv);
 	glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
+	glutInitWindowPosition(0, 0);
 	glutCreateWindow("TETRIS");
 	Gl_Init();
 	Tetris_Init();
