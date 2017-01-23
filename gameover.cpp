@@ -55,8 +55,8 @@ void Tetris::Gameover_Display() {
 /**
 *	@brief		ゲームオーバーのキー操作関数
 *	@param [in]	k	キー
-*	@param [in] x	マウスx座標
-*	@param [in] y	マウスy座標
+*	@param [in]	x	マウスx座標
+*	@param [in]	y	マウスy座標
 *	@return		なし
 */
 void Tetris::Gameover_Keyboard(unsigned char k, int x, int y) {
@@ -87,8 +87,8 @@ void Tetris::Gameover_Keyboard(unsigned char k, int x, int y) {
 /**
 *	@brief		ゲームオーバーモードの特殊キー操作関数
 *	@param [in]	k	キー
-*	@param [in] x	マウスx座標
-*	@param [in] y	マウスy座標
+*	@param [in]	x	マウスx座標
+*	@param [in]	y	マウスy座標
 *	@return		なし
 */
 void Tetris::Gameover_Specialkeyboard(int k, int x, int y) {

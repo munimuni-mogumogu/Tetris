@@ -163,8 +163,8 @@ void Tetris::Ranking_Display() {
 		title.set_str("3D TETRIS");
 	}
 	glPushMatrix();
-	glTranslated((BOARD_WIDTH + MENU_SIZE) * BLOCK_SIZE / 2, (BOARD_HEIGHT + 2) * BLOCK_SIZE, 0);
-	glScaled(4, 4, 4);
+	glTranslated((BOARD_WIDTH + MENU_SIZE) * BLOCK_SIZE / 2, (BOARD_HEIGHT + 1) * BLOCK_SIZE, 0);
+	glScaled(3, 3, 3);
 	title.draw_block(CENTER);
 	glScaled(1, 1, 1);
 
@@ -257,7 +257,7 @@ void Tetris::Ranking_Display() {
 	glPushMatrix();
 	glTranslated((BOARD_WIDTH + MENU_SIZE - 2) / 2 * BLOCK_SIZE, -3 * BLOCK_SIZE, 0);
 	draw_str please("please push enter key", 1, 0, 0);
-	glScaled(2.0, 2.0, 2.0);
+	glScaled(1.5, 1.5, 1.5);
 	please.draw_block(CENTER);
 	glPopMatrix();
 
@@ -301,8 +301,8 @@ void Tetris::Ranking_Display() {
 /**
 *	@brief		ランキングモードのキー操作関数
 *	@param [in]	k	キー
-*	@param [in] x	マウスx座標
-*	@param [in] y	マウスy座標
+*	@param [in]	x	マウスx座標
+*	@param [in]	y	マウスy座標
 *	@return		なし
 */
 void Tetris::Ranking_Keyboard(unsigned char k, int x, int y) {
@@ -341,8 +341,8 @@ void Tetris::Ranking_Keyboard(unsigned char k, int x, int y) {
 /**
 *	@brief		ランキングモードの特殊キー操作関数
 *	@param [in]	k	キー
-*	@param [in] x	マウスx座標
-*	@param [in] y	マウスy座標
+*	@param [in]	x	マウスx座標
+*	@param [in]	y	マウスy座標
 *	@return		なし
 */
 void Tetris::Ranking_Specialkeyboard(int k, int x, int y) {

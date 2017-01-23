@@ -54,6 +54,19 @@ void Tetris::Create_Block3D(bool block[MINO_DEPTH][MINO_HEIGHT][MINO_WIDTH], GLd
 *	@return		なし
 */
 void Tetris::Create_Board3D(bool block[BOARD_DEPTH][BOARD_HEIGHT][BOARD_WIDTH]) {
+	for(int i = 1; i < BOARD_DEPTH - 1; i++) {
+		for(int j = 1; j < BOARD_HEIGHT - 1; j++){
+			for(int k = 1; k < BOARD_WIDTH - 1; k++) {
+				glPushMatrix();
+				glTranslated(k * BLOCK_SIZE, j * BLOCK_SIZE, -i * BLOCK_SIZE);
+				if(block[i][j][k]) {
+					glColor3d(board3d.getBoard().red[i][j][k], board3d.getBoard().green[i][j][k], board3d.getBoard().blue[i][j][k]);
+					glutSolidCube(BLOCK_SIZE);
+				}
+				glPopMatrix();
+			}
+		}
+	}
 	for(int i = 0; i < BOARD_DEPTH; i++) {
 		for(int j = 0; j < BOARD_HEIGHT; j++){
 			for(int k = 0; k < BOARD_WIDTH; k++) {
@@ -71,9 +84,6 @@ void Tetris::Create_Board3D(bool block[BOARD_DEPTH][BOARD_HEIGHT][BOARD_WIDTH]) 
 							glDepthMask(GL_FALSE);
 							glColor4d(board3d.getBoard().red[i][j][k], board3d.getBoard().green[i][j][k], board3d.getBoard().blue[i][j][k], 0.01);
 						}
-					} else {
-						glDepthMask(GL_TRUE);
-						glColor3d(board3d.getBoard().red[i][j][k], board3d.getBoard().green[i][j][k], board3d.getBoard().blue[i][j][k]);
 					}
 					glutSolidCube(BLOCK_SIZE);
 				}
@@ -249,17 +259,35 @@ void Tetris::Tetris3D_Display() {
 /**
 *	@brief		テトリスモードのキー操作関数
 *	@param [in]	k	キー
-*	@param [in] x	マウスx座標
-*	@param [in] y	マウスy座標
+*	@param [in]	x	マウスx座標
+*	@param [in]	y	マウスy座標
 *	@return		なし
 */
+#include <iostream>
 void Tetris::Tetris3D_Keyboard(unsigned char k, int x, int y) {
+	std::cout << (int)' ' << std::endl;
 	switch(k) {
-	case 'z':	//回転(左)
+	case 'z':	//回転(x左)
 		tetrimino3d.rotate(1, 1, 0, 0, &board3d);
 		break;
-	case 'x':	//回転(右)
+	case 'x':	//回転(x右)
 		tetrimino3d.rotate(0, 1, 0, 0, &board3d);
+		break;
+	case 'a':	//回転(y左)
+		//tetrimino3d.rotate(1, 0, 1, 0, &board3d);
+		break;
+	case 's':	//回転(y右)
+		//tetrimino3d.rotate(0, 0, 1, 0, &board3d);
+		break;
+	case 'q':	//回転(z左)
+		//tetrimino3d.rotate(1, 0, 0, 1, &board3d);
+		break;
+	case 'w':	//回転(z右)
+		//tetrimino3d.rotate(0, 0, 0, 1, &board3d);
+		break;
+	case ' ':	//ホールド
+		//2度連続でホールドしていないかの判定
+		if(hold_check) Mino_Hold();
 		break;
 	case 'v':	//視点のリセット
 		View_Reset();
@@ -281,8 +309,8 @@ void Tetris::Tetris3D_Keyboard(unsigned char k, int x, int y) {
 /**
 *	@brief		テトリスモードの特殊キー操作関数
 *	@param [in]	k	キー
-*	@param [in] x	マウスx座標
-*	@param [in] y	マウスy座標
+*	@param [in]	x	マウスx座標
+*	@param [in]	y	マウスy座標
 *	@return		なし
 */
 void Tetris::Tetris3D_Specialkeyboard(int k, int x, int y) {
@@ -298,6 +326,20 @@ void Tetris::Tetris3D_Specialkeyboard(int k, int x, int y) {
 		break;
 	case GLUT_KEY_UP:		//移動(上)
 		tetrimino3d.translate(0, 0, 1, false, &board3d);
+	case 112://移動(下)
+		//着地判定
+		if(tetrimino.translate(0, -1, false, &board)) {
+			hold_check = true;
+			Next_Mino();
+		}
+		break;
+		break;
+	case 113:		//移動(着地)
+		//着地するまで移動
+		while(!tetrimino3d.translate(0, -1, 0, false, &board3d));
+		hold_check = true;
+		Next_Mino();
+		break;
 	default:
 		break;
 	}

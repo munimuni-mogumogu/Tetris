@@ -235,8 +235,8 @@ void Tetris::Tetris_Display() {
 /**
 *	@brief		テトリスモードのキー操作関数
 *	@param [in]	k	キー
-*	@param [in] x	マウスx座標
-*	@param [in] y	マウスy座標
+*	@param [in]	x	マウスx座標
+*	@param [in]	y	マウスy座標
 *	@return		なし
 */
 void Tetris::Tetris_Keyboard(unsigned char k, int x, int y) {
@@ -254,7 +254,7 @@ void Tetris::Tetris_Keyboard(unsigned char k, int x, int y) {
 	case 'x':	//回転(右)
 		tetrimino.rotate(0, &board);
 		break;
-	case 'a':	//ホールド
+	case ' ':	//ホールド
 		//2度連続でホールドしていないかの判定
 		if(hold_check) Mino_Hold();
 		break;
@@ -271,8 +271,8 @@ void Tetris::Tetris_Keyboard(unsigned char k, int x, int y) {
 /**
 *	@brief		テトリスモードの特殊キー操作関数
 *	@param [in]	k	キー
-*	@param [in] x	マウスx座標
-*	@param [in] y	マウスy座標
+*	@param [in]	x	マウスx座標
+*	@param [in]	y	マウスy座標
 *	@return		なし
 */
 void Tetris::Tetris_Specialkeyboard(int k, int x, int y) {

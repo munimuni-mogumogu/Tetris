@@ -57,7 +57,7 @@ Tetris::Tetris() {
 	angle = 90;
 	mode = 0;
 	angle_of_top = 1.0;
-	view_distance = 200;
+	view_distance = 150;
 	azimuth = 0.0;
 	elevation = 0.0;
 	view_check = true;
@@ -81,7 +81,7 @@ Tetris::Tetris() {
 *	@return		Ç»Çµ
 */
 void Tetris::View_Reset() {
-	view_distance = 200;
+	view_distance = 150;
 	azimuth = 0.0;
 	elevation = 0.0;
 	mousepoint.x = 0; mousepoint.y = 0;
@@ -151,7 +151,7 @@ void Tetris::Gl_Init() {
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, &shininess);
 
 	//åıåπÇÃê›íË
-	GLfloat lightPosition[4] = { (BOARD_WIDTH + MENU_SIZE) * BLOCK_SIZE / 2, BOARD_HEIGHT / 2, -500, 1.0 }; //åıåπÇÃà íu
+	GLfloat lightPosition[4] = { (BOARD_WIDTH + MENU_SIZE) * BLOCK_SIZE / 2, (BOARD_HEIGHT + 10) * BLOCK_SIZE, BOARD_DEPTH / 2 * BLOCK_SIZE, 1.0 }; //åıåπÇÃà íu
 	GLfloat lightDiffuse[3]  = { 1.0, 1.0, 1.0 }; //ägéUåı
 	GLfloat lightAmbient[3]  = { 0.25, 0.25, 0.25 }; //ä¬ã´åı
 	GLfloat lightSpecular[3] = { 0.25, 0.25, 0.25 }; //ãæñ åı

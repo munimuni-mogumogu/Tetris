@@ -73,8 +73,8 @@ void Tetris::Title_Display() {
 /**
 *	@brief		タイトルモードのキー操作関数
 *	@param [in]	k	キー
-*	@param [in] x	マウスx座標
-*	@param [in] y	マウスy座標
+*	@param [in]	x	マウスx座標
+*	@param [in]	y	マウスy座標
 *	@return		なし
 */
 void Tetris::Title_Keyboard(unsigned char k, int x, int y) {
@@ -113,8 +113,8 @@ void Tetris::Title_Keyboard(unsigned char k, int x, int y) {
 /**
 *	@brief		タイトルモードの特殊キー操作関数
 *	@param [in]	k	キー
-*	@param [in] x	マウスx座標
-*	@param [in] y	マウスy座標
+*	@param [in]	x	マウスx座標
+*	@param [in]	y	マウスy座標
 *	@return		なし
 */
 void Tetris::Title_Specialkeyboard(int k, int x, int y) {
