@@ -235,7 +235,7 @@ void Tetris::Tetris3D_Display() {
 	forecastmino3d.setMino(tetrimino3d.getMino());
 	forecastmino_pos3d = tetrimino3d.getXYZ();
 	forecastmino3d.setPoint(forecastmino_pos3d);
-	//while(!forecastmino3d.translate(0, -1, 0, true, &board3d));
+	while(!forecastmino3d.translate(0, -1, 0, true, &board3d));
 	//落下予測位置にテトリミノの描画(透明度60%)
 	glPushMatrix();
 	glTranslated(forecastmino3d.getX() * BLOCK_SIZE, forecastmino3d.getY() * BLOCK_SIZE, -forecastmino3d.getZ() * BLOCK_SIZE);
@@ -328,11 +328,10 @@ void Tetris::Tetris3D_Specialkeyboard(int k, int x, int y) {
 		tetrimino3d.translate(0, 0, 1, false, &board3d);
 	case 112://移動(下)
 		//着地判定
-		if(tetrimino.translate(0, -1, false, &board)) {
+		if(tetrimino3d.translate(0, -1, 0, false, &board3d)) {
 			hold_check = true;
 			Next_Mino();
 		}
-		break;
 		break;
 	case 113:		//移動(着地)
 		//着地するまで移動
