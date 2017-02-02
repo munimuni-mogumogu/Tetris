@@ -14,6 +14,7 @@ double Tetris::aspect;
 int Tetris::mode;				//ゲームモード
 GLfloat Tetris::angle_of_top;	//画面の上の設定(1 : 上がyの正, -1 : 下がyの正)
 int Tetris::view_distance;		//視点から中点の距離
+int Tetris::tmp_view_distance;
 double Tetris::azimuth;			//方位角
 double Tetris::elevation;		//仰角
 bool Tetris::view_check;		//視点移動の初期化用
@@ -63,6 +64,7 @@ Tetris::Tetris() {
 	mode = 0;
 	angle_of_top = 1.0;
 	view_distance = 150;
+	tmp_view_distance = view_distance;
 	azimuth = 0.0;
 	elevation = 0.0;
 	view_check = true;
@@ -89,6 +91,7 @@ Tetris::Tetris() {
 */
 void Tetris::View_Reset() {
 	view_distance = 150;
+	tmp_view_distance = view_distance;
 	azimuth = 0.0;
 	elevation = 0.0;
 	mousepoint.x = 0; mousepoint.y = 0;

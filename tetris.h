@@ -36,6 +36,7 @@ private:
 	static int mode;			//ゲームモード
 	static GLfloat angle_of_top;	//画面の上の設定(1 : 上がyの正, -1 : 下がyの正)
 	static int view_distance;	//視点から中点の距離
+	static int tmp_view_distance;
 	static double azimuth;		//方位角
 	static double elevation;		//仰角
 	static bool view_check;		//視点移動の初期化用変数

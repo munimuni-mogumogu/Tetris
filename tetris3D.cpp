@@ -145,6 +145,7 @@ void Tetris::Draw_Information3D(int score, int plane) {
 	glTranslated(center.x, center.y, center.z);
 	glRotated(azimuth/M_PI*180, 0, -1, 0);
 	glRotated(-elevation/M_PI*180,info_pos.x,0,-info_pos.z);
+	glTranslated(0, 0, view_distance - tmp_view_distance);
 	
 	//SCORE‚Ì•¶Žš‚Ì•`‰æ
 	glPushMatrix();
