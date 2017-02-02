@@ -157,7 +157,7 @@ void Tetris::Draw_Information(int score, int line) {
 	glTranslated(center.x, center.y, center.z);
 	glRotated(azimuth/M_PI*180, 0, -1, 0);
 	glRotated(-elevation/M_PI*180,info_pos.x,0,-info_pos.z);
-	
+
 	//SCOREの文字の描画
 	glPushMatrix();
 	draw_str score_str("score");
@@ -251,9 +251,6 @@ void Tetris::Tetris_Display() {
 		}
 	}
 
-	//テトリス中の情報の描画
-	Draw_Information(score.getScore(), score.getLine());
-
 	//テトリミノの落下予測位置の計測
 	forecastmino.setMino(tetrimino.getMino());
 	forecastmino_pos = tetrimino.getXY();
@@ -267,6 +264,12 @@ void Tetris::Tetris_Display() {
 
 	//ボードの描画
 	Create_Board(board.getBoard().board);
+
+	//テトリス中の情報の描画
+	glDepthMask(GL_FALSE);
+	Draw_Information(score.getScore(), score.getLine());
+	glDepthMask(GL_TRUE);
+
 	//ゲームオーバーの判定
 	if(board.boardCheck(score)) {
 		mode = GAMEOVER;

@@ -240,7 +240,9 @@ void Tetris::Tetris3D_Display() {
 	}
 
 	//テトリス中の情報の描画
+	glDepthMask(GL_FALSE);
 	Draw_Information3D(score.getScore(), score.getLine());
+	glDepthMask(GL_TRUE);
 
 	//テトリミノの落下予測位置の計測
 	forecastmino3d.setMino(tetrimino3d.getMino());
