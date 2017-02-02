@@ -153,7 +153,6 @@ void Tetris::Mino_Hold() {
 */
 void Tetris::Draw_Information(int score, int line) {
 	glPushMatrix();
-
 	glTranslated(center.x, center.y, center.z);
 	glRotated(azimuth/M_PI*180, 0, -1, 0);
 	glRotated(-elevation/M_PI*180,info_pos.x,0,-info_pos.z);
@@ -267,9 +266,7 @@ void Tetris::Tetris_Display() {
 	Create_Board(board.getBoard().board);
 
 	//テトリス中の情報の描画
-	glDepthMask(GL_FALSE);
 	Draw_Information(score.getScore(), score.getLine());
-	glDepthMask(GL_TRUE);
 
 	//ゲームオーバーの判定
 	if(board.boardCheck(score)) {

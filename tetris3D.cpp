@@ -141,7 +141,6 @@ void Tetris::Mino_Hold3D() {
 */
 void Tetris::Draw_Information3D(int score, int plane) {
 	glPushMatrix();
-
 	glTranslated(center.x, center.y, center.z);
 	glRotated(azimuth/M_PI*180, 0, -1, 0);
 	glRotated(-elevation/M_PI*180,info_pos.x,0,-info_pos.z);
@@ -240,11 +239,6 @@ void Tetris::Tetris3D_Display() {
 		}
 	}
 
-	//テトリス中の情報の描画
-	glDepthMask(GL_FALSE);
-	Draw_Information3D(score.getScore(), score.getLine());
-	glDepthMask(GL_TRUE);
-
 	//テトリミノの落下予測位置の計測
 	forecastmino3d.setMino(tetrimino3d.getMino());
 	forecastmino_pos3d = tetrimino3d.getXYZ();
@@ -253,6 +247,10 @@ void Tetris::Tetris3D_Display() {
 
 	//ボードの描画
 	Create_Board3D(board3d.getBoard().board);
+	
+	//テトリス中の情報の描画
+	Draw_Information3D(score.getScore(), score.getLine());
+
 	//ゲームオーバーの判定
 	if(board3d.boardCheck(score)) {
 		page = TETRIS3D;
