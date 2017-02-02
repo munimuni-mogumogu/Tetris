@@ -140,10 +140,16 @@ void Tetris::Mino_Hold3D() {
 *	@return		Ç»Çµ
 */
 void Tetris::Draw_Information3D(int score, int plane) {
+	glPushMatrix();
+
+	glTranslated(center.x, center.y, center.z);
+	glRotated(azimuth/M_PI*180, 0, -1, 0);
+	glRotated(-elevation/M_PI*180,info_pos.x,0,-info_pos.z);
+	
 	//SCOREÇÃï∂éöÇÃï`âÊ
 	glPushMatrix();
 	draw_str score_str("score");
-	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, (BOARD_HEIGHT - 2) * BLOCK_SIZE, 0);
+	glTranslated(6 * BLOCK_SIZE, (BOARD_HEIGHT/2 - 2) * BLOCK_SIZE, 0);
 	glScaled(2, 2, 0);
 	score_str.draw_block();
 	glPopMatrix();
@@ -151,23 +157,23 @@ void Tetris::Draw_Information3D(int score, int plane) {
 	//ì_êîÇÃï`âÊ
 	glPushMatrix();
 	draw_str draw_score(score);
-	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, (BOARD_HEIGHT - 4) * BLOCK_SIZE, 0);
+	glTranslated(6 * BLOCK_SIZE, (BOARD_HEIGHT/2 - 4) * BLOCK_SIZE, 0);
 	glScaled(2, 2, 0);
 	draw_score.draw_block();
 	glPopMatrix();
 
-	//PlaneÇÃï∂éöÇÃï`âÊ
+	//PLANEÇÃï∂éöÇÃï`âÊ
 	glPushMatrix();
 	draw_str plane_str("plane");
-	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, (BOARD_HEIGHT - 6) * BLOCK_SIZE, 0);
+	glTranslated(6 * BLOCK_SIZE, (BOARD_HEIGHT/2 - 6) * BLOCK_SIZE, 0);
 	glScaled(2, 2, 0);
 	plane_str.draw_block();
 	glPopMatrix();
 
-	//è¡ÇµÇΩPlaneêîÇÃï`âÊ
+	//è¡ÇµÇΩPLANEêîÇÃï`âÊ
 	glPushMatrix();
 	draw_str draw_plane(plane);
-	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, (BOARD_HEIGHT - 8) * BLOCK_SIZE, 0);
+	glTranslated(6 * BLOCK_SIZE, (BOARD_HEIGHT/2 - 8) * BLOCK_SIZE, 0);
 	glScaled(2, 2, 0);
 	draw_plane.draw_block();
 	glPopMatrix();
@@ -175,29 +181,30 @@ void Tetris::Draw_Information3D(int score, int plane) {
 	//HOLDÇÃï∂éöÇÃï`âÊ
 	glPushMatrix();
 	draw_str hold_str("hold");
-	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, (BOARD_HEIGHT - 11) * BLOCK_SIZE, 0);
+	glTranslated(6 * BLOCK_SIZE, (BOARD_HEIGHT/2 - 11) * BLOCK_SIZE, 0);
 	glScaled(2, 2, 0);
 	hold_str.draw_block();
 	glPopMatrix();
 
 	//ÉzÅ[ÉãÉhÉ~ÉmÇÃï`âÊ
 	glPushMatrix();
-	glTranslated(holdmino3d.getX() * BLOCK_SIZE, holdmino3d.getY() * BLOCK_SIZE, holdmino3d.getZ() * BLOCK_SIZE);
+	glTranslated(7 * BLOCK_SIZE, -4 * BLOCK_SIZE, 0);
 	Create_Block3D(holdmino3d.getMino().mino, holdmino3d.getR(), holdmino3d.getG(), holdmino3d.getB());
 	glPopMatrix();
 
 	//NEXTÇÃï∂éöÇÃï`âÊ
 	glPushMatrix();
 	draw_str next_str("next");
-	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, 4 * BLOCK_SIZE, 0);
+	glTranslated(6 * BLOCK_SIZE, -7 * BLOCK_SIZE, 0);
 	glScaled(2, 2, 0);
 	next_str.draw_block();
 	glPopMatrix();
 
 	//ÉlÉNÉXÉgÉ~ÉmÇÃï`âÊ
 	glPushMatrix();
-	glTranslated(nextmino3d.getX() * BLOCK_SIZE, nextmino3d.getY() * BLOCK_SIZE, nextmino3d.getZ() * BLOCK_SIZE);
+	glTranslated(7 * BLOCK_SIZE,-11 * BLOCK_SIZE, 0);
 	Create_Block3D(nextmino3d.getMino().mino, nextmino3d.getR(), nextmino3d.getG(), nextmino3d.getB());
+	glPopMatrix();
 	glPopMatrix();
 }
 

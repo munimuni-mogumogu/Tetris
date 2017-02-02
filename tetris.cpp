@@ -42,6 +42,7 @@ Score Tetris::score;			//スコア
 double Tetris::speed;			//落下速度(ms)
 bool Tetris::light_check;		//ライトのオンオフ
 bool Tetris::screen_check;
+Point3 Tetris::info_pos;
 
 Board3D Tetris::board3d;		//3Dテトリスのボード
 TmpPoint3D Tetris::mino_pos3d;	//3Dテトリスのミノの位置
@@ -79,6 +80,7 @@ Tetris::Tetris() {
 	speed = 1000;
 	light_check = false;
 	screen_check = false;
+	info_pos.x = 1.0; info_pos.y = 0.0; info_pos.z = 0.0;
 }
 
 /**

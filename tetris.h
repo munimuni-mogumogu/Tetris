@@ -64,6 +64,7 @@ private:
 	static double speed;		//落下速度(ms)
 	static bool light_check;	//ライトのオンオフ
 	static bool screen_check;
+	static Point3 info_pos;		//インフォメーションの回転用ベクトル
 	
 	static Board3D board3d;
 	static TmpPoint3D mino_pos3d;

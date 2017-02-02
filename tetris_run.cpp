@@ -152,10 +152,16 @@ void Tetris::Mino_Hold() {
 *	@return		Ç»Çµ
 */
 void Tetris::Draw_Information(int score, int line) {
+	glPushMatrix();
+
+	glTranslated(center.x, center.y, center.z);
+	glRotated(azimuth/M_PI*180, 0, -1, 0);
+	glRotated(-elevation/M_PI*180,info_pos.x,0,-info_pos.z);
+	
 	//SCOREÇÃï∂éöÇÃï`âÊ
 	glPushMatrix();
 	draw_str score_str("score");
-	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, (BOARD_HEIGHT - 2) * BLOCK_SIZE, 0);
+	glTranslated(6 * BLOCK_SIZE, (BOARD_HEIGHT/2 - 2) * BLOCK_SIZE, 0);
 	glScaled(2, 2, 0);
 	score_str.draw_block();
 	glPopMatrix();
@@ -163,7 +169,7 @@ void Tetris::Draw_Information(int score, int line) {
 	//ì_êîÇÃï`âÊ
 	glPushMatrix();
 	draw_str draw_score(score);
-	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, (BOARD_HEIGHT - 4) * BLOCK_SIZE, 0);
+	glTranslated(6 * BLOCK_SIZE, (BOARD_HEIGHT/2 - 4) * BLOCK_SIZE, 0);
 	glScaled(2, 2, 0);
 	draw_score.draw_block();
 	glPopMatrix();
@@ -171,7 +177,7 @@ void Tetris::Draw_Information(int score, int line) {
 	//LINEÇÃï∂éöÇÃï`âÊ
 	glPushMatrix();
 	draw_str line_str("line");
-	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, (BOARD_HEIGHT - 6) * BLOCK_SIZE, 0);
+	glTranslated(6 * BLOCK_SIZE, (BOARD_HEIGHT/2 - 6) * BLOCK_SIZE, 0);
 	glScaled(2, 2, 0);
 	line_str.draw_block();
 	glPopMatrix();
@@ -179,7 +185,7 @@ void Tetris::Draw_Information(int score, int line) {
 	//è¡ÇµÇΩLINEêîÇÃï`âÊ
 	glPushMatrix();
 	draw_str draw_line(line);
-	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, (BOARD_HEIGHT - 8) * BLOCK_SIZE, 0);
+	glTranslated(6 * BLOCK_SIZE, (BOARD_HEIGHT/2 - 8) * BLOCK_SIZE, 0);
 	glScaled(2, 2, 0);
 	draw_line.draw_block();
 	glPopMatrix();
@@ -187,29 +193,30 @@ void Tetris::Draw_Information(int score, int line) {
 	//HOLDÇÃï∂éöÇÃï`âÊ
 	glPushMatrix();
 	draw_str hold_str("hold");
-	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, (BOARD_HEIGHT - 11) * BLOCK_SIZE, 0);
+	glTranslated(6 * BLOCK_SIZE, (BOARD_HEIGHT/2 - 11) * BLOCK_SIZE, 0);
 	glScaled(2, 2, 0);
 	hold_str.draw_block();
 	glPopMatrix();
 
 	//ÉzÅ[ÉãÉhÉ~ÉmÇÃï`âÊ
 	glPushMatrix();
-	glTranslated(holdmino.getX() * BLOCK_SIZE, holdmino.getY() * BLOCK_SIZE, 0);
+	glTranslated(7 * BLOCK_SIZE, -4 * BLOCK_SIZE, 0);
 	Create_Block(holdmino.getMino().mino, holdmino.getR(), holdmino.getG(), holdmino.getB());
 	glPopMatrix();
 
 	//NEXTÇÃï∂éöÇÃï`âÊ
 	glPushMatrix();
 	draw_str next_str("next");
-	glTranslated((BOARD_WIDTH + 1) * BLOCK_SIZE, 4 * BLOCK_SIZE, 0);
+	glTranslated(6 * BLOCK_SIZE, -7 * BLOCK_SIZE, 0);
 	glScaled(2, 2, 0);
 	next_str.draw_block();
 	glPopMatrix();
 
 	//ÉlÉNÉXÉgÉ~ÉmÇÃï`âÊ
 	glPushMatrix();
-	glTranslated(nextmino.getX() * BLOCK_SIZE, nextmino.getY() * BLOCK_SIZE, 0);
+	glTranslated(7 * BLOCK_SIZE,-11 * BLOCK_SIZE, 0);
 	Create_Block(nextmino.getMino().mino, nextmino.getR(), nextmino.getG(), nextmino.getB());
+	glPopMatrix();
 	glPopMatrix();
 }
 
