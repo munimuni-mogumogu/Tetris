@@ -32,6 +32,7 @@ class Tetris {
 private:
 	static bool run;			//ゲーム終了判定
 	static int angle;			//視野角
+	static double aspect;
 	static int mode;			//ゲームモード
 	static GLfloat angle_of_top;	//画面の上の設定(1 : 上がyの正, -1 : 下がyの正)
 	static int view_distance;	//視点から中点の距離

@@ -10,6 +10,7 @@
 //Tetris classの変数の初期化
 bool Tetris::run;				//ゲーム終了判定用
 int Tetris::angle;				//視野角
+double Tetris::aspect;
 int Tetris::mode;				//ゲームモード
 GLfloat Tetris::angle_of_top;	//画面の上の設定(1 : 上がyの正, -1 : 下がyの正)
 int Tetris::view_distance;		//視点から中点の距離
@@ -57,6 +58,7 @@ Tetrimino3D Tetris::forecastmino3d;		//着地点予測用ミノ
 Tetris::Tetris() {
 	run = true;
 	angle = 90;
+	aspect = WINDOW_WIDTH / WINDOW_HEIGHT;
 	mode = 0;
 	angle_of_top = 1.0;
 	view_distance = 150;

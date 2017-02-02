@@ -130,8 +130,15 @@ void Tetris::Title_Keyboard(unsigned char k, int x, int y) {
 		break;
 	case 'f':
 		screen_check = !screen_check;
-		if(screen_check) glutFullScreen();
-		else glutReshapeWindow(WINDOW_WIDTH, WINDOW_HEIGHT);
+		if(screen_check){
+			int dispx = GetSystemMetrics(SM_CXSCREEN);
+			int dispy = GetSystemMetrics(SM_CYSCREEN);
+			aspect = (double)dispx / (double)dispy;
+			glutFullScreen();
+		} else {
+			aspect = (double)WINDOW_WIDTH / (double)WINDOW_HEIGHT;
+			glutReshapeWindow(WINDOW_WIDTH, WINDOW_HEIGHT);
+		}
 		break;
 	default:
 		break;

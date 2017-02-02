@@ -49,7 +49,7 @@ void Tetris::Reshape(int w, int h) {
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(Tetris::angle, WINDOW_WIDTH / WINDOW_HEIGHT, 0.1, 1000.0);
+	gluPerspective(angle, aspect, 0.1, 1000.0);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
