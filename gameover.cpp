@@ -62,10 +62,7 @@ void Tetris::Gameover_Display() {
 void Tetris::Gameover_Keyboard(unsigned char k, int x, int y) {
 	switch(k) {
 	case GLUT_KEY_ENTER:	//Enterキー入力時
-		//どのモードかの判定
-		if(page == TETRIS) Set_Get_Ranking(RANKINGTXT);
-		else if(page == TETRISRAND) Set_Get_Ranking(RANKINGRANDTXT);
-		else if(page == TETRIS3D) Set_Get_Ranking(RANKING3DTXT);
+		Set_Get_Ranking();
 		mode = RANKING;
 		break;
 	case 'v':	//視点のリセット

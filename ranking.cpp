@@ -8,7 +8,6 @@
 #include "tetris.h"
 #include <fstream>
 #include <iostream>
-#include <string>
 
 /**
 *	@brief		ランキングモードのメイン関数
@@ -40,47 +39,65 @@ void Tetris::Change_Name(char name1[], char name2[], int size) {
 	}
 }
 
+
+
 /**
 *	@brief		ランキングをファイルから呼び出し,順位にScoreとLineを組み込む
 *	@param [in]	file_name[]	ファイルの名前
 *	@return		なし
 */
-void Tetris::Set_Get_Ranking(char file_name[]) {
+void Tetris::Set_Get_Ranking() {
+	score.additional(2);
 	//ランキング順位の初期化
 	rank_pos = -1;
 	//ファイルオープン
-	std::ifstream fin(file_name);
+	std::ifstream fin(SAVEDATA);
 	if(fin.fail()) {
 		std::cerr << "Error : Cannot open file" << std::endl;
 	}
 
+	int index = 1;
+	do {
+		while(true) {
+			char check;
+			fin.get(check);
+			if(check == '/') break;
+		}
+	}while (!(index++ == page));
+
 	//ファイルからScore,Line,名前の呼び出し
+	/*
 	std::string str;
 	int i = 0;
 	while (std::getline(fin, str)) {
-		std::string s = "";
-		std::string l = "";
-		std::string n = "";
-		int tmp = str.find(' ');
-		for (int j = 0; j < tmp; j++)
-			s += str[j];
-		str = str.substr(tmp + 1);
-		tmp = str.find(' ');
-		for (int j = 0; j < tmp; j++)
-			l += str[j];
-		str = str.substr(tmp + 1);
-		ranking[i].x = stoi(s);
-		ranking[i].y = stoi(l);
-		while (str.size() != RANKNAME) str += " ";
-		for (int j = 0; j < RANKNAME; j++)
-			rank_name[i][j] = str[j];
-		i++;
+	std::string s = "";
+	std::string l = "";
+	std::string n = "";
+	int tmp = str.find(' ');
+	for (int j = 0; j < tmp; j++)
+	s += str[j];
+	str = str.substr(tmp + 1);
+	tmp = str.find(' ');
+	for (int j = 0; j < tmp; j++)
+	l += str[j];
+	str = str.substr(tmp + 1);
+	ranking[i].x = stoi(s);
+	ranking[i].y = stoi(l);
+	while (str.size() != RANKNAME) str += " ";
+	for (int j = 0; j < RANKNAME; j++)
+	rank_name[i][j] = str[j];
+	i++;
+	}*/
+
+	for(int i = 0; i < 10; i++) {
+		fin >> ranking[i].x >> ranking[i].y;
+		char c;
+		fin.get(c);
+		for(int j = 0; j < RANKNAME; j++) fin.get(rank_name[i][j]);
 	}
 
 	//名前の末尾に\0をつける
-	for(int i = 0; i < 10; i++) {
-		rank_name[i][RANKNAME - 1] = '\0';
-	}
+	for(int i = 0; i < 10; i++) rank_name[i][RANKNAME - 1] = '\0';
 
 	//今回の順位を組み込む
 	Point2 temp1 = {score.getScore(), score.getLine()};
@@ -121,23 +138,69 @@ void Tetris::Set_Get_Ranking(char file_name[]) {
 *	@param [in]	file_name[]	ファイルの名前
 *	@return		なし
 */
-void Tetris::Save_Ranking_Name(char file_name[]) {
+void Tetris::Save_Ranking_Name() {
 	//ファイルオープン
-	std::ofstream fout(file_name);
+	std::ifstream fin(SAVEDATA);
+	if(fin.fail()) {
+		std::cerr << "Error : Cannot open file" << std::endl;
+	}
+	std::ofstream fout("temp");
 	if(fout.fail()) {
 		std::cerr << "Error : Cannot open file" << std::endl;
 	}
 
-	//Score,Line,名前をファイルに保存
-	for(int i = 0; i < 10; i++) {
-		fout << ranking[i].x << " " << ranking[i].y << " ";
-		for(int j = 0; j < RANKNAME; j++) {
-			fout << rank_name[i][j];
-		}
-		fout << std::endl;
+	char c;
+	while(!fin.eof()) {
+		fin.get(c);
+		fout << c;
+	}
+	fin.close();
+	fout.close();
+
+	//ファイルオープン
+	fin.open("temp");
+	if(fin.fail()) {
+		std::cerr << "Error : Cannot open file" << std::endl;
+	}
+	fout.open(SAVEDATA);
+	if(fout.fail()) {
+		std::cerr << "Error : Cannot open file" << std::endl;
 	}
 
+	fin.get(c);
+	fout << "/";
+	for(int index = TETRIS; index <= TETRIS3D; index++) {
+		if(page == index) {
+			fout << std::endl;
+			//Score,Line,名前をファイルに保存
+			for(int i = 0; i < 10; i++) {
+				fout << ranking[i].x << " " << ranking[i].y << " ";
+				for(int j = 0; j < RANKNAME; j++) {
+					fout << rank_name[i][j];
+				}
+				fout << std::endl;
+			}
+			char c;
+			fin.get(c);
+			while(true) {
+				fin.get(c);
+				if(c == '/') break;
+			}
+			fout << '/';
+		} else {
+			while(true) {
+				char c;
+				fin.get(c);
+				fout << c;
+				if(c == '/') break;
+			}
+		}
+	}
+
+	fin.close();
 	fout.close();
+
+	remove("temp");
 
 	//ランキングの順位を初期化
 	rank_pos = -1;
@@ -159,6 +222,8 @@ void Tetris::Ranking_Display() {
 	//どのランキングかの判定
 	if(page == TETRIS) {
 		title.set_str("TETRIS");
+	} else if(page == TETRISRAND) {
+		title.set_str("RANDOM TETRIS");
 	} else if(page == TETRIS3D) {
 		title.set_str("3D TETRIS");
 	}
@@ -179,7 +244,26 @@ void Tetris::Ranking_Display() {
 		glVertex3d(0.0, BLOCK_SIZE / 2, 0.0);
 		glVertex3d(BLOCK_SIZE / 2, BLOCK_SIZE / 4, 0.0);
 		glEnd();
-	}else if(page == TETRIS3D) {
+	} else if(page == TETRISRAND) {
+		//右三角の描画
+		glPushMatrix();
+		glTranslated(BLOCK_SIZE * 8, 0, 0);
+		glBegin(GL_TRIANGLES);
+		glVertex3d(0.0, 0.0, 0.0);
+		glVertex3d(0.0, BLOCK_SIZE / 2, 0.0);
+		glVertex3d(BLOCK_SIZE / 2, BLOCK_SIZE / 4, 0.0);
+		glEnd();
+		glPopMatrix();
+		//左三角の描画
+		glPushMatrix();
+		glTranslated(-BLOCK_SIZE, 0, 0);
+		glBegin(GL_TRIANGLES);
+		glVertex3d(BLOCK_SIZE / 2, 0.0, 0.0);
+		glVertex3d(BLOCK_SIZE / 2, BLOCK_SIZE / 2, 0.0);
+		glVertex3d(0.0 , BLOCK_SIZE / 4, 0.0);
+		glEnd();
+		glPopMatrix();
+	} else if(page == TETRIS3D) {
 		//左三角の描画
 		glTranslated(-BLOCK_SIZE, 0, 0);
 		glBegin(GL_TRIANGLES);
@@ -195,7 +279,7 @@ void Tetris::Ranking_Display() {
 	draw_str score("score");
 	draw_str line;
 	//どのランキングかの判定
-	if(page == TETRIS) {
+	if(page == TETRIS || page == TETRISRAND) {
 		line.set_str("line");
 	} else if(page == TETRIS3D) {
 		line.set_str("plane");
@@ -317,8 +401,7 @@ void Tetris::Ranking_Keyboard(unsigned char k, int x, int y) {
 			//ダイアログが出ているときにyesを押したとき
 			dialog_check = false;
 			//どのランキングかの判定
-			if(page == TETRIS) Save_Ranking_Name(RANKINGTXT);
-			else if(page == TETRIS3D) Save_Ranking_Name(RANKING3DTXT);
+			Save_Ranking_Name();
 		} else if(rank_pos != -1 && dialog_check == true && dialog_pos == 1) {
 			//ダイアログが出ている時にnoを押したとき
 			dialog_pos = 0;
@@ -352,8 +435,12 @@ void Tetris::Ranking_Specialkeyboard(int k, int x, int y) {
 		else if(dialog_check == false && name_pos < RANKNAME - 2 && rank_pos != -1) name_pos++;	//名前を決めているとき
 		else if(page == TETRIS && rank_pos == -1){
 			//ランキング外の時に通常テトリスモードのランキングを見ているとき
-			Set_Get_Ranking(RANKING3DTXT);
+			page = TETRISRAND;
+			Set_Get_Ranking();
+		} else if(page == TETRISRAND && rank_pos == -1) {
+			//ランキング外の時ランダムテトリスモードのランキングを見ているとき
 			page = TETRIS3D;
+			Set_Get_Ranking();
 		}
 		break;
 	case GLUT_KEY_LEFT:	//左矢印キーを押したとき
@@ -361,8 +448,12 @@ void Tetris::Ranking_Specialkeyboard(int k, int x, int y) {
 		else if(dialog_check == false && name_pos > 0 && rank_pos != -1) name_pos--;	//名前を決めているとき
 		else if(page == TETRIS3D && rank_pos == -1){
 			//ランキング外の時に3Dテトリスモードのランキングを見ているとき
-			Set_Get_Ranking(RANKINGTXT);
+			page = TETRISRAND;
+			Set_Get_Ranking();
+		} else if(page == TETRISRAND && rank_pos == -1) {
+			//ランキング外の時にランダムテトリスモードのランキングを見ているとき
 			page = TETRIS;
+			Set_Get_Ranking();
 		}
 		break;
 	case GLUT_KEY_UP:	//上矢印キーを押したとき

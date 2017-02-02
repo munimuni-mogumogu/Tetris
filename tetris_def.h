@@ -13,24 +13,24 @@
 
 #define MENU_SIZE 8			//メニューの大きさ
 
-#define WINDOW_WIDTH 1600	//ウィンドウの幅
-#define WINDOW_HEIGHT 800	//ウィンドウの高さ
+#define WINDOW_WIDTH 640	//ウィンドウの幅
+#define WINDOW_HEIGHT 640	//ウィンドウの高さ
 
 #define GLUT_KEY_ENTER 0x000d	//エンターキー
 
 //モード
 #define TITLE 0
 #define TETRIS 1
-#define TETRIS3D 2
-#define GAMEOVER 3
+#define TETRISRAND 2
+#define TETRIS3D 3
 #define RANKING 4
+#define GAMEOVER 5
 
 //ランキングの名前の文字数制限(5文字)
 #define RANKNAME 6
 
 //ランキングの読み込み/保存先
-#define RANKINGTXT "ranking.txt"
-#define RANKING3DTXT "ranking3d.txt"
+#define SAVEDATA "ranking.sav"
 
 /* テンプレートパターン数 */
 #define TEMPLATE_PATTERN	7

@@ -50,7 +50,7 @@ void Tetris::Title_Display() {
 	glScaled(2, 2, 2);
 	Start_str.draw_block(CENTER);
 	glPopMatrix();
-	
+
 	//通常テトリスの描画
 	glPushMatrix();
 	draw_str Startrand("start random tetris");
@@ -73,6 +73,12 @@ void Tetris::Title_Display() {
 	glTranslated((BOARD_WIDTH + MENU_SIZE) / 2 * BLOCK_SIZE, (BOARD_HEIGHT / 2 - 10) * BLOCK_SIZE, 0);
 	glScaled(2, 2, 2);
 	ranking_str.draw_block(CENTER);
+	glPopMatrix();
+
+	glPushMatrix();
+	draw_str finish("finish / esc");
+	glTranslated((BOARD_WIDTH + MENU_SIZE - 3) * BLOCK_SIZE, -BLOCK_SIZE * 3, 0);
+	finish.draw_block();
 	glPopMatrix();
 
 	glutSwapBuffers();
@@ -99,6 +105,7 @@ void Tetris::Title_Keyboard(unsigned char k, int x, int y) {
 			page = TETRISRAND;
 			mode = TETRIS;
 			Tetris_Init();
+			page = TETRISRAND;
 		} else if (title_pos == TETRIS3D) {
 			//3Dテトリスの時
 			page = TETRIS3D;
@@ -106,7 +113,7 @@ void Tetris::Title_Keyboard(unsigned char k, int x, int y) {
 			Tetris_Init();
 		} else if(title_pos == RANKING) {
 			//ランキングの時
-			Set_Get_Ranking(RANKINGTXT);
+			Set_Get_Ranking();
 			mode = RANKING;
 		}
 		break;
@@ -120,6 +127,11 @@ void Tetris::Title_Keyboard(unsigned char k, int x, int y) {
 		light_check = !light_check;
 		if(light_check) glEnable(GL_LIGHTING);
 		else glDisable(GL_LIGHTING);
+		break;
+	case 'f':
+		screen_check = !screen_check;
+		if(screen_check) glutFullScreen();
+		else glutReshapeWindow(WINDOW_WIDTH, WINDOW_HEIGHT);
 		break;
 	default:
 		break;

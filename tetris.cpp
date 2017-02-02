@@ -20,6 +20,7 @@ Point2 Tetris::mousepoint;		//マウスの位置
 Point3 Tetris::viewpoint;		//視点
 Point3 Tetris::center;			//全体の中心
 clock_t Tetris::start;			//時間経過の管理用
+Draw_Rect Tetris::draw_rect;
 TmpPoint Tetris::mino_pos;		//テトリミノの位置
 Tetrimino Tetris::tetrimino;	//テトリミノ
 Tetrimino Tetris::nextmino;		//次のテトリミノ
@@ -39,6 +40,7 @@ int Tetris::title_pos;			//タイトルの位置
 Score Tetris::score;			//スコア
 double Tetris::speed;			//落下速度(ms)
 bool Tetris::light_check;		//ライトのオンオフ
+bool Tetris::screen_check;
 
 Board3D Tetris::board3d;		//3Dテトリスのボード
 TmpPoint3D Tetris::mino_pos3d;	//3Dテトリスのミノの位置
@@ -71,9 +73,10 @@ Tetris::Tetris() {
 	dialog_pos = 0;
 	dialog_check = false;
 	page = TETRIS;
-	title_pos = 0;
+	title_pos = TETRIS;
 	speed = 1000;
 	light_check = false;
+	screen_check = false;
 }
 
 /**
@@ -95,7 +98,8 @@ void Tetris::View_Reset() {
 */
 void Tetris::Tetris_Init() {
 	board.init();
-	tetrimino.create();
+	if(page == TETRIS) tetrimino.create(2);
+	else tetrimino.create();
 	holdmino = Tetrimino();
 	mino_pos.x = BOARD_WIDTH / 2;
 	mino_pos.y = BOARD_HEIGHT - 2;
@@ -104,14 +108,15 @@ void Tetris::Tetris_Init() {
 	holdmino_pos.y = 7;
 	tetrimino.setPoint(mino_pos);
 	holdmino.setPoint(holdmino_pos);
-	nextmino.create();
+	if(page == TETRIS) nextmino.create(2);
+	else nextmino.create();
 	start = clock();
 	rank_pos = -1;
 	name_pos = 0;
 	dialog_pos = 0;
 	dialog_check = false;
 	page = TETRIS;
-	title_pos = 0;
+	title_pos = TETRIS;
 	score.clear();
 
 	board3d.init();

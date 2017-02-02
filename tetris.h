@@ -15,6 +15,7 @@
 #include "score.h"
 #include "tetrimino_template.h"
 #include "tetris_def.h"
+#include "draw_template.h"
 
 struct Point2 {
 	double x;
@@ -41,6 +42,7 @@ private:
 	static Point3 viewpoint;	//視点
 	static Point3 center;	//全体の中心
 	static clock_t start;	//時間経過の管理用
+	static Draw_Rect draw_rect;
 	static TmpPoint mino_pos;			//テトリミノの位置
 	static Tetrimino tetrimino;		//テトリミノ
 	static Tetrimino nextmino;			//次のテトリミノ
@@ -60,6 +62,7 @@ private:
 	static Score score;				//スコア
 	static double speed;		//落下速度(ms)
 	static bool light_check;	//ライトのオンオフ
+	static bool screen_check;
 	
 	static Board3D board3d;
 	static TmpPoint3D mino_pos3d;
@@ -99,14 +102,15 @@ private:
 	//ゲームオーバーの関数
 	static void Gameover();
 	static void Gameover_Display();
+	static int charcheck();
 	static void Gameover_Keyboard(unsigned char, int, int);
 	static void Gameover_Specialkeyboard(int, int, int);
 
 	//ランキングの関数
 	static void Ranking();
 	static void Change_Name(char[], char[], int);
-	static void Set_Get_Ranking(char[]);
-	static void Save_Ranking_Name(char[]);
+	static void Set_Get_Ranking();
+	static void Save_Ranking_Name();
 	static void Ranking_Display();
 	static void Ranking_Keyboard(unsigned char, int, int);
 	static void Ranking_Specialkeyboard(int, int, int);
