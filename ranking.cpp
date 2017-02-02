@@ -47,7 +47,6 @@ void Tetris::Change_Name(char name1[], char name2[], int size) {
 *	@return		なし
 */
 void Tetris::Set_Get_Ranking() {
-	score.additional(2);
 	//ランキング順位の初期化
 	rank_pos = -1;
 	//ファイルオープン
@@ -64,30 +63,6 @@ void Tetris::Set_Get_Ranking() {
 			if(check == '/') break;
 		}
 	}while (!(index++ == page));
-
-	//ファイルからScore,Line,名前の呼び出し
-	/*
-	std::string str;
-	int i = 0;
-	while (std::getline(fin, str)) {
-	std::string s = "";
-	std::string l = "";
-	std::string n = "";
-	int tmp = str.find(' ');
-	for (int j = 0; j < tmp; j++)
-	s += str[j];
-	str = str.substr(tmp + 1);
-	tmp = str.find(' ');
-	for (int j = 0; j < tmp; j++)
-	l += str[j];
-	str = str.substr(tmp + 1);
-	ranking[i].x = stoi(s);
-	ranking[i].y = stoi(l);
-	while (str.size() != RANKNAME) str += " ";
-	for (int j = 0; j < RANKNAME; j++)
-	rank_name[i][j] = str[j];
-	i++;
-	}*/
 
 	for(int i = 0; i < 10; i++) {
 		fin >> ranking[i].x >> ranking[i].y;
